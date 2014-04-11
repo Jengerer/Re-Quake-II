@@ -109,7 +109,7 @@ void vector_cross_product(const vector3d_t *a, const vector3d_t *b, vector3d_t *
 	// Cache values so we 'out' can be one of the operands.
 	float x = (a->y * b->z) - (a->z * b->y);
 	float y = (a->z * b->x) - (a->x * b->z);
-	out->z = (a->x * b->z) - (a->z * b->x);
+	out->z = (a->x * b->y) - (a->y * b->x);
 	out->y = y;
 	out->x = x;
 }

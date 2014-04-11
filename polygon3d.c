@@ -79,9 +79,28 @@ int calculate_polygon_index_count(int vertex_count)
 /*
  * Get a vertex from polygon by index from index buffer.
  */
-const vector3d_t *get_polygon_vertex(const polygon3d_t *polygon, unsigned char index)
+const vector3d_t *get_polygon_indexed_vertex(const polygon3d_t *polygon, unsigned char index)
 {
 	index = polygon->indices[index];
 	return &polygon->vertices[index];
+}
+
+/*
+ * Calculate the front-facing normal for this polygon.
+ * Vector is filled out as a unit vector.
+ */
+void get_polygon_normal(const polygon3d_t *polygon, vector3d_t *out)
+{
+	vector3d_t a;
+	vector3d_t b;
+	const vector3d_t *v0 = &polygon->vertices[0];
+	const vector3d_t *v1 = &polygon->vertices[1];
+	const vector3d_t *v2 = &polygon->vertices[2];
+
+	// Calculate cross product of (v2 - v0) and (v1 - v0).
+	vector_subtract(v1, v0, &a);
+	vector_subtract(v2, v0, &b);
+	vector_cross_product(&a, &b, out);
+	vector_normalize(out, out);
 }
 

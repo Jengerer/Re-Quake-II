@@ -23,6 +23,9 @@ void destroy_polygon(polygon3d_t *polygon);
 
 // Index handling.
 int calculate_polygon_index_count(int vertex_count);
-const vector3d_t *get_polygon_vertex(const polygon3d_t *polygon, unsigned char index);
+const vector3d_t *get_polygon_indexed_vertex(const polygon3d_t *polygon, unsigned char index);
+
+// Polygon parameters.
+void get_polygon_normal(const polygon3d_t *polygon, vector3d_t *out);
 
 #endif // _POLYGON_3D_H_
