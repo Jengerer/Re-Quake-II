@@ -24,4 +24,10 @@ void vector_subtract(const vector3d_t *a, const vector3d_t *b, vector3d_t *out);
 float vector_dot_product(const vector3d_t *a, const vector3d_t *b);
 void vector_cross_product(const vector3d_t *a, const vector3d_t *b, vector3d_t *out);
 
+// Hybrid operations.
+void vector_scalar_add(const vector3d_t *base,
+	float factor,
+	const vector3d_t *scaled,
+	vector3d_t *out);
+
 #endif // _VECTOR_2D_H_

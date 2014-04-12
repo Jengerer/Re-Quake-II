@@ -1,10 +1,10 @@
-#include "polygon3d.h"
+#include "polygon.h"
 #include <stdlib.h>
 
 /*
  * Set the polygon to be of size 0 so it doesn't get destroyed improperly.
  */
-void null_polygon(polygon3d_t *polygon)
+void null_polygon(polygon_t *polygon)
 {
 	polygon->vertex_count = 0;
 	polygon->index_count = 0;
@@ -13,7 +13,7 @@ void null_polygon(polygon3d_t *polygon)
 /*
  * Allocate space for the vertices and indices.
  */
-int initialize_polygon(polygon3d_t *polygon, int vertex_count)
+int initialize_polygon(polygon_t *polygon, int vertex_count)
 {
 	unsigned char vertex;
 	unsigned char index;
@@ -55,7 +55,7 @@ int initialize_polygon(polygon3d_t *polygon, int vertex_count)
 /*
  * Deallocate a polygon's vertices and indices.
  */
-void destroy_polygon(polygon3d_t *polygon)
+void destroy_polygon(polygon_t *polygon)
 {
 	if (polygon->vertex_count != 0) {
 		free(polygon->vertices);
@@ -79,7 +79,7 @@ int calculate_polygon_index_count(int vertex_count)
 /*
  * Get a vertex from polygon by index from index buffer.
  */
-const vector3d_t *get_polygon_indexed_vertex(const polygon3d_t *polygon, unsigned char index)
+const vector3d_t *get_polygon_indexed_vertex(const polygon_t *polygon, unsigned char index)
 {
 	index = polygon->indices[index];
 	return &polygon->vertices[index];
@@ -87,12 +87,13 @@ const vector3d_t *get_polygon_indexed_vertex(const polygon3d_t *polygon, unsigne
 
 /*
  * Calculate the front-facing normal for this polygon.
- * Vector is filled out as a unit vector.
+ * Fills out the normal in the polygon's structure.
  */
-void get_polygon_normal(const polygon3d_t *polygon, vector3d_t *out)
+void calculate_polygon_plane(polygon_t *polygon)
 {
 	vector3d_t a;
 	vector3d_t b;
+	plane_t *plane = &polygon->plane;
 	const vector3d_t *v0 = &polygon->vertices[0];
 	const vector3d_t *v1 = &polygon->vertices[1];
 	const vector3d_t *v2 = &polygon->vertices[2];
@@ -100,7 +101,10 @@ void get_polygon_normal(const polygon3d_t *polygon, vector3d_t *out)
 	// Calculate cross product of (v2 - v0) and (v1 - v0).
 	vector_subtract(v1, v0, &a);
 	vector_subtract(v2, v0, &b);
-	vector_cross_product(&a, &b, out);
-	vector_normalize(out, out);
+	vector_cross_product(&a, &b, &a);
+	vector_normalize(&a, &plane->normal);
+
+	// Get the distance by projecting any of the points onto the normal.
+	plane->distance = vector_dot_product(v0, &plane->normal);
 }
 

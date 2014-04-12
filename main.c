@@ -1,36 +1,63 @@
+#include "window.h"
+#include "map.h"
 #include <stdio.h>
-#include "polygon3d.h"
 
-#define NUM_VERTICES 5
+// Application constants.
+#define APPLICATION_TITLE "Engine Test"
+#define APPLICATION_WIDTH 1024
+#define APPLICATION_HEIGHT 768
 
-int main(int argc, char *argv[]) {
-	int i;
-	polygon3d_t polygon;
-	const vector3d_t *vertex;
-	vector3d_t normal;
+int main(int argc, char *argv[])
+{
+    window_t window;
+	map_t map;
+	aabb_t aabb;
+	vector3d_t end;
+	trace_t trace;
+	polygon_t *polygon;
+	plane_t *plane;
 
-	// Allocate 5 vertices.
-	if (!initialize_polygon(&polygon, NUM_VERTICES)) {
-		printf("Polygon initialization failed.");
-		return -1;
+	// Create test map.
+	if (!initialize_map(&map, 1)) {
+		printf("Failed to initialize map.\n");
+		return 0;
 	}
-
-	// Initialize to pentagonal shape.
-	vector_set(&polygon.vertices[0], 0.0f, 1.0f, 0.0f);
-	vector_set(&polygon.vertices[1], 0.5f, 0.5f, 0.0f);
-	vector_set(&polygon.vertices[2], 0.5f, -0.5f, 0.0f);
-	vector_set(&polygon.vertices[3], -0.5f, -0.5f, 0.0f);
-	vector_set(&polygon.vertices[4], -0.5f, 0.5f, 0.0f);
-
-	// Run through indices.
-	for (i = 0; i < polygon.index_count; ++i) {
-		vertex = get_polygon_indexed_vertex(&polygon, i);
-		printf("(%f, %f, %f)\n", vertex->x, vertex->y, vertex->z);
+	polygon = &map.polygons[0];
+	if (!initialize_polygon(polygon, 4)) {
+		printf("Failed to initialize polygon.\n");
+		return 0;
 	}
-	destroy_polygon(&polygon);
+	vector_set(&polygon->vertices[0], -1.0f, -1.0f, -1.0f);
+	vector_set(&polygon->vertices[1], 1.0f, -1.0f, -1.0f);
+	vector_set(&polygon->vertices[2], 1.0f, 1.0f, -1.0f);
+	vector_set(&polygon->vertices[3], -1.0f, 1.0f, -1.0f);
+	calculate_polygon_plane(polygon);
+	plane = &polygon->plane;
 
-	// Calculate normal.
-	get_polygon_normal(&polygon, &normal);
-	printf("(%f, %f, %f)\n", normal.x, normal.y, normal.z);
+	// Test printing polygon.
+	printf("Normal: (%f, %f, %f), Distance: %f\n", plane->normal.x, plane->normal.y, plane->normal.z, plane->distance);
+
+	// Create test AABB.
+	vector_set(&aabb.mins, -0.25f, -0.25f, -0.25f);
+	vector_set(&aabb.maxs, 0.25f, 0.25f, 0.25f);
+	vector_set(&aabb.position, 0.0f, 0.0f, 0.0f);
+	
+	// Test collision behind the plane.
+	vector_set(&end, 0.0f, 0.0f, -10.0f);
+	trace_aabb(&map, &aabb, &aabb.position, &end, &trace);
+
+    // Create SDL window.
+    if (!create_window(APPLICATION_WIDTH, APPLICATION_HEIGHT, APPLICATION_TITLE, &window)) {
+        fprintf(stderr, "Failed to initialize window.\n");
+        return -1;
+    }
+
+    // Enter main loop.
+    enter_main_loop(&window);
+
+    // Exit application.
+    destroy_window(&window);
+
 	return 0;
 }
+

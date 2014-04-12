@@ -114,3 +114,14 @@ void vector_cross_product(const vector3d_t *a, const vector3d_t *b, vector3d_t *
 	out->x = x;
 }
 
+/*
+ * Add a scalar multiple of some vector to another.
+ */
+void vector_scalar_add(const vector3d_t *base,
+	float factor,
+	const vector3d_t *scaled,
+	vector3d_t *out)
+{
+	vector_scale(scaled, factor, out);
+	vector_add(base, out, out);
+}
