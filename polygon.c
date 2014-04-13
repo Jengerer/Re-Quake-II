@@ -65,6 +65,7 @@ void destroy_polygon(polygon_t *polygon)
 		free(polygon->indices);
 		polygon->index_count = 0;
 	}
+	null_polygon(polygon);
 }
 
 /*

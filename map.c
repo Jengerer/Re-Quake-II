@@ -45,7 +45,7 @@ void destroy_map(map_t *map)
 	for (i = 0; i < map->polygon_count; ++i) {
 		destroy_polygon(&map->polygons[i]);
 	}
-	map->polygon_count = 0;
+	null_map(map);
 }
 
 /*

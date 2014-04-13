@@ -1,10 +1,18 @@
-#include "file.h"
 #include "window.h"
 #include <stdlib.h>
 
-
 // Window constant parameters.
 #define WINDOW_BUFFER_DEPTH 24
+
+/*
+ * Base window initialization for easier cleanup.
+ */
+void null_window(window_t *window)
+{
+	window->window = NULL;
+	window->gl_context = NULL;
+	null_opengl_state(&window->opengl_state);
+}
 
 /*
  * Initialize SDL window with OpenGL context.
@@ -39,21 +47,21 @@ int create_window(int width, int height, const char *title, window_t *out)
         fprintf(stderr, "Failed to create OpenGL window.\n");
         return 0;
     }
+	out->window = result;
 
     // Create OpenGL context.
     context = SDL_GL_CreateContext(result);
     if (context != NULL) {
         fprintf(stderr, "Failed to create OpenGL context: %s.\n", SDL_GetError());
-        SDL_DestroyWindow(result);
         return 0;
     }
-
-    // Fill out struct.
-    out->window = result;
-    out->gl_context = context;
+	out->gl_context = context;
 
 	// Initialize OpenGL.
-	setup_opengl(out);
+	if (!initialize_opengl(&out->opengl_state)) {
+		fprintf(stderr, "Failed to initialize OpenGL.\n");
+		return 0;
+	}
 
 	// Finished!
     return 1;
@@ -65,33 +73,13 @@ int create_window(int width, int height, const char *title, window_t *out)
 void destroy_window(window_t *window)
 {
     // Destroy context/window.
-    SDL_GL_DeleteContext(window->gl_context);
-    SDL_DestroyWindow(window->window);
-
-    // Update pointers.
-    window->gl_context = NULL;
-    window->window = NULL;
-}
-
-/*
- * Set up OpenGL rendering scene.
- * Returns 1 on success, 0 otherwise.
- */
-int setup_opengl()
-{
-	GLchar *vertex_source;
-	GLchar *fragment_source;
-	GLuint vertex_shader;
-	GLuint fragment_shader;
-	GLuint shader;
-
-	// Create vertex shader.
-	if (read_file("engine.vert", &vertex_source) == 0) {
-		return 0;
+	if (window->gl_context != NULL) {
+		SDL_GL_DeleteContext(window->gl_context);
 	}
-	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex_shader, 1, (const GLchar**)&vertex_source, 0);
-	return 1;
+	if (window->window != NULL) {
+		SDL_DestroyWindow(window->window);
+	}
+	null_window(window);
 }
 
 /*
