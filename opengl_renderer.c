@@ -68,6 +68,32 @@ int initialize_opengl(opengl_state_t *state)
 }
 
 /*
+ * Deallocate OpenGL context.
+ */
+void destroy_opengl(opengl_state_t *state)
+{
+	glUseProgram(0);
+
+	// Deallocate vertex shader.
+	if (state->vertex_shader != 0) {
+		glDetachShader(state->program, state->vertex_shader);
+		glDeleteShader(state->vertex_shader);
+	}
+
+	// Deallocate fragment shader.
+	if (state->fragment_shader != 0) {
+		glDetachShader(state->program, state->fragment_shader);
+		glDeleteShader(state->fragment_shader);
+	}
+
+	// Destroy the program.
+	if (state->program != 0) {
+		glDeleteProgram(state->program);
+	}
+	null_opengl_state(state);
+}
+
+/*
  * Create and compile a shader from a file.
  * Returns the GL handle to the shader on success, 0 otherwise.
  */
@@ -76,6 +102,8 @@ GLuint create_shader_from_file(const char *filename, GLenum shader_type)
 	GLuint shader;
 	GLchar *source;
 	int compile_status;
+	GLsizei log_length;
+	GLchar *log;
 
 	// Create vertex shader.
 	if (read_file(filename, &source) == 0) {
@@ -94,6 +122,12 @@ GLuint create_shader_from_file(const char *filename, GLenum shader_type)
 	// Check that it compiled properly.
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_status);
 	if (compile_status == GL_FALSE) {
+		// Print error.
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_length);
+		log = (char*)malloc(log_length * sizeof(GLchar));
+		glGetShaderInfoLog(shader, log_length, &log_length, log);
+		fprintf(stderr, "%s\n", log);
+		free(log);
 		glDeleteShader(shader);
 		printf("Failed to compile shader '%s'.\n", filename);
 		return 0;
@@ -101,3 +135,6 @@ GLuint create_shader_from_file(const char *filename, GLenum shader_type)
 	return shader;
 }
 
+/*
+ * Create a renderer context for a given polygon.
+ */

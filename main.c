@@ -14,6 +14,8 @@ int main(int argc, char *argv[])
 	aabb_t aabb;
 	vector3d_t end;
 	trace_t trace;
+	mesh_t *mesh;
+	indexed_mesh_t *indexed_mesh;
 	polygon_t *polygon;
 	plane_t *plane;
 
@@ -23,14 +25,16 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 	polygon = &map.polygons[0];
+	indexed_mesh = &polygon->indexed_mesh;
+	mesh = &indexed_mesh->mesh;
 	if (!initialize_polygon(polygon, 4)) {
 		printf("Failed to initialize polygon.\n");
 		return 0;
 	}
-	vector_set(&polygon->vertices[0], -1.0f, -1.0f, -1.0f);
-	vector_set(&polygon->vertices[1], 1.0f, -1.0f, -1.0f);
-	vector_set(&polygon->vertices[2], 1.0f, 1.0f, -1.0f);
-	vector_set(&polygon->vertices[3], -1.0f, 1.0f, -1.0f);
+	vector_set(&mesh->vertices[0], -1.0f, -1.0f, -1.0f);
+	vector_set(&mesh->vertices[1], 1.0f, -1.0f, -1.0f);
+	vector_set(&mesh->vertices[2], 1.0f, 1.0f, -1.0f);
+	vector_set(&mesh->vertices[3], -1.0f, 1.0f, -1.0f);
 	calculate_polygon_plane(polygon);
 	plane = &polygon->plane;
 

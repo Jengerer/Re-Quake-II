@@ -1,7 +1,7 @@
 #ifndef _POLYGON_H_
 #define _POLYGON_H_
 
-#include "vector3d.h"
+#include "indexed_mesh.h"
 #include "plane.h"
 
 /*
@@ -11,14 +11,14 @@
  */
 typedef struct polygon
 {
-	// Vertices and indices to them.
-	vector3d_t *vertices;
-	int vertex_count;
-	unsigned char *indices;
-	int index_count;
+	// Mesh representing this polygon's shape.
+	indexed_mesh_t indexed_mesh;
 
 	// Plane that this polygon's vertices are on (calculated after filled).
 	plane_t plane;
+
+	// Render context for this polygon.
+	void *renderer_context;
 } polygon_t;
 
 // Polygon initialization/destruction.
@@ -28,7 +28,6 @@ void destroy_polygon(polygon_t *polygon);
 
 // Index handling.
 int calculate_polygon_index_count(int vertex_count);
-const vector3d_t *get_polygon_indexed_vertex(const polygon_t *polygon, unsigned char index);
 
 // Polygon parameters.
 void calculate_polygon_plane(polygon_t *polygon);

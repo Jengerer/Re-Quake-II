@@ -2,8 +2,8 @@
 #define _WINDOW_H_
 
 #include "opengl_renderer.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
+#include <SDL.h>
+#include <SDL_opengl.h>
 
 // Window structure.
 typedef struct window

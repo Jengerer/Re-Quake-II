@@ -1,4 +1,5 @@
 #include "window.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 // Window constant parameters.
@@ -51,7 +52,7 @@ int create_window(int width, int height, const char *title, window_t *out)
 
     // Create OpenGL context.
     context = SDL_GL_CreateContext(result);
-    if (context != NULL) {
+    if (context == NULL) {
         fprintf(stderr, "Failed to create OpenGL context: %s.\n", SDL_GetError());
         return 0;
     }

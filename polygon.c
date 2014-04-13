@@ -1,54 +1,42 @@
-#include "polygon.h"
 #include <stdlib.h>
+#include "opengl_renderer.h"
+#include "polygon.h"
 
 /*
  * Set the polygon to be of size 0 so it doesn't get destroyed improperly.
  */
 void null_polygon(polygon_t *polygon)
 {
-	polygon->vertex_count = 0;
-	polygon->index_count = 0;
+	null_indexed_mesh(&polygon->indexed_mesh);
 }
 
 /*
  * Allocate space for the vertices and indices.
  */
-int initialize_polygon(polygon_t *polygon, int vertex_count)
+int initialize_polygon(polygon_t *polygon, int num_vertices)
 {
+	indexed_mesh_t *indexed_mesh;
+	unsigned int *indices;
 	unsigned char vertex;
 	unsigned char index;
-	int index_count;
-	unsigned char *indices; 
-	vector3d_t *vertices;
-
-	// Allocate vertices.
-	vertices = (vector3d_t*)malloc(vertex_count * sizeof(vector3d_t));
-	if (vertices == NULL) {
-		return 0;
-	}
+	int num_indices;
 	
-	// Allocate indices.
-	index_count = calculate_polygon_index_count(vertex_count);
-	indices = (unsigned char*)malloc(index_count * sizeof(vector3d_t));
-	if (indices == NULL) {
-		free(vertices);
+	// Allocate mesh.
+	indexed_mesh = &polygon->indexed_mesh;
+	num_indices = calculate_polygon_index_count(num_vertices);
+	if (!initialize_indexed_mesh(indexed_mesh, num_vertices, num_indices)) {
 		return 0;
 	}
+	indices = indexed_mesh->indices;
 
 	// Fill in indices 3 at a time for each triangle.
 	vertex = 1;
-	for (index = 0; index < index_count; index += 3) {
+	for (index = 0; index < num_indices; index += 3) {
 		// Assign (0, 1, 2), then (0, 2, 3), etc.
 		indices[index] = 0;
 		indices[index + 1] = vertex;
 		indices[index + 2] = ++vertex;
 	}
-
-	// Fill out struct and return.
-	polygon->vertices = vertices;
-	polygon->vertex_count = vertex_count;
-	polygon->indices = indices;
-	polygon->index_count = index_count;
 	return 1;
 }
 
@@ -57,15 +45,7 @@ int initialize_polygon(polygon_t *polygon, int vertex_count)
  */
 void destroy_polygon(polygon_t *polygon)
 {
-	if (polygon->vertex_count != 0) {
-		free(polygon->vertices);
-		polygon->vertex_count = 0;
-	}
-	if (polygon->index_count != 0) {
-		free(polygon->indices);
-		polygon->index_count = 0;
-	}
-	null_polygon(polygon);
+	destroy_indexed_mesh(&polygon->indexed_mesh);
 }
 
 /*
@@ -78,15 +58,6 @@ int calculate_polygon_index_count(int vertex_count)
 }
 
 /*
- * Get a vertex from polygon by index from index buffer.
- */
-const vector3d_t *get_polygon_indexed_vertex(const polygon_t *polygon, unsigned char index)
-{
-	index = polygon->indices[index];
-	return &polygon->vertices[index];
-}
-
-/*
  * Calculate the front-facing normal for this polygon.
  * Fills out the normal in the polygon's structure.
  */
@@ -94,10 +65,18 @@ void calculate_polygon_plane(polygon_t *polygon)
 {
 	vector3d_t a;
 	vector3d_t b;
-	plane_t *plane = &polygon->plane;
-	const vector3d_t *v0 = &polygon->vertices[0];
-	const vector3d_t *v1 = &polygon->vertices[1];
-	const vector3d_t *v2 = &polygon->vertices[2];
+	plane_t *plane;
+	mesh_t *mesh;
+	const vector3d_t *v0;
+	const vector3d_t *v1;
+	const vector3d_t *v2;
+
+	// Get first 3 vertices.
+	mesh = &polygon->indexed_mesh.mesh;
+	plane = &polygon->plane;
+	v0 = &mesh->vertices[0];
+	v1 = &mesh->vertices[1];
+	v2 = &mesh->vertices[2];
 
 	// Calculate cross product of (v2 - v0) and (v1 - v0).
 	vector_subtract(v1, v0, &a);
@@ -108,4 +87,3 @@ void calculate_polygon_plane(polygon_t *polygon)
 	// Get the distance by projecting any of the points onto the normal.
 	plane->distance = vector_dot_product(v0, &plane->normal);
 }
-
