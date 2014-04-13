@@ -8,9 +8,8 @@
 // Window structure.
 typedef struct window
 {
-    SDL_Window *window;
-    SDL_GLContext gl_context;
-	opengl_state_t opengl_state;
+    SDL_Window *sdl_window;
+	SDL_GLContext sdl_gl;
 } window_t;
 
 // Window initialization.
@@ -18,7 +17,8 @@ void null_window(window_t *window);
 int create_window(int width, int height, const char *title, window_t *out);
 void destroy_window(window_t *window);
 
-// Program main loop.
-void enter_main_loop(window_t *window);
+// Window running functions.
+int handle_window_events(window_t *window);
+void swap_buffer(window_t *window);
 
 #endif // _WINDOW_H_

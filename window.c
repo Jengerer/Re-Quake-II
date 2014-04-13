@@ -10,9 +10,8 @@
  */
 void null_window(window_t *window)
 {
-	window->window = NULL;
-	window->gl_context = NULL;
-	null_opengl_state(&window->opengl_state);
+	window->sdl_window = NULL;
+	window->sdl_gl = NULL;
 }
 
 /*
@@ -48,7 +47,7 @@ int create_window(int width, int height, const char *title, window_t *out)
         fprintf(stderr, "Failed to create OpenGL window.\n");
         return 0;
     }
-	out->window = result;
+	out->sdl_window = result;
 
     // Create OpenGL context.
     context = SDL_GL_CreateContext(result);
@@ -56,13 +55,7 @@ int create_window(int width, int height, const char *title, window_t *out)
         fprintf(stderr, "Failed to create OpenGL context: %s.\n", SDL_GetError());
         return 0;
     }
-	out->gl_context = context;
-
-	// Initialize OpenGL.
-	if (!initialize_opengl(&out->opengl_state)) {
-		fprintf(stderr, "Failed to initialize OpenGL.\n");
-		return 0;
-	}
+	out->sdl_gl = context;
 
 	// Finished!
     return 1;
@@ -74,33 +67,34 @@ int create_window(int width, int height, const char *title, window_t *out)
 void destroy_window(window_t *window)
 {
     // Destroy context/window.
-	if (window->gl_context != NULL) {
-		SDL_GL_DeleteContext(window->gl_context);
+	if (window->sdl_gl != NULL) {
+		SDL_GL_DeleteContext(window->sdl_gl);
 	}
-	if (window->window != NULL) {
-		SDL_DestroyWindow(window->window);
+	if (window->sdl_window != NULL) {
+		SDL_DestroyWindow(window->sdl_window);
 	}
-	null_window(window);
 }
 
 /*
- * Run window main loop.
+ * Handle events for the window.
+ * Returns 0 only if window close event was triggered, 1 otherwise.
  */
-void enter_main_loop(window_t *window)
+int handle_window_events(window_t *window)
 {
-    SDL_Event event;
+	SDL_Event event;
+	if (SDL_PollEvent(&event)) {
+		// Trigger close if event is to close window.
+		if (event.type == SDL_QUIT) {
+			return 0;
+		}
+	}
+	return 1;
+}
 
-    // Run until quit.
-    while (1) {
-        // Handle any window events.
-        if (SDL_PollEvent(&event)) {
-            // End loop if exiting.
-            if (event.type == SDL_QUIT) {
-                break;
-            }
-        }
-
-        // Swap buffers.
-        SDL_GL_SwapWindow(window->window);
-    }
+/*
+ * Trigger buffer swap for the window.
+ */
+void swap_buffer(window_t *window)
+{
+	SDL_GL_SwapWindow(window->sdl_window);
 }

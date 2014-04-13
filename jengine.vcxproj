@@ -70,6 +70,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="engine.c" />
     <ClCompile Include="file.c" />
     <ClCompile Include="indexed_mesh.c" />
     <ClCompile Include="main.c" />
@@ -78,12 +79,14 @@
     <ClCompile Include="opengl_model.c" />
     <ClCompile Include="opengl_renderer.c" />
     <ClCompile Include="polygon.c" />
+    <ClCompile Include="renderer.c" />
     <ClCompile Include="vector3d.c" />
     <ClCompile Include="window.c" />
     <ClCompile Include="world.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
+    <ClInclude Include="engine.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="map.h" />
@@ -92,6 +95,7 @@
     <ClInclude Include="opengl_renderer.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="polygon.h" />
+    <ClInclude Include="renderer.h" />
     <ClInclude Include="trace.h" />
     <ClInclude Include="vector3d.h" />
     <ClInclude Include="window.h" />

@@ -1,4 +1,5 @@
-#include "window.h"
+#include "engine.h"
+#include "opengl_renderer.h"
 #include "map.h"
 #include <stdio.h>
 
@@ -9,7 +10,6 @@
 
 int main(int argc, char *argv[])
 {
-    window_t window;
 	map_t map;
 	aabb_t aabb;
 	vector3d_t end;
@@ -19,17 +19,37 @@ int main(int argc, char *argv[])
 	polygon_t *polygon;
 	plane_t *plane;
 
+	// Engine state.
+	engine_t engine;
+	engine_configuration_t *config = &engine.config;
+
+	// Create configuration for engine.
+	config->title = APPLICATION_TITLE;
+	config->width = APPLICATION_WIDTH;
+	config->height = APPLICATION_HEIGHT;
+
+	// Prepare OpenGL renderer.
+	initialize_opengl_interface(&engine.renderer);
+
+	// Initialize engine.
+	null_engine(&engine);
+	if (!initialize_engine(&engine)) {
+		// Destroy partially initialized state.
+		destroy_engine(&engine);
+		return -1;
+	}
+
 	// Create test map.
 	if (!initialize_map(&map, 1)) {
 		printf("Failed to initialize map.\n");
-		return 0;
+		return -1;
 	}
 	polygon = &map.polygons[0];
 	indexed_mesh = &polygon->indexed_mesh;
 	mesh = &indexed_mesh->mesh;
 	if (!initialize_polygon(polygon, 6)) {
 		printf("Failed to initialize polygon.\n");
-		return 0;
+		return -1;
 	}
 	vector_set(&mesh->vertices[0], -1.0f, -1.0f, -1.0f);
 	vector_set(&mesh->vertices[1], -1.0, 0.0f, -1.0f);
@@ -52,19 +72,9 @@ int main(int argc, char *argv[])
 	vector_set(&end, 0.0f, 0.0f, -10.0f);
 	trace_aabb(&map, &aabb, &aabb.position, &end, &trace);
 
-    // Create SDL window.
-    if (!create_window(APPLICATION_WIDTH, APPLICATION_HEIGHT, APPLICATION_TITLE, &window)) {
-        fprintf(stderr, "Failed to initialize window.\n");
-        return -1;
-    }
-
-	create_opengl_model(&polygon->indexed_mesh.mesh, &polygon->model);
-
-    // Enter main loop.
-    enter_main_loop(&window);
-
-    // Exit application.
-    destroy_window(&window);
+	// Run engine and shut down.
+	run_engine(&engine);
+	destroy_engine(&engine);
 
 	return 0;
 }

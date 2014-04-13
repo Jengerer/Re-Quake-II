@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include "opengl_renderer.h"
 #include "polygon.h"
 
 /*

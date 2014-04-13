@@ -51,6 +51,12 @@
     <ClCompile Include="opengl_model.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="engine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -90,6 +96,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="indexed_mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

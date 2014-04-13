@@ -1,8 +1,8 @@
 #ifndef _POLYGON_H_
 #define _POLYGON_H_
 
+#include "renderer.h"
 #include "indexed_mesh.h"
-#include "opengl_model.h"
 #include "plane.h"
 
 /*
@@ -19,7 +19,7 @@ typedef struct polygon
 	plane_t plane;
 
 	// Render context for this polygon.
-	opengl_model_t model;
+	renderer_model_t *model;
 } polygon_t;
 
 // Polygon initialization/destruction.

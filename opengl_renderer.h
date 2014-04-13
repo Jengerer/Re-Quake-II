@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include "opengl_model.h"
 #include "polygon.h"
+#include "renderer.h"
 
 // Structure representing OpenGL state.
 typedef struct opengl_state
@@ -18,13 +19,23 @@ typedef struct opengl_state
 
 // OpenGL initialization/destruction.
 void null_opengl_state(opengl_state_t *state);
-int initialize_opengl(opengl_state_t *state);
-void destroy_opengl(opengl_state_t *state);
 
-// Create a shader from a shader file.
-GLuint create_shader_from_file(const char *filename, GLenum shader_type);
+// Renderer/OpenGL conversions.
+GLenum get_opengl_shader_type(renderer_shader_type_t type);
 
-// Create a renderer context for a given mesh.
-int create_opengl_model(const mesh_t *mesh, opengl_model_t* out);
+// Filling out renderer interface.
+void initialize_opengl_interface(renderer_t *renderer);
+
+// Renderer interface functions.
+int initialize_opengl(renderer_context_t *context);
+void destroy_opengl(renderer_context_t *context);
+int create_opengl_model(renderer_context_t *context, const mesh_t *mesh, renderer_model_t *out);
+void render_opengl_model(renderer_context_t *context, const renderer_model_t *model);
+int create_opengl_shader(renderer_context_t *context,
+	const char *filename,
+	renderer_shader_type_t type,
+	renderer_shader_t *out);
+
+// Engine interface intiailization.
 
 #endif // _OPENGL_RENDERER_H_
