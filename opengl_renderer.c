@@ -136,5 +136,17 @@ GLuint create_shader_from_file(const char *filename, GLenum shader_type)
 }
 
 /*
- * Create a renderer context for a given polygon.
+ * Create a renderer context for a given mesh.
+ * Returns 1 and fills out struct on success, returns 0 otherwise.
  */
+int create_opengl_model(const mesh_t *mesh, opengl_model_t* out)
+{
+	GLuint vertex_buffer;
+
+	// Create vertex buffer.
+	glGenBuffers(1, &vertex_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * sizeof(vector3d_t), mesh->vertices, GL_STATIC_DRAW);
+	out->vertex_buffer = vertex_buffer;
+	return 1;
+}

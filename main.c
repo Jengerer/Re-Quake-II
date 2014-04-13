@@ -27,14 +27,16 @@ int main(int argc, char *argv[])
 	polygon = &map.polygons[0];
 	indexed_mesh = &polygon->indexed_mesh;
 	mesh = &indexed_mesh->mesh;
-	if (!initialize_polygon(polygon, 4)) {
+	if (!initialize_polygon(polygon, 6)) {
 		printf("Failed to initialize polygon.\n");
 		return 0;
 	}
 	vector_set(&mesh->vertices[0], -1.0f, -1.0f, -1.0f);
-	vector_set(&mesh->vertices[1], 1.0f, -1.0f, -1.0f);
-	vector_set(&mesh->vertices[2], 1.0f, 1.0f, -1.0f);
-	vector_set(&mesh->vertices[3], -1.0f, 1.0f, -1.0f);
+	vector_set(&mesh->vertices[1], -1.0, 0.0f, -1.0f);
+	vector_set(&mesh->vertices[2], 0.0f, -1.0f, -1.0f);
+	vector_set(&mesh->vertices[3], 1.0f, 0.5f, -1.0f);
+	vector_set(&mesh->vertices[4], 1.0f, 1.0f, -1.0f);
+	vector_set(&mesh->vertices[5], 0.5f, 1.0f, -1.0f);
 	calculate_polygon_plane(polygon);
 	plane = &polygon->plane;
 
@@ -55,6 +57,8 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Failed to initialize window.\n");
         return -1;
     }
+
+	create_opengl_model(&polygon->indexed_mesh.mesh, &polygon->model);
 
     // Enter main loop.
     enter_main_loop(&window);

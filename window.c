@@ -104,4 +104,3 @@ void enter_main_loop(window_t *window)
         SDL_GL_SwapWindow(window->window);
     }
 }
-

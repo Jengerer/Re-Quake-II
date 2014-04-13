@@ -24,7 +24,7 @@ void destroy_opengl(opengl_state_t *state);
 // Create a shader from a shader file.
 GLuint create_shader_from_file(const char *filename, GLenum shader_type);
 
-// Create a renderer context for a given polygon.
-int create_opengl_model(const polygon_t *polygon, opengl_model_t* out);
+// Create a renderer context for a given mesh.
+int create_opengl_model(const mesh_t *mesh, opengl_model_t* out);
 
 #endif // _OPENGL_RENDERER_H_
