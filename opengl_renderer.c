@@ -128,6 +128,7 @@ GLuint create_shader_from_file(const char *filename, GLenum shader_type)
 		glGetShaderInfoLog(shader, log_length, &log_length, log);
 		fprintf(stderr, "%s\n", log);
 		free(log);
+
 		glDeleteShader(shader);
 		printf("Failed to compile shader '%s'.\n", filename);
 		return 0;
