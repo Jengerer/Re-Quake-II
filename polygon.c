@@ -7,6 +7,7 @@
 void null_polygon(polygon_t *polygon)
 {
 	null_indexed_mesh(&polygon->indexed_mesh);
+	null_renderer_model(&polygon->model);
 }
 
 /*

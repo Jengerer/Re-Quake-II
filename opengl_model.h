@@ -7,6 +7,8 @@
 typedef struct opengl_model
 {
 	GLuint vertex_buffer;
+	GLuint index_buffer;
+	GLuint array_size;
 } opengl_model_t;
 
 // Only null function here; initialization/destruction responsibility of renderer.

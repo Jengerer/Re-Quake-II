@@ -8,6 +8,7 @@ void null_engine(engine_t *engine)
 {
 	null_window(&engine->window);
 	null_renderer(&engine->renderer);
+	null_game(&engine->game);
 }
 
 /*
@@ -16,22 +17,33 @@ void null_engine(engine_t *engine)
  */
 int initialize_engine(engine_t *engine)
 {
-	window_t *window;
 	engine_configuration_t *config;
+	window_t *window;
 	renderer_t *renderer;
-	window = &engine->window;
+	game_t *game;
 	config = &engine->config;
+	window = &engine->window;
 	renderer = &engine->renderer;
+	game = &engine->game;
 
 	// Create SDL window.
 	if (!create_window(config->width, config->height, config->title, window)) {
-		fprintf(stderr, "Failed to initialize window.\n");
 		return 0;
 	}
 
 	// Create renderer.
-	if (!renderer->initialize(&renderer->renderer_context)) {
+	if (!renderer->initialize(&renderer->context)) {
 		// Clean up if partially initialized.
+		return 0;
+	}
+
+	// Create game.
+	if (!game->initialize(&game->context)) {
+		return 0;
+	}
+
+	// Load game resources.
+	if (!game->load_resources(game->context, renderer)) {
 		return 0;
 	}
 	return 1;
@@ -44,10 +56,18 @@ void destroy_engine(engine_t *engine)
 {
 	window_t *window;
 	renderer_t *renderer;
+	game_t *game;
+
+	// Deallocate game resources.
+	renderer = &engine->renderer;
+	game = &engine->game;
+	game->free_resources(game->context, renderer);
+
+	// Destroy game.
+	game->destroy(game->context);
 
 	// Destroy renderer.
-	renderer = &engine->renderer;
-	renderer->destroy(renderer->renderer_context);
+	renderer->destroy(renderer->context);
 
 	// Destroy window.
 	window = &engine->window;
@@ -60,13 +80,20 @@ void destroy_engine(engine_t *engine)
  */
 int run_engine(engine_t *engine)
 {
-	int done = 0;
+	game_t *game;
+	int done;
+	
+	game = &engine->game;
+	done = 0;
 	while (!done) {
 		// Handle window events and break if closed.
 		if (!handle_window_events(&engine->window)) {
 			done = 1;
 		}
 		else {
+			// Call game's render function.
+			game->render(game->context, &engine->renderer);
+
 			// Swap the buffer.
 			swap_buffer(&engine->window);
 		}

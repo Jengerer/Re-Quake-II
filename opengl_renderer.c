@@ -9,7 +9,7 @@
 /*
  * Create null OpenGL state for clean destruction.
  */
-void null_opengl_state(opengl_state_t *state)
+void null_opengl_context(opengl_context_t *state)
 {
 	state->vertex_shader = 0;
 	state->fragment_shader = 0;
@@ -42,7 +42,9 @@ void initialize_opengl_interface(renderer_t *renderer)
 	// Fill out interface functions.
 	renderer->initialize = &initialize_opengl;
 	renderer->destroy = &destroy_opengl;
-	renderer->create_model = &create_opengl_model;
+	renderer->create_mesh_model = &create_opengl_mesh_model;
+	renderer->create_indexed_mesh_model = &create_opengl_indexed_mesh_model;
+	renderer->destroy_model = &destroy_opengl_model;
 	renderer->render_model = &render_opengl_model;
 	renderer->create_shader = &create_opengl_shader;
 }
@@ -58,14 +60,14 @@ int initialize_opengl(renderer_context_t **out)
 	GLint program;
 	int link_status;
 	renderer_context_t *context;
-	opengl_state_t *state;
+	opengl_context_t *state;
 
 	// Allocate OpenGL renderer state.
-	state = (opengl_state_t*)malloc(sizeof(opengl_state_t));
+	state = (opengl_context_t*)malloc(sizeof(opengl_context_t));
 	if (state == NULL) {
 		return 0;
 	}
-	null_opengl_state(state);
+	null_opengl_context(state);
 	context = (renderer_context_t*)state;
 	*out = context;
 
@@ -112,7 +114,7 @@ int initialize_opengl(renderer_context_t **out)
 */
 void destroy_opengl(renderer_context_t *context)
 {
-	opengl_state_t *state = (opengl_state_t*)context;
+	opengl_context_t *state = (opengl_context_t*)context;
 
 	// Check if we even started initializing.
 	if (state == NULL) {
@@ -144,17 +146,91 @@ void destroy_opengl(renderer_context_t *context)
 * Create a renderer context for a given mesh.
 * Returns 1 and fills out struct on success, returns 0 otherwise.
 */
-int create_opengl_model(renderer_context_t *context, const mesh_t *mesh, renderer_model_t *out)
+int create_opengl_mesh_model(renderer_context_t *context,
+	const mesh_t *mesh,
+	renderer_model_t **out)
 {
 	GLuint vertex_buffer;
-	opengl_model_t *model = (opengl_model_t*)out;
+	opengl_model_t *model = (opengl_model_t*)malloc(sizeof(opengl_model_t));
+	null_opengl_model(model);
 
 	// Create vertex buffer.
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * sizeof(vector3d_t), mesh->vertices, GL_STATIC_DRAW);
 	model->vertex_buffer = vertex_buffer;
+	model->array_size = mesh->num_vertices;
 	return 1;
+}
+
+/*
+* Create a renderer context for a given indexed mesh.
+* Returns 1 and fills out struct on success, returns 0 otherwise.
+*/
+int create_opengl_indexed_mesh_model(renderer_context_t *context,
+	const indexed_mesh_t *indexed_mesh,
+	renderer_model_t **out)
+{
+	GLuint vertex_buffer;
+	GLuint index_buffer;
+	const mesh_t *mesh;
+	opengl_model_t *model;
+	mesh = &indexed_mesh->mesh;
+
+	// Allocate space for the model.
+	model = (opengl_model_t*)malloc(sizeof(opengl_model_t));
+	if (model == NULL) {
+		return 0;
+	}
+	null_opengl_model(model);
+	*out = (renderer_model_t*)model;
+
+	// Create vertex buffer.
+	glGenBuffers(1, &vertex_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * sizeof(vector3d_t), mesh->vertices, GL_STATIC_DRAW);
+
+	// Set attributes.
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vector3d_t), 0);
+	glEnableVertexAttribArray(0);
+
+	// Create index buffer.
+	glGenBuffers(1, &index_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexed_mesh->num_indices * sizeof(unsigned int), indexed_mesh->indices, GL_STATIC_DRAW);
+
+	// Create index buffer.
+	model->vertex_buffer = vertex_buffer;
+	model->index_buffer = index_buffer;
+	model->array_size = indexed_mesh->num_indices;
+	return 1;
+}
+
+/*
+ * Destroy the OpenGL model.
+ */
+void destroy_opengl_model(renderer_context_t *context, renderer_model_t *model)
+{
+	opengl_model_t *opengl_model;
+
+	// Check if anything was actually allocated.
+	if (model == NULL) {
+		return;
+	}
+	opengl_model = (opengl_model_t*)model;
+
+	// Free vertex buffer if there is one.
+	if (opengl_model->vertex_buffer != 0) {
+		glDeleteBuffers(1, &opengl_model->vertex_buffer);
+
+		// We won't have index buffer if we have no vertex buffer.
+		if (opengl_model->index_buffer != 0) {
+			glDeleteBuffers(1, &opengl_model->index_buffer);
+		}
+	}
+	
+	// Free the struct.
+	free(opengl_model);
 }
 
 /*
@@ -162,6 +238,19 @@ int create_opengl_model(renderer_context_t *context, const mesh_t *mesh, rendere
 */
 void render_opengl_model(renderer_context_t *context, const renderer_model_t *model)
 {
+	const opengl_model_t  *opengl_model = (const opengl_model_t*)model;
+	if (opengl_model->index_buffer != 0) {
+		printf("Rendering %u index elements.\n", opengl_model->array_size);
+		glBindBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opengl_model->index_buffer);
+		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_UNSIGNED_INT, NULL);
+	}
+	else if (opengl_model->vertex_buffer != 0) {
+		printf("Rendering %u vertex elements.\n", opengl_model->array_size);
+		glBindBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_FLOAT, NULL);
+	}
 }
 
 /*

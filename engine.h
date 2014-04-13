@@ -3,6 +3,7 @@
 
 #include "renderer.h"
 #include "window.h"
+#include "game.h"
 
 // Struct that refers to generic game/engine configuration state.
 typedef struct engine_configuration
@@ -18,6 +19,7 @@ typedef struct engine
 	window_t window;
 	renderer_t renderer;
 	engine_configuration_t config;
+	game_t game;
 } engine_t;
 
 // Engine initialization/destruction.

@@ -7,13 +7,13 @@
  */
 void null_map(map_t *map)
 {
-	map->polygon_count = 0;
+	map->num_polygons = 0;
 }
 
 /*
  * Allocate space for a certain number of polygons.
  */
-int initialize_map(map_t *map, int polygon_count)
+int initialize_map(map_t *map, int num_polygons)
 {
 	int i;
 	polygon_t *polygons;
@@ -22,17 +22,17 @@ int initialize_map(map_t *map, int polygon_count)
 	null_map(map);
 
 	// Allocate space for polygons and null them.
-	polygons = (polygon_t*)malloc(polygon_count * sizeof(polygon_t));
+	polygons = (polygon_t*)malloc(num_polygons * sizeof(polygon_t));
 	if (polygons == NULL) {
 		return 0;
 	}
-	for (i = 0; i < polygon_count; ++i) {
+	for (i = 0; i < num_polygons; ++i) {
 		null_polygon(&polygons[i]);
 	}
 
 	// Fill out struct and return.
 	map->polygons = polygons;
-	map->polygon_count = polygon_count;
+	map->num_polygons = num_polygons;
 	return 1;
 }
 
@@ -42,7 +42,7 @@ int initialize_map(map_t *map, int polygon_count)
 void destroy_map(map_t *map)
 {
 	int i;
-	for (i = 0; i < map->polygon_count; ++i) {
+	for (i = 0; i < map->num_polygons; ++i) {
 		destroy_polygon(&map->polygons[i]);
 	}
 }
@@ -68,7 +68,7 @@ void trace_aabb(const map_t *map,
 	trace->fraction = 1.0f;
 
 	// Go through each polygon.
-	for (i = 0; i < map->polygon_count; ++i) {
+	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
 		plane = &polygon->plane;
 

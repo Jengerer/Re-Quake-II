@@ -11,12 +11,12 @@
 typedef struct map
 {
 	polygon_t *polygons;
-	int polygon_count;
+	int num_polygons;
 } map_t;
 
 // Map initialization and destruction.
 void null_map(map_t *map);
-int initialize_map(map_t *map, int polygon_count);
+int initialize_map(map_t *map, int num_polygons);
 void destroy_map(map_t *map);
 
 // Map collision tracing.
