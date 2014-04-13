@@ -25,7 +25,7 @@ void vector_clear(vector3d_t *vec)
 float vector_magnitude(const vector3d_t *vec)
 {
 	float squared = vector_dot_product(vec, vec);
-	return sqrt(squared);
+	return sqrtf(squared);
 }
 
 /*
