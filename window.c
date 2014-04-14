@@ -85,8 +85,14 @@ int handle_window_events(window_t *window)
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) {
 		// Trigger close if event is to close window.
-		if (event.type == SDL_QUIT) {
+		switch (event.type) {
+		case SDL_QUIT:
 			return 0;
+
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+			printf("%d %d %u\n", event.key.keysym.scancode, event.key.state, event.key.type);
+			break;
 		}
 	}
 	return 1;

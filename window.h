@@ -19,6 +19,7 @@ void destroy_window(window_t *window);
 
 // Window running functions.
 int handle_window_events(window_t *window);
+int handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event);
 void swap_buffer(window_t *window);
 
 #endif // _WINDOW_H_

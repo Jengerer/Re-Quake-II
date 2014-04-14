@@ -208,8 +208,12 @@ int create_opengl_indexed_mesh_model(renderer_context_t *context,
 	glGenBuffers(1, &index_buffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexed_mesh->num_indices * sizeof(unsigned int), indexed_mesh->indices, GL_STATIC_DRAW);
+	
+	// Unbind VAO.
+	glBindVertexArray(0);
 
 	// Create index buffer.
+	model->vertex_array = vertex_array;
 	model->vertex_buffer = vertex_buffer;
 	model->index_buffer = index_buffer;
 	model->array_size = indexed_mesh->num_indices;
@@ -252,15 +256,11 @@ void render_opengl_model(renderer_context_t *context, const renderer_model_t *mo
 	(void)context;
 	const opengl_model_t  *opengl_model = (const opengl_model_t*)model;
 	if (opengl_model->index_buffer != 0) {
-		printf("Rendering %u index elements.\n", opengl_model->array_size);
-		glBindBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opengl_model->index_buffer);
+		glBindVertexArray(opengl_model->vertex_array);
 		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_UNSIGNED_INT, NULL);
 	}
 	else if (opengl_model->vertex_buffer != 0) {
-		printf("Rendering %u vertex elements.\n", opengl_model->array_size);
-		glBindBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindVertexArray(opengl_model->vertex_array);
 		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_FLOAT, NULL);
 	}
 }

@@ -122,6 +122,9 @@
     <ClInclude Include="vector2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="key_bindings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine.frag">

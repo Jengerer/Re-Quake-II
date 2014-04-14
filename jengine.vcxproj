@@ -96,6 +96,7 @@
     <ClInclude Include="file.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="indexed_mesh.h" />
+    <ClInclude Include="key_bindings.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="opengl_model.h" />
