@@ -10,6 +10,9 @@
 
 int main(int argc, char *argv[])
 {
+	(void)argc;
+	(void)argv;
+
 	// Engine state.
 	engine_t engine;
 	engine_configuration_t *config = &engine.config;

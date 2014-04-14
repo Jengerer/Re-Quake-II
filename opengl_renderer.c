@@ -150,9 +150,11 @@ int create_opengl_mesh_model(renderer_context_t *context,
 	const mesh_t *mesh,
 	renderer_model_t **out)
 {
+	(void)context;
 	GLuint vertex_buffer;
 	opengl_model_t *model = (opengl_model_t*)malloc(sizeof(opengl_model_t));
 	null_opengl_model(model);
+	*out = (renderer_model_t*)model;
 
 	// Create vertex buffer.
 	glGenBuffers(1, &vertex_buffer);
@@ -171,6 +173,8 @@ int create_opengl_indexed_mesh_model(renderer_context_t *context,
 	const indexed_mesh_t *indexed_mesh,
 	renderer_model_t **out)
 {
+	(void)context;
+	GLuint vertex_array;
 	GLuint vertex_buffer;
 	GLuint index_buffer;
 	const mesh_t *mesh;
@@ -185,14 +189,20 @@ int create_opengl_indexed_mesh_model(renderer_context_t *context,
 	null_opengl_model(model);
 	*out = (renderer_model_t*)model;
 
+	// Allocate vertex array object and bind.
+	glGenVertexArrays(1, &vertex_array);
+	glBindVertexArray(vertex_array);
+
 	// Create vertex buffer.
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * sizeof(vector3d_t), mesh->vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * sizeof(mesh_vertex_t), mesh->vertices, GL_STATIC_DRAW);
 
 	// Set attributes.
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vector3d_t), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(mesh_vertex_t), 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(mesh_vertex_t), (GLvoid*)sizeof(vector3d_t));
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 
 	// Create index buffer.
 	glGenBuffers(1, &index_buffer);
@@ -211,6 +221,7 @@ int create_opengl_indexed_mesh_model(renderer_context_t *context,
  */
 void destroy_opengl_model(renderer_context_t *context, renderer_model_t *model)
 {
+	(void)context;
 	opengl_model_t *opengl_model;
 
 	// Check if anything was actually allocated.
@@ -238,6 +249,7 @@ void destroy_opengl_model(renderer_context_t *context, renderer_model_t *model)
 */
 void render_opengl_model(renderer_context_t *context, const renderer_model_t *model)
 {
+	(void)context;
 	const opengl_model_t  *opengl_model = (const opengl_model_t*)model;
 	if (opengl_model->index_buffer != 0) {
 		printf("Rendering %u index elements.\n", opengl_model->array_size);
@@ -263,6 +275,7 @@ int create_opengl_shader(renderer_context_t *context,
 	renderer_shader_type_t type,
 	renderer_shader_t *out)
 {
+	(void)context;
 	GLuint shader;
 	GLchar *source;
 	int compile_status;

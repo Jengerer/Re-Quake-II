@@ -54,9 +54,9 @@ int initialize_platformer(game_context_t **out)
 
 	// Create player.
 	player = &context->player;
-	vector_set(&player->mins, -0.25f, -0.25f, -0.25f);
-	vector_set(&player->maxs, 0.25f, 0.25f, 0.25f);
-	vector_set(&player->position, 0.0f, 0.0f, 0.0f);
+	vector3d_set(&player->mins, -0.25f, -0.25f, -0.25f);
+	vector3d_set(&player->maxs, 0.25f, 0.25f, 0.25f);
+	vector3d_set(&player->position, 0.0f, 0.0f, 0.0f);
 
 	// Initialize the map.
 	map = &context->map;
@@ -71,10 +71,10 @@ int initialize_platformer(game_context_t **out)
 		printf("Failed to initialize polygon.\n");
 		return 0;
 	}
-	vector_set(&mesh->vertices[0], -1.0f, 1.0f, 0.0f);
-	vector_set(&mesh->vertices[1], 0.0, 1.0f, 0.0f);
-	vector_set(&mesh->vertices[2], 0.0f, 0.0f, 0.0f);
-	vector_set(&mesh->vertices[3], -1.0f, 0.0f, 0.0f);
+	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 0.0f);
+	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 0.0f);
+	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 0.0f);
+	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 0.0f);
 	calculate_polygon_plane(polygon);
 	return 1;
 }

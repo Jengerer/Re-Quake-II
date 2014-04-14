@@ -81,6 +81,7 @@ void destroy_window(window_t *window)
  */
 int handle_window_events(window_t *window)
 {
+	(void)window;
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) {
 		// Trigger close if event is to close window.

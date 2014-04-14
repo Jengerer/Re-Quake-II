@@ -14,7 +14,7 @@ void null_mesh(mesh_t *mesh)
  */
 int initialize_mesh(mesh_t *mesh, int num_vertices)
 {
-	vector3d_t *vertices = (vector3d_t*)malloc(num_vertices * sizeof(vector3d_t));
+	mesh_vertex_t *vertices = (mesh_vertex_t*)malloc(num_vertices * sizeof(mesh_vertex_t));
 	if (vertices == NULL) {
 		return 0;
 	}

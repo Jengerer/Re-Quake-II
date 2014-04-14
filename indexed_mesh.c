@@ -50,8 +50,8 @@ void destroy_indexed_mesh(indexed_mesh_t *mesh)
 /*
  * Get an vector by its index in the index buffer.
  */
-void get_indexed_vertex(indexed_mesh_t *mesh, int index, vector3d_t *out)
+const mesh_vertex_t* get_indexed_vertex(indexed_mesh_t *mesh, int index)
 {
 	index = mesh->indices[index];
-	vector_copy(&mesh->mesh.vertices[index], out);
+	return &mesh->mesh.vertices[index];
 }

@@ -46,9 +46,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <CompileAs>CompileAsC</CompileAs>
+      <ExceptionHandling>false</ExceptionHandling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,6 +85,7 @@
     <ClCompile Include="platformer.c" />
     <ClCompile Include="polygon.c" />
     <ClCompile Include="renderer.c" />
+    <ClCompile Include="vector2d.c" />
     <ClCompile Include="vector3d.c" />
     <ClCompile Include="window.c" />
     <ClCompile Include="world.c" />
@@ -101,6 +105,7 @@
     <ClInclude Include="polygon.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="trace.h" />
+    <ClInclude Include="vector2d.h" />
     <ClInclude Include="vector3d.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="world.h" />

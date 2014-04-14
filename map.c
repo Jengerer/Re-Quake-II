@@ -74,8 +74,8 @@ void trace_aabb(const map_t *map,
 
 		// Project the AABB onto the plane's normal.
 		aabb_dot = get_aabb_projection(aabb, plane);
-		start_dot = vector_dot_product(start, &plane->normal) + aabb_dot;
-		end_dot = vector_dot_product(end, &plane->normal) + aabb_dot;
+		start_dot = vector3d_dot_product(start, &plane->normal) + aabb_dot;
+		end_dot = vector3d_dot_product(end, &plane->normal) + aabb_dot;
 
 		// No collision of both start and end are on one side of plane.
 		if (start_dot > 0.0f && end_dot >= start_dot) {
@@ -90,8 +90,8 @@ void trace_aabb(const map_t *map,
 		if ((fraction >= 0.0f) && (fraction <= 1.0f)) {
 			vector3d_t direction;
 			vector3d_t new_end;
-			vector_subtract(end, start, &direction);
-			vector_scalar_add(start, fraction, &direction, &new_end);
+			vector3d_subtract(end, start, &direction);
+			vector3d_scalar_add(start, fraction, &direction, &new_end);
 			printf("Fraction: %f\n", fraction);
 			printf("End at: (%f, %f, %f)\n", new_end.x, new_end.y, new_end.z);
 		}
@@ -110,6 +110,6 @@ float get_aabb_projection(const aabb_t *aabb, const plane_t *plane)
 	offsets.x = (normal->x > 0.0f ? aabb->mins.x : aabb->maxs.x);
 	offsets.y = (normal->y > 0.0f ? aabb->mins.y : aabb->maxs.y);
 	offsets.z = (normal->z > 0.0f ? aabb->mins.z : aabb->maxs.z);
-	return vector_dot_product(&offsets, normal) - plane->distance;
+	return vector3d_dot_product(&offsets, normal) - plane->distance;
 }
 

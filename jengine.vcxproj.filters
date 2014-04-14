@@ -63,6 +63,9 @@
     <ClCompile Include="platformer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vector2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -114,6 +117,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="platformer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

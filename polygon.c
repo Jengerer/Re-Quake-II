@@ -74,16 +74,16 @@ void calculate_polygon_plane(polygon_t *polygon)
 	// Get first 3 vertices.
 	mesh = &polygon->indexed_mesh.mesh;
 	plane = &polygon->plane;
-	v0 = &mesh->vertices[0];
-	v1 = &mesh->vertices[1];
-	v2 = &mesh->vertices[2];
+	v0 = &mesh->vertices[0].position;
+	v1 = &mesh->vertices[1].position;
+	v2 = &mesh->vertices[2].position;
 
 	// Calculate cross product of (v2 - v0) and (v1 - v0).
-	vector_subtract(v1, v0, &a);
-	vector_subtract(v2, v0, &b);
-	vector_cross_product(&a, &b, &a);
-	vector_normalize(&a, &plane->normal);
+	vector3d_subtract(v1, v0, &a);
+	vector3d_subtract(v2, v0, &b);
+	vector3d_cross_product(&a, &b, &a);
+	vector3d_normalize(&a, &plane->normal);
 
 	// Get the distance by projecting any of the points onto the normal.
-	plane->distance = vector_dot_product(v0, &plane->normal);
+	plane->distance = vector3d_dot_product(v0, &plane->normal);
 }
