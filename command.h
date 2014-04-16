@@ -7,7 +7,8 @@ typedef enum command_parameter_type
 	INVALID_TYPE = -1,
 	INTEGER_PARAMETER,
 	FLOAT_PARAMETER,
-	STRING_PARAMETER
+	STRING_PARAMETER,
+	BOOLEAN_PARAMETER
 } command_parameter_type_t;
 
 // Struct for representing a command parameter.
