@@ -5,6 +5,11 @@
 // Window constant parameters.
 #define WINDOW_BUFFER_DEPTH 24
 
+// Private functions.
+static void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event);
+static key_code_t sdl_key_to_engine(SDL_Keycode sdl_code);
+static SDL_Keycode engine_key_to_sdl(key_code_t engine_code);
+
 /*
  * Base window initialization for easier cleanup.
  */
@@ -57,6 +62,9 @@ int create_window(int width, int height, const char *title, window_t *out)
     }
 	out->sdl_gl = context;
 
+	// Initialize keyboard manager.
+	initialize_keyboard_manager(&out->keyboard);
+
 	// Finished!
     return 1;
 }
@@ -91,7 +99,7 @@ int handle_window_events(window_t *window)
 
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
-			printf("%d %d %u\n", event.key.keysym.scancode, event.key.state, event.key.type);
+			handle_keyboard_event(window, &event.key);
 			break;
 		}
 	}
@@ -104,4 +112,49 @@ int handle_window_events(window_t *window)
 void swap_buffer(window_t *window)
 {
 	SDL_GL_SwapWindow(window->sdl_window);
+}
+
+/*
+ * Handle keyboard event by updating state.
+ */
+void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event)
+{
+	SDL_Keycode sdl_code;
+	key_code_t key_code;
+	keyboard_key_t *key;
+	key_state_t old_state;
+	key_state_t new_state;
+
+	// Convert code to engine code.
+	sdl_code = event->keysym.sym;
+	key_code = sdl_key_to_engine(sdl_code);
+
+	// Update state in keyboard manager.
+	key = get_keyboard_key(&window->keyboard, key_code);
+	old_state = key->state;
+	if (event->state == SDL_PRESSED) {
+		new_state = FLAG_KEY_DOWN;
+	}
+	else {
+		new_state = 0;
+	}
+
+	// Update if state changed.
+	if ((old_state & new_state) == 0) {
+		printf("%d changed to %d.\n", key_code, new_state);
+		new_state |= FLAG_KEY_CHANGED;
+	}
+	key->state = new_state;
+}
+
+/*
+ * Convert SDL key code to engine key code.
+ */
+static key_code_t sdl_key_to_engine(SDL_Keycode sdl_code)
+{
+	if ((sdl_code >= SDLK_a) && (sdl_code <= SDLK_z)) {
+		return (key_code_t)(ENGINE_KEY_A + (sdl_code - SDLK_a));
+	}
+
+	return (key_code_t)ENGINE_KEY_INVALID;
 }
