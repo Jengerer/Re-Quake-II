@@ -128,6 +128,9 @@ void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event)
 	// Convert code to engine code.
 	sdl_code = event->keysym.sym;
 	key_code = sdl_key_to_engine(sdl_code);
+	if (key_code == ENGINE_KEY_INVALID) {
+		return;
+	}
 
 	// Update state in keyboard manager.
 	key = get_keyboard_key(&window->keyboard, key_code);
