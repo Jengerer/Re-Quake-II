@@ -81,16 +81,23 @@ void destroy_engine(engine_t *engine)
 int run_engine(engine_t *engine)
 {
 	game_t *game;
+	window_t *window;
+	keyboard_manager_t *keyboard;
 	int done;
 	
 	game = &engine->game;
+	window = &engine->window;
+	keyboard = &window->keyboard;
 	done = 0;
 	while (!done) {
 		// Handle window events and break if closed.
-		if (!handle_window_events(&engine->window)) {
+		if (!handle_window_events(window)) {
 			done = 1;
 		}
 		else {
+			// Handle game input.
+			game->handle_keyboard(game->context, keyboard);
+
 			// Call game's render function.
 			game->render(game->context, &engine->renderer);
 

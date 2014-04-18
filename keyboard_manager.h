@@ -58,6 +58,7 @@ void initialize_keyboard_manager(keyboard_manager_t *manager);
 
 // Keyboard management functions.
 void refresh_keyboard_state(keyboard_manager_t *manager);
-keyboard_key_t *get_keyboard_key(keyboard_manager_t *manager, key_code_t key_code);
+key_state_t get_key_state(const keyboard_manager_t *manager, key_code_t key_code);
+void update_key_state(keyboard_manager_t *manager, key_code_t key_code, key_state_t new_state);
 
 #endif // _KEYBOARD_MANAGER_H_

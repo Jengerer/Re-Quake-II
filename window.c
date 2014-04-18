@@ -121,7 +121,6 @@ void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event)
 {
 	SDL_Keycode sdl_code;
 	key_code_t key_code;
-	keyboard_key_t *key;
 	key_state_t old_state;
 	key_state_t new_state;
 
@@ -133,8 +132,7 @@ void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event)
 	}
 
 	// Update state in keyboard manager.
-	key = get_keyboard_key(&window->keyboard, key_code);
-	old_state = key->state;
+	old_state = get_key_state(&window->keyboard, key_code);
 	if (event->state == SDL_PRESSED) {
 		new_state = FLAG_KEY_DOWN;
 	}
@@ -144,10 +142,10 @@ void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event)
 
 	// Update if state changed.
 	if ((old_state & new_state) == 0) {
-		printf("%d changed to %d.\n", key_code, new_state);
 		new_state |= FLAG_KEY_CHANGED;
 	}
-	key->state = new_state;
+	update_key_state(&window->keyboard, key_code, new_state);
+	
 }
 
 /*

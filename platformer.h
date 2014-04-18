@@ -1,14 +1,14 @@
 #ifndef _PLATFORMER_H_
 #define _PLATFORMER_H_
 
-#include "aabb.h"
 #include "game.h"
 #include "map.h"
+#include "player.h"
 
 // Platformer game state to test engine.
 typedef struct platformer_context
 {
-	aabb_t player;
+	player_t player;
 	map_t map;
 } platformer_context_t;
 
@@ -25,5 +25,6 @@ void destroy_platformer(game_context_t *context);
 int load_platformer_resources(game_context_t *context, renderer_t *renderer);
 void free_platformer_resources(game_context_t *context, renderer_t *renderer);
 int render_platformer(game_context_t *context, renderer_t *renderer);
+void handle_platformer_keyboard(game_context_t *context, keyboard_manager_t *keyboard);
 
 #endif // _PLATFORMER_H_

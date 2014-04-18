@@ -35,7 +35,17 @@ void refresh_keyboard_state(keyboard_manager_t *manager)
 /*
  * Return key state object reference for the engine key code.
  */
-keyboard_key_t *get_keyboard_key(keyboard_manager_t *manager, key_code_t key_code)
+key_state_t get_key_state(const keyboard_manager_t *manager, key_code_t key_code)
 {
-	return &manager->keys[key_code];
+	const keyboard_key_t *key = &manager->keys[key_code];
+	return key->state;
+}
+
+/*
+ * Update keyboard state in the manner.
+ */
+void update_key_state(keyboard_manager_t *manager, key_code_t key_code, key_state_t new_state)
+{
+	keyboard_key_t *key = &manager->keys[key_code];
+	key->state = new_state;
 }

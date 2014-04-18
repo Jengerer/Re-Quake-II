@@ -1,4 +1,5 @@
 #include "platformer.h"
+#include "player_move.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -23,6 +24,7 @@ void initialize_platformer_interface(game_t *game)
 	game->load_resources = &load_platformer_resources;
 	game->free_resources = &free_platformer_resources;
 	game->render = &render_platformer;
+	game->handle_keyboard = &handle_platformer_keyboard;
 }
 
 /*
@@ -40,7 +42,7 @@ const char* get_platformer_name()
  */
 int initialize_platformer(game_context_t **out)
 {
-	aabb_t *player;
+	player_t *player;
 	map_t *map;
 	polygon_t *polygon;
 	mesh_t *mesh;
@@ -54,9 +56,7 @@ int initialize_platformer(game_context_t **out)
 
 	// Create player.
 	player = &context->player;
-	vector3d_set(&player->mins, -0.25f, -0.25f, -0.25f);
-	vector3d_set(&player->maxs, 0.25f, 0.25f, 0.25f);
-	vector3d_set(&player->position, 0.0f, 0.0f, 0.0f);
+	initialize_player(player);
 
 	// Initialize the map.
 	map = &context->map;
@@ -156,4 +156,34 @@ int render_platformer(game_context_t *context, renderer_t *renderer)
 		renderer->render_model(&renderer->context, polygon->model);
 	}
 	return 1;
+}
+
+/*
+ * Handle keyboard input for platjformer.
+ */
+void handle_platformer_keyboard(game_context_t *context, keyboard_manager_t *keyboard)
+{
+	platformer_context_t *platformer;
+	player_t *player;
+	player_move_t *move;
+	entity_t *player_entity;
+	vector3d_t *position;
+	vector3d_t *velocity;
+
+	platformer = (platformer_context_t*)context;
+	player = &platformer->player;
+	move = &player->move;
+	player_entity = &player->entity.base;
+	position = &player_entity->origin;
+	velocity = &move->move_direction;
+	
+	// Update player movement.
+	handle_player_move(keyboard, move);
+
+	// Move the player by the command.
+	vector3d_add(position, velocity, position);
+	if (vector3d_magnitude(velocity) != 0.0f) {
+		printf("VEL: (%f, %f, %f)\n", velocity->x, velocity->y, velocity->z);
+		printf("POS: (%f, %f, %f)\n", position->x, position->y, position->z);
+	}
 }

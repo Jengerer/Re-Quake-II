@@ -8,7 +8,6 @@
  */
 typedef struct aabb
 {
-	vector3d_t position;
 	vector3d_t mins;
 	vector3d_t maxs;
 } aabb_t;
