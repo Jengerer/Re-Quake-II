@@ -16,9 +16,9 @@ typedef struct engine_configuration
 // Engine state struct.
 typedef struct engine
 {
+	engine_configuration_t config;
 	window_t window;
 	renderer_t renderer;
-	engine_configuration_t config;
 	game_t game;
 } engine_t;
 

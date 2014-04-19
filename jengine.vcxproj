@@ -77,12 +77,15 @@
     <ClCompile Include="file.c" />
     <ClCompile Include="game.c" />
     <ClCompile Include="indexed_mesh.c" />
+    <ClCompile Include="keyboard_manager.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="mesh.c" />
     <ClCompile Include="opengl_model.c" />
     <ClCompile Include="opengl_renderer.c" />
     <ClCompile Include="platformer.c" />
+    <ClCompile Include="player.c" />
+    <ClCompile Include="player_move.c" />
     <ClCompile Include="polygon.c" />
     <ClCompile Include="renderer.c" />
     <ClCompile Include="vector2d.c" />
@@ -92,17 +95,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
+    <ClInclude Include="aabb_entity.h" />
     <ClInclude Include="engine.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="indexed_mesh.h" />
-    <ClInclude Include="key_bindings.h" />
+    <ClInclude Include="keyboard_manager.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="opengl_model.h" />
     <ClInclude Include="opengl_renderer.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="platformer.h" />
+    <ClInclude Include="player.h" />
+    <ClInclude Include="player_move.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="trace.h" />
