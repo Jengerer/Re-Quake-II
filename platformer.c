@@ -5,6 +5,9 @@
 
 #define PLATFORMER_NAME "Platformer Test"
 
+// Global platformer context.
+platformer_context_t platformer;
+
 /*
  * Null platformer context for safe destruction.
  */
@@ -18,6 +21,10 @@ void null_platformer_context(platformer_context_t *context)
  */
 void initialize_platformer_interface(game_t *game)
 {
+	// Null context here.
+	null_platformer_context(&platformer);
+
+	// Initialize interface functions.
 	game->get_name = &get_platformer_name;
 	game->initialize = &initialize_platformer;
 	game->destroy = &destroy_platformer;
@@ -40,26 +47,20 @@ const char* get_platformer_name()
  * Returns 1 on success, 0 otherwise.
  * Context is filled out as soon as there's something to clean.
  */
-int initialize_platformer(game_context_t **out)
+int initialize_platformer()
 {
 	player_t *player;
 	map_t *map;
 	polygon_t *polygon;
 	mesh_t *mesh;
 	indexed_mesh_t *indexed_mesh;
-	platformer_context_t *context = (platformer_context_t*)malloc(sizeof(platformer_context_t));
-	if (context == NULL) {
-		return 0;
-	}
-	null_platformer_context(context);
-	*out = (game_context_t*)context;
 
 	// Create player.
-	player = &context->player;
+	player = &platformer.player;
 	initialize_player(player);
 
 	// Initialize the map.
-	map = &context->map;
+	map = &platformer.map;
 	if (!initialize_map(map, 1)) {
 		printf("Failed to initialize map.\n");
 		return 0;
@@ -82,34 +83,23 @@ int initialize_platformer(game_context_t **out)
 /*
  * Destroy the platformer context.
  */
-void destroy_platformer(game_context_t *context)
+void destroy_platformer()
 {
-	platformer_context_t *platformer;
-	
-	// Check if we even started initializing.
-	if (context == NULL) {
-		return;
-	}
-	platformer = (platformer_context_t*)context;
-
 	// Destroy the map.
-	destroy_map(&platformer->map);
+	destroy_map(&platformer.map);
 }
 
 /*
  * Load all base resources required by platformer.
  */
-int load_platformer_resources(game_context_t *context, renderer_t *renderer)
+int load_platformer_resources(renderer_t *renderer)
 {
 	int i;
-	platformer_context_t *platformer;
 	map_t *map;
 	polygon_t *polygon;
 
-	platformer = (platformer_context_t*)context;
-	map = &platformer->map;
-
 	// Create models for the map polygons.
+	map = &platformer.map;
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
 		if (!renderer->create_indexed_mesh_model(&polygon->indexed_mesh, &polygon->model)) {
@@ -122,21 +112,14 @@ int load_platformer_resources(game_context_t *context, renderer_t *renderer)
 /*
  * Free base resources for platformer.
  */
-void free_platformer_resources(game_context_t *context, renderer_t *renderer)
+void free_platformer_resources(renderer_t *renderer)
 {
 	int i;
-	platformer_context_t *platformer;
 	map_t *map;
 	polygon_t *polygon;
 
-	// Check if anything to destroy.
-	platformer = (platformer_context_t*)context;
-	if (platformer == NULL) {
-		return;
-	}
-	map = &platformer->map;
-
-	// Create models for the map polygons.
+	// Destroy models for the map polygons.
+	map = &platformer.map;
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
 		renderer->destroy_model(polygon->model);
@@ -146,15 +129,14 @@ void free_platformer_resources(game_context_t *context, renderer_t *renderer)
 /*
  * Platformer rendering function.
  */
-int render_platformer(game_context_t *context, renderer_t *renderer)
+int render_platformer(renderer_t *renderer)
 {
 	int i;
 	map_t *map;
 	polygon_t *polygon;
-	platformer_context_t *platformer = (platformer_context_t*)context;
 
 	// Render the map polygons.
-	map = &platformer->map;
+	map = &platformer.map;
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
 		renderer->render_model(polygon->model);
@@ -165,17 +147,15 @@ int render_platformer(game_context_t *context, renderer_t *renderer)
 /*
  * Handle keyboard input for platjformer.
  */
-void handle_platformer_keyboard(game_context_t *context, keyboard_manager_t *keyboard)
+void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 {
-	platformer_context_t *platformer;
 	player_t *player;
 	player_move_t *move;
 	entity_t *player_entity;
 	vector3d_t *position;
 	vector3d_t *velocity;
 
-	platformer = (platformer_context_t*)context;
-	player = &platformer->player;
+	player = &platformer.player;
 	move = &player->move;
 	player_entity = &player->entity.base;
 	position = &player_entity->origin;
@@ -191,3 +171,4 @@ void handle_platformer_keyboard(game_context_t *context, keyboard_manager_t *key
 		printf("POS: (%f, %f, %f)\n", position->x, position->y, position->z);
 	}
 }
+

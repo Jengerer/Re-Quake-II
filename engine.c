@@ -38,12 +38,12 @@ int initialize_engine(engine_t *engine)
 	}
 
 	// Create game.
-	if (!game->initialize(&game->context)) {
+	if (!game->initialize()) {
 		return 0;
 	}
 
 	// Load game resources.
-	if (!game->load_resources(game->context, renderer)) {
+	if (!game->load_resources(renderer)) {
 		return 0;
 	}
 	return 1;
@@ -61,10 +61,10 @@ void destroy_engine(engine_t *engine)
 	// Deallocate game resources.
 	renderer = &engine->renderer;
 	game = &engine->game;
-	game->free_resources(game->context, renderer);
+	game->free_resources(renderer);
 
 	// Destroy game.
-	game->destroy(game->context);
+	game->destroy();
 
 	// Destroy renderer.
 	renderer->destroy();
@@ -96,10 +96,10 @@ int run_engine(engine_t *engine)
 		}
 		else {
 			// Handle game input.
-			game->handle_keyboard(game->context, keyboard);
+			game->handle_keyboard(keyboard);
 
 			// Call game's render function.
-			game->render(game->context, &engine->renderer);
+			game->render(&engine->renderer);
 
 			// Swap the buffer.
 			swap_buffer(&engine->window);

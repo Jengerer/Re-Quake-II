@@ -20,11 +20,11 @@ void initialize_platformer_interface(game_t *game);
 
 // Game interface functions.
 const char* get_platformer_name();
-int initialize_platformer(game_context_t **out);
-void destroy_platformer(game_context_t *context);
-int load_platformer_resources(game_context_t *context, renderer_t *renderer);
-void free_platformer_resources(game_context_t *context, renderer_t *renderer);
-int render_platformer(game_context_t *context, renderer_t *renderer);
-void handle_platformer_keyboard(game_context_t *context, keyboard_manager_t *keyboard);
+int initialize_platformer();
+void destroy_platformer();
+int load_platformer_resources(renderer_t *renderer);
+void free_platformer_resources(renderer_t *renderer);
+int render_platformer(renderer_t *renderer);
+void handle_platformer_keyboard(keyboard_manager_t *keyboard);
 
 #endif // _PLATFORMER_H_

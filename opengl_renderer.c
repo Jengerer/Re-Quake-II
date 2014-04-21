@@ -7,7 +7,7 @@
 #define FRAGMENT_SHADER_FILE "engine.frag"
 
 // Singleton reference for OpenGL renderer.
-opengl_context_t opengl_context;
+opengl_context_t opengl;
 
 /*
  * Create null OpenGL state for clean destruction.
@@ -43,7 +43,7 @@ GLenum get_opengl_shader_type(renderer_shader_type_t type)
 void initialize_opengl_interface(renderer_t *renderer)
 {
 	// Null OpenGL state here for clean up.
-	null_opengl_context(&opengl_context);
+	null_opengl_context(&opengl);
 
 	// Fill out interface functions.
 	renderer->initialize = &initialize_opengl;
@@ -71,14 +71,14 @@ int initialize_opengl()
 
 	// Create a shader program.
 	program = glCreateProgram();
-	opengl_context.program = program;
+	opengl.program = program;
 
 	// Create vertex shader.
 	if (!create_opengl_shader(VERTEX_SHADER_FILE, VERTEX_SHADER, &shader)) {
 		printf("Failed to create vertex shader.\n");
 		return 0;
 	}
-	opengl_context.vertex_shader = shader;
+	opengl.vertex_shader = shader;
 	glAttachShader(program, shader);
 
 	// Create fragment shader.
@@ -86,7 +86,7 @@ int initialize_opengl()
 		printf("Failed to create fragment shader.\n");
 		return 0;
 	}
-	opengl_context.fragment_shader = shader;
+	opengl.fragment_shader = shader;
 	glAttachShader(program, shader);
 
 	// Bind attributes to variable names.
@@ -113,20 +113,20 @@ void destroy_opengl()
 	GLuint shader;
 
 	// Unset program so we can detach.
-	program = opengl_context.program;
+	program = opengl.program;
 	if (program != 0) {
 		glUseProgram(0);
 	}
 
 	// Deallocate vertex shader.
-	shader = opengl_context.vertex_shader;
+	shader = opengl.vertex_shader;
 	if (shader != 0) {
 		glDetachShader(program, shader);
 		glDeleteShader(shader);
 	}
 
 	// Deallocate fragment shader.
-	shader = opengl_context.fragment_shader;
+	shader = opengl.fragment_shader;
 	if (shader != 0) {
 		glDetachShader(program, shader);
 		glDeleteShader(shader);
