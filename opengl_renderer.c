@@ -6,6 +6,9 @@
 #define VERTEX_SHADER_FILE "engine.vert"
 #define FRAGMENT_SHADER_FILE "engine.frag"
 
+// Singleton reference for OpenGL renderer.
+opengl_state_t opengl_state;
+
 /*
  * Create null OpenGL state for clean destruction.
  */
@@ -39,6 +42,9 @@ GLenum get_opengl_shader_type(renderer_shader_type_t type)
  */
 void initialize_opengl_interface(renderer_t *renderer)
 {
+	// Null OpenGL state here for clean up.
+	null_opengl_context(&opengl_state);
+
 	// Fill out interface functions.
 	renderer->initialize = &initialize_opengl;
 	renderer->destroy = &destroy_opengl;
@@ -54,44 +60,33 @@ void initialize_opengl_interface(renderer_t *renderer)
 * The state is partially filled out as components are initialized
 * to allow for clean-up.
 */
-int initialize_opengl(renderer_context_t **out)
+int initialize_opengl()
 {
 	GLint shader;
 	GLint program;
 	int link_status;
-	renderer_context_t *context;
-	opengl_context_t *state;
-
-	// Allocate OpenGL renderer state.
-	state = (opengl_context_t*)malloc(sizeof(opengl_context_t));
-	if (state == NULL) {
-		return 0;
-	}
-	null_opengl_context(state);
-	context = (renderer_context_t*)state;
-	*out = context;
 
 	// Initialize GLEW.
 	glewInit();
 
 	// Create a shader program.
 	program = glCreateProgram();
-	state->program = program;
+	opengl_state.program = program;
 
 	// Create vertex shader.
-	if (!create_opengl_shader(context, VERTEX_SHADER_FILE, VERTEX_SHADER, &shader)) {
+	if (!create_opengl_shader(VERTEX_SHADER_FILE, VERTEX_SHADER, &shader)) {
 		printf("Failed to create vertex shader.\n");
 		return 0;
 	}
-	state->vertex_shader = shader;
+	opengl_state.vertex_shader = shader;
 	glAttachShader(program, shader);
 
 	// Create fragment shader.
-	if (!create_opengl_shader(context, FRAGMENT_SHADER_FILE, FRAGMENT_SHADER, &shader)) {
+	if (!create_opengl_shader(FRAGMENT_SHADER_FILE, FRAGMENT_SHADER, &shader)) {
 		printf("Failed to create fragment shader.\n");
 		return 0;
 	}
-	state->fragment_shader = shader;
+	opengl_state->fragment_shader = shader;
 	glAttachShader(program, shader);
 
 	// Bind attributes to variable names.
@@ -112,16 +107,12 @@ int initialize_opengl(renderer_context_t **out)
 /*
 * Deallocate OpenGL context.
 */
-void destroy_opengl(renderer_context_t *context)
+void destroy_opengl()
 {
-	opengl_context_t *state = (opengl_context_t*)context;
-
-	// Check if we even started initializing.
-	if (state == NULL) {
-		return;
+	// Unset program so we can detach.
+	if (state->program != 0) {
+		glUseProgram(0);
 	}
-
-	glUseProgram(0);
 
 	// Deallocate vertex shader.
 	if (state->vertex_shader != 0) {
@@ -139,18 +130,14 @@ void destroy_opengl(renderer_context_t *context)
 	if (state->program != 0) {
 		glDeleteProgram(state->program);
 	}
-	free(state);
 }
 
 /*
 * Create a renderer context for a given mesh.
 * Returns 1 and fills out struct on success, returns 0 otherwise.
 */
-int create_opengl_mesh_model(renderer_context_t *context,
-	const mesh_t *mesh,
-	renderer_model_t **out)
+int create_opengl_mesh_model(const mesh_t *mesh, renderer_model_t **out)
 {
-	(void)context;
 	GLuint vertex_buffer;
 	opengl_model_t *model = (opengl_model_t*)malloc(sizeof(opengl_model_t));
 	null_opengl_model(model);
@@ -169,11 +156,8 @@ int create_opengl_mesh_model(renderer_context_t *context,
 * Create a renderer context for a given indexed mesh.
 * Returns 1 and fills out struct on success, returns 0 otherwise.
 */
-int create_opengl_indexed_mesh_model(renderer_context_t *context,
-	const indexed_mesh_t *indexed_mesh,
-	renderer_model_t **out)
+int create_opengl_indexed_mesh_model(const indexed_mesh_t *indexed_mesh, renderer_model_t **out)
 {
-	(void)context;
 	GLuint vertex_array;
 	GLuint vertex_buffer;
 	GLuint index_buffer;
@@ -223,9 +207,8 @@ int create_opengl_indexed_mesh_model(renderer_context_t *context,
 /*
  * Destroy the OpenGL model.
  */
-void destroy_opengl_model(renderer_context_t *context, renderer_model_t *model)
+void destroy_opengl_model(renderer_model_t *model)
 {
-	(void)context;
 	opengl_model_t *opengl_model;
 
 	// Check if anything was actually allocated.
@@ -251,10 +234,11 @@ void destroy_opengl_model(renderer_context_t *context, renderer_model_t *model)
 /*
 * Render an OpenGL model.
 */
-void render_opengl_model(renderer_context_t *context, const renderer_model_t *model)
+void render_opengl_model(const renderer_model_t *model)
 {
-	(void)context;
-	const opengl_model_t  *opengl_model = (const opengl_model_t*)model;
+	const opengl_model_t *opengl_model = (const opengl_model_t*)model;
+
+	// Draw differently depending on indexed or not.
 	if (opengl_model->index_buffer != 0) {
 		glBindVertexArray(opengl_model->vertex_array);
 		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_UNSIGNED_INT, NULL);
@@ -270,12 +254,10 @@ void render_opengl_model(renderer_context_t *context, const renderer_model_t *mo
 * Returns 1 on success, 0 otherwise.
 * Fills out the output struct as soon as it can be deallocated.
 */
-int create_opengl_shader(renderer_context_t *context,
-	const char *filename,
+int create_opengl_shader(const char *filename,
 	renderer_shader_type_t type,
 	renderer_shader_t *out)
 {
-	(void)context;
 	GLuint shader;
 	GLchar *source;
 	int compile_status;
@@ -321,3 +303,4 @@ int create_opengl_shader(renderer_context_t *context,
 	*shader_ptr = shader;
 	return 1;
 }
+

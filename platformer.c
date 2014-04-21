@@ -129,7 +129,11 @@ void free_platformer_resources(game_context_t *context, renderer_t *renderer)
 	map_t *map;
 	polygon_t *polygon;
 
+	// Check if anything to destroy.
 	platformer = (platformer_context_t*)context;
+	if (platformer == NULL) {
+		return;
+	}
 	map = &platformer->map;
 
 	// Create models for the map polygons.

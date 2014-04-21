@@ -8,7 +8,6 @@
 // Private functions.
 static void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event);
 static key_code_t sdl_key_to_engine(SDL_Keycode sdl_code);
-static SDL_Keycode engine_key_to_sdl(key_code_t engine_code);
 
 /*
  * Base window initialization for easier cleanup.
@@ -36,8 +35,8 @@ int create_window(int width, int height, const char *title, window_t *out)
 
 	// Set GL version.
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
 
 	// Set buffering attributes.
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);

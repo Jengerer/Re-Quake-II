@@ -1,4 +1,4 @@
-#version 150
+#version 130
 in vec3 in_pos;
  
 // Pass vertex colour to next shader.

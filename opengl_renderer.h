@@ -24,21 +24,18 @@ void null_opengl_context(opengl_context_t *state);
 GLenum get_opengl_shader_type(renderer_shader_type_t type);
 
 // Filling out renderer interface.
-void initialize_opengl_interface(renderer_t *renderer);
+void initialize_opengl_interface();
 
 // Renderer interface functions.
-int initialize_opengl(renderer_context_t **context);
-void destroy_opengl(renderer_context_t *context);
-int create_opengl_mesh_model(renderer_context_t *context,
-	const mesh_t *mesh,
+int initialize_opengl();
+void destroy_opengl();
+int create_opengl_mesh_model(const mesh_t *mesh,
 	renderer_model_t **out);
-int create_opengl_indexed_mesh_model(renderer_context_t *context,
-	const indexed_mesh_t *indexed_mesh,
+int create_opengl_indexed_mesh_model(const indexed_mesh_t *indexed_mesh,
 	renderer_model_t **out);
-void destroy_opengl_model(renderer_context_t *context, renderer_model_t *model);
-void render_opengl_model(renderer_context_t *context, const renderer_model_t *model);
-int create_opengl_shader(renderer_context_t *context,
-	const char *filename,
+void destroy_opengl_model(renderer_model_t *model);
+void render_opengl_model(const renderer_model_t *model);
+int create_opengl_shader(const char *filename,
 	renderer_shader_type_t type,
 	renderer_shader_t *out);
 
