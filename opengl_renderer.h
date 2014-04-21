@@ -9,8 +9,6 @@
 // Structure representing OpenGL state.
 typedef struct opengl_context
 {
-	GLuint vertex_array;
-
 	// Shader members.
 	GLuint vertex_shader;
 	GLuint fragment_shader;

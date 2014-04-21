@@ -15,9 +15,10 @@ int main(int argc, char *argv[])
 
 	// Engine state.
 	engine_t engine;
-	engine_configuration_t *config = &engine.config;
+	null_engine(&engine);
 
 	// Create configuration for engine.
+	engine_configuration_t *config = &engine.config;
 	config->title = APPLICATION_TITLE;
 	config->width = APPLICATION_WIDTH;
 	config->height = APPLICATION_HEIGHT;
@@ -29,7 +30,6 @@ int main(int argc, char *argv[])
 	initialize_platformer_interface(&engine.game);
 
 	// Initialize engine.
-	null_engine(&engine);
 	if (!initialize_engine(&engine)) {
 		// Destroy partially initialized state.
 		destroy_engine(&engine);

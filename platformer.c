@@ -112,7 +112,7 @@ int load_platformer_resources(game_context_t *context, renderer_t *renderer)
 	// Create models for the map polygons.
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
-		if (!renderer->create_indexed_mesh_model(renderer->context, &polygon->indexed_mesh, &polygon->model)) {
+		if (!renderer->create_indexed_mesh_model(&polygon->indexed_mesh, &polygon->model)) {
 			return 0;
 		}
 	}
@@ -139,7 +139,7 @@ void free_platformer_resources(game_context_t *context, renderer_t *renderer)
 	// Create models for the map polygons.
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
-		renderer->destroy_model(&renderer->context, polygon->model);
+		renderer->destroy_model(polygon->model);
 	}
 }
 
@@ -157,7 +157,7 @@ int render_platformer(game_context_t *context, renderer_t *renderer)
 	map = &platformer->map;
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
-		renderer->render_model(&renderer->context, polygon->model);
+		renderer->render_model(polygon->model);
 	}
 	return 1;
 }

@@ -7,7 +7,7 @@
 #define FRAGMENT_SHADER_FILE "engine.frag"
 
 // Singleton reference for OpenGL renderer.
-opengl_state_t opengl_state;
+opengl_context_t opengl_context;
 
 /*
  * Create null OpenGL state for clean destruction.
@@ -43,7 +43,7 @@ GLenum get_opengl_shader_type(renderer_shader_type_t type)
 void initialize_opengl_interface(renderer_t *renderer)
 {
 	// Null OpenGL state here for clean up.
-	null_opengl_context(&opengl_state);
+	null_opengl_context(&opengl_context);
 
 	// Fill out interface functions.
 	renderer->initialize = &initialize_opengl;
@@ -71,14 +71,14 @@ int initialize_opengl()
 
 	// Create a shader program.
 	program = glCreateProgram();
-	opengl_state.program = program;
+	opengl_context.program = program;
 
 	// Create vertex shader.
 	if (!create_opengl_shader(VERTEX_SHADER_FILE, VERTEX_SHADER, &shader)) {
 		printf("Failed to create vertex shader.\n");
 		return 0;
 	}
-	opengl_state.vertex_shader = shader;
+	opengl_context.vertex_shader = shader;
 	glAttachShader(program, shader);
 
 	// Create fragment shader.
@@ -86,7 +86,7 @@ int initialize_opengl()
 		printf("Failed to create fragment shader.\n");
 		return 0;
 	}
-	opengl_state->fragment_shader = shader;
+	opengl_context.fragment_shader = shader;
 	glAttachShader(program, shader);
 
 	// Bind attributes to variable names.
@@ -109,26 +109,32 @@ int initialize_opengl()
 */
 void destroy_opengl()
 {
+	GLuint program;
+	GLuint shader;
+
 	// Unset program so we can detach.
-	if (state->program != 0) {
+	program = opengl_context.program;
+	if (program != 0) {
 		glUseProgram(0);
 	}
 
 	// Deallocate vertex shader.
-	if (state->vertex_shader != 0) {
-		glDetachShader(state->program, state->vertex_shader);
-		glDeleteShader(state->vertex_shader);
+	shader = opengl_context.vertex_shader;
+	if (shader != 0) {
+		glDetachShader(program, shader);
+		glDeleteShader(shader);
 	}
 
 	// Deallocate fragment shader.
-	if (state->fragment_shader != 0) {
-		glDetachShader(state->program, state->fragment_shader);
-		glDeleteShader(state->fragment_shader);
+	shader = opengl_context.fragment_shader;
+	if (shader != 0) {
+		glDetachShader(program, shader);
+		glDeleteShader(shader);
 	}
 
 	// Destroy the program.
-	if (state->program != 0) {
-		glDeleteProgram(state->program);
+	if (program != 0) {
+		glDeleteProgram(program);
 	}
 }
 
@@ -138,15 +144,37 @@ void destroy_opengl()
 */
 int create_opengl_mesh_model(const mesh_t *mesh, renderer_model_t **out)
 {
+	GLuint vertex_array;
 	GLuint vertex_buffer;
-	opengl_model_t *model = (opengl_model_t*)malloc(sizeof(opengl_model_t));
+	opengl_model_t *model;
+
+	// Allocate space for model.
+	model = (opengl_model_t*)malloc(sizeof(opengl_model_t));
+	if (model == NULL) {
+		return 0;
+	}
 	null_opengl_model(model);
 	*out = (renderer_model_t*)model;
+
+	// Allocate vertex array object and bind.
+	glGenVertexArrays(1, &vertex_array);
+	glBindVertexArray(vertex_array);
 
 	// Create vertex buffer.
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, mesh->num_vertices * sizeof(vector3d_t), mesh->vertices, GL_STATIC_DRAW);
+
+	// Set attributes.
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(mesh_vertex_t), 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(mesh_vertex_t), (GLvoid*)sizeof(vector3d_t));
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	// Unbind VAO.
+	glBindVertexArray(0);
+
+	model->vertex_array = vertex_array;
 	model->vertex_buffer = vertex_buffer;
 	model->array_size = mesh->num_vertices;
 	return 1;
@@ -196,7 +224,6 @@ int create_opengl_indexed_mesh_model(const indexed_mesh_t *indexed_mesh, rendere
 	// Unbind VAO.
 	glBindVertexArray(0);
 
-	// Create index buffer.
 	model->vertex_array = vertex_array;
 	model->vertex_buffer = vertex_buffer;
 	model->index_buffer = index_buffer;
@@ -209,6 +236,9 @@ int create_opengl_indexed_mesh_model(const indexed_mesh_t *indexed_mesh, rendere
  */
 void destroy_opengl_model(renderer_model_t *model)
 {
+	GLuint vertex_array;
+	GLuint vertex_buffer;
+	GLuint index_buffer;
 	opengl_model_t *opengl_model;
 
 	// Check if anything was actually allocated.
@@ -218,13 +248,21 @@ void destroy_opengl_model(renderer_model_t *model)
 	opengl_model = (opengl_model_t*)model;
 
 	// Free vertex buffer if there is one.
-	if (opengl_model->vertex_buffer != 0) {
-		glDeleteBuffers(1, &opengl_model->vertex_buffer);
+	vertex_buffer = opengl_model->vertex_buffer;
+	if (vertex_buffer != 0) {
+		glDeleteBuffers(1, &vertex_buffer);
 
 		// We won't have index buffer if we have no vertex buffer.
-		if (opengl_model->index_buffer != 0) {
-			glDeleteBuffers(1, &opengl_model->index_buffer);
+		index_buffer = opengl_model->index_buffer;
+		if (index_buffer != 0) {
+			glDeleteBuffers(1, &index_buffer);
 		}
+	}
+
+	// Destroy vertex array.
+	vertex_array = opengl_model->vertex_array;
+	if (vertex_array != 0) {
+		glDeleteVertexArrays(1, &vertex_array);
 	}
 	
 	// Free the struct.

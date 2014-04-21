@@ -32,7 +32,7 @@ int initialize_engine(engine_t *engine)
 	}
 
 	// Create renderer.
-	if (!renderer->initialize(&renderer->context)) {
+	if (!renderer->initialize()) {
 		// Clean up if partially initialized.
 		return 0;
 	}
@@ -67,7 +67,7 @@ void destroy_engine(engine_t *engine)
 	game->destroy(game->context);
 
 	// Destroy renderer.
-	renderer->destroy(renderer->context);
+	renderer->destroy();
 
 	// Destroy window.
 	window = &engine->window;
