@@ -1,5 +1,6 @@
 #include "opengl_renderer.h"
 #include "file.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,7 +8,7 @@
 #define FRAGMENT_SHADER_FILE "engine.frag"
 
 // Singleton reference for OpenGL renderer.
-opengl_context_t opengl;
+static opengl_context_t opengl;
 
 /*
  * Create null OpenGL state for clean destruction.
@@ -51,6 +52,7 @@ void initialize_opengl_interface(renderer_t *renderer)
 	renderer->create_mesh_model = &create_opengl_mesh_model;
 	renderer->create_indexed_mesh_model = &create_opengl_indexed_mesh_model;
 	renderer->destroy_model = &destroy_opengl_model;
+	renderer->clear_scene = &clear_opengl_scene;
 	renderer->render_model = &render_opengl_model;
 	renderer->create_shader = &create_opengl_shader;
 }
@@ -60,7 +62,7 @@ void initialize_opengl_interface(renderer_t *renderer)
 * The state is partially filled out as components are initialized
 * to allow for clean-up.
 */
-int initialize_opengl()
+int initialize_opengl(void)
 {
 	GLint shader;
 	GLint program;
@@ -100,14 +102,18 @@ int initialize_opengl()
 		printf("Failed to link shader program.\n");
 		return 0;
 	}
+	opengl.timer_location = glGetUniformLocation(program, "timer1");
 	glUseProgram(program);
+
+	// Set up GL rendering parameters.
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	return 1;
 }
 
 /*
 * Deallocate OpenGL context.
 */
-void destroy_opengl()
+void destroy_opengl(void)
 {
 	GLuint program;
 	GLuint shader;
@@ -270,11 +276,26 @@ void destroy_opengl_model(renderer_model_t *model)
 }
 
 /*
+ * Clear an OpenGL scene for a new frame.
+ */
+void clear_opengl_scene(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+/*
 * Render an OpenGL model.
 */
 void render_opengl_model(const renderer_model_t *model)
 {
 	const opengl_model_t *opengl_model = (const opengl_model_t*)model;
+
+	static float timer = 4.0f;
+	float polled;
+	timer += 0.01f;
+	glProgramUniform1f(opengl.program, opengl.timer_location, timer);
+	glGetUniformfv(opengl.program, opengl.timer_location, &polled);
+	printf("%f\n", polled);
 
 	// Draw differently depending on indexed or not.
 	if (opengl_model->index_buffer != 0) {

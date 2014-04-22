@@ -6,7 +6,7 @@
 #define PLATFORMER_NAME "Platformer Test"
 
 // Global platformer context.
-platformer_context_t platformer;
+static platformer_context_t platformer;
 
 /*
  * Null platformer context for safe destruction.
@@ -37,7 +37,7 @@ void initialize_platformer_interface(game_t *game)
 /*
  * Return name of the platformer game.
  */
-const char* get_platformer_name()
+const char* get_platformer_name(void)
 {
 	return PLATFORMER_NAME;
 }
@@ -47,7 +47,7 @@ const char* get_platformer_name()
  * Returns 1 on success, 0 otherwise.
  * Context is filled out as soon as there's something to clean.
  */
-int initialize_platformer()
+int initialize_platformer(void)
 {
 	player_t *player;
 	map_t *map;
@@ -72,10 +72,10 @@ int initialize_platformer()
 		printf("Failed to initialize polygon.\n");
 		return 0;
 	}
-	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 0.0f);
-	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 0.0f);
-	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 0.0f);
-	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 0.0f);
+	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 4.0f);
+	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 4.0f);
+	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 4.0f);
+	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 4.0f);
 	calculate_polygon_plane(polygon);
 	return 1;
 }
@@ -83,7 +83,7 @@ int initialize_platformer()
 /*
  * Destroy the platformer context.
  */
-void destroy_platformer()
+void destroy_platformer(void)
 {
 	// Destroy the map.
 	destroy_map(&platformer.map);
@@ -135,6 +135,9 @@ int render_platformer(renderer_t *renderer)
 	map_t *map;
 	polygon_t *polygon;
 
+	// Clear the scene.
+	renderer->clear_scene();
+
 	// Render the map polygons.
 	map = &platformer.map;
 	for (i = 0; i < map->num_polygons; ++i) {
@@ -171,4 +174,3 @@ void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 		printf("POS: (%f, %f, %f)\n", position->x, position->y, position->z);
 	}
 }
-

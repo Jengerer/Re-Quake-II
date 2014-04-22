@@ -98,7 +98,7 @@ int run_engine(engine_t *engine)
 			// Handle game input.
 			game->handle_keyboard(keyboard);
 
-			// Call game's render function.
+			// Render a new scene.
 			game->render(&engine->renderer);
 
 			// Swap the buffer.

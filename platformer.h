@@ -19,9 +19,9 @@ void null_platformer_context(platformer_context_t *context);
 void initialize_platformer_interface(game_t *game);
 
 // Game interface functions.
-const char* get_platformer_name();
-int initialize_platformer();
-void destroy_platformer();
+const char* get_platformer_name(void);
+int initialize_platformer(void);
+void destroy_platformer(void);
 int load_platformer_resources(renderer_t *renderer);
 void free_platformer_resources(renderer_t *renderer);
 int render_platformer(renderer_t *renderer);

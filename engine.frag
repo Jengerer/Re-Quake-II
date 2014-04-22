@@ -1,4 +1,4 @@
-#version 130
+#version 150
 in vec3 ex_colour;
 
 void main(void) {

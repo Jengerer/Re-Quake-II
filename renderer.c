@@ -11,6 +11,7 @@ void null_renderer(renderer_t *renderer)
 	renderer->create_mesh_model = NULL;
 	renderer->create_indexed_mesh_model = NULL;
 	renderer->destroy_model = NULL;
+	renderer->clear_scene = NULL;
 	renderer->render_model = NULL;
 	renderer->create_shader = NULL;
 }

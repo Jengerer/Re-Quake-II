@@ -13,6 +13,7 @@ typedef struct opengl_context
 	GLuint vertex_shader;
 	GLuint fragment_shader;
 	GLuint program;
+	GLint timer_location;
 } opengl_context_t;
 
 // OpenGL initialization/destruction.
@@ -25,13 +26,14 @@ GLenum get_opengl_shader_type(renderer_shader_type_t type);
 void initialize_opengl_interface();
 
 // Renderer interface functions.
-int initialize_opengl();
-void destroy_opengl();
+int initialize_opengl(void);
+void destroy_opengl(void);
 int create_opengl_mesh_model(const mesh_t *mesh,
 	renderer_model_t **out);
 int create_opengl_indexed_mesh_model(const indexed_mesh_t *indexed_mesh,
 	renderer_model_t **out);
 void destroy_opengl_model(renderer_model_t *model);
+void clear_opengl_scene(void);
 void render_opengl_model(const renderer_model_t *model);
 int create_opengl_shader(const char *filename,
 	renderer_shader_type_t type,

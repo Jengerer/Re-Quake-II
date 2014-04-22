@@ -5,9 +5,9 @@
 #include "keyboard_manager.h"
 
 // Function types for game interface.
-typedef const char* (*game_get_name_fn)();
-typedef int (*game_initialize_fn)();
-typedef void (*game_destroy_fn)();
+typedef const char* (*game_get_name_fn)(void);
+typedef int (*game_initialize_fn)(void);
+typedef void (*game_destroy_fn)(void);
 typedef int (*game_load_resources_fn)(renderer_t *renderer);
 typedef void (*game_free_resources_fn)(renderer_t *renderer);
 typedef int (*game_render_fn)(renderer_t *renderer);
