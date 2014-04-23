@@ -123,6 +123,8 @@ void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event)
 	key_state_t old_state;
 	key_state_t new_state;
 
+	printf("%d %d\n", event->type, event->state);
+
 	// Convert code to engine code.
 	sdl_code = event->keysym.sym;
 	key_code = sdl_key_to_engine(sdl_code);

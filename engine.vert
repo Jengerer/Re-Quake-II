@@ -1,6 +1,8 @@
 #version 150
 
 uniform float timer1;
+in vec3 in_vertex;
+in vec2 texture;
 out vec3 ex_colour;
 
 // Create perspective projection matrix.
@@ -35,8 +37,7 @@ mat4 scale(
  
 // Pass vertex colour to next shader.
 void main(void) {
-	gl_Position = view_frustrum(radians(45.0), 4.0 / 3.0, 1.0, 100.0)
-		* scale(timer1, timer1, timer1)
-		* gl_Vertex;
+	gl_Position = view_frustrum(radians(45.0), 4.0 / 3.0, 1.0, 100.0) *
+		vec4((in_vertex.xy * sin(timer1)), in_vertex.z, 1.0);
     ex_colour = vec3(1.0, 1.0, 1.0);
 }

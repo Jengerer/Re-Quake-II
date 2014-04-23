@@ -291,11 +291,8 @@ void render_opengl_model(const renderer_model_t *model)
 	const opengl_model_t *opengl_model = (const opengl_model_t*)model;
 
 	static float timer = 4.0f;
-	float polled;
-	timer += 0.01f;
+	timer += 0.0001f;
 	glProgramUniform1f(opengl.program, opengl.timer_location, timer);
-	glGetUniformfv(opengl.program, opengl.timer_location, &polled);
-	printf("%f\n", polled);
 
 	// Draw differently depending on indexed or not.
 	if (opengl_model->index_buffer != 0) {
