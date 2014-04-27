@@ -37,6 +37,6 @@ mat4 scale(
 // Pass vertex colour to next shader.
 void main(void) {
 	gl_Position = view_frustrum(radians(45.0), 4.0 / 3.0, 1.0, 100.0) *
-		vec4(in_vertex, 0.0);
+		vec4(in_vertex, 1.0);
     //ex_colour = vec3(in_texture, 1.0);
 }
