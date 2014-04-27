@@ -7,7 +7,7 @@
 #define PLATFORMER_NAME "Platformer Test"
 
 // Rendering parameters.
-#define NUM_PERSPECTIVE_SHADER_ATTRIBUTES 2
+#define NUM_PERSPECTIVE_SHADER_ATTRIBUTES 1
 #define VERTEX_SHADER_FILE "engine.vert"
 #define FRAGMENT_SHADER_FILE "engine.frag"
 
@@ -16,8 +16,8 @@ static platformer_context_t platformer;
 
 // Renderer shader schemas.
 const renderer_shader_attribute_t mesh_attributes[NUM_PERSPECTIVE_SHADER_ATTRIBUTES] = {
-	{"in_vertex", ATTRIBUTE_VERTEX_3D},
-	{"in_texture", ATTRIBUTE_TEXTURE_COORDINATE}
+	{"in_vertex", ATTRIBUTE_VERTEX_3D}//,
+	//{"in_texture", ATTRIBUTE_TEXTURE_COORDINATE}
 };
 
 // Initialize schema.
@@ -92,14 +92,14 @@ int initialize_platformer(void)
 		printf("Failed to initialize polygon.\n");
 		return 0;
 	}
-	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 4.0f);
-	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 4.0f);
-	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 4.0f);
-	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 4.0f);
-	vector2d_set(&mesh->vertices[0].texture, 0.0f, 0.0f);
+	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 0.0f);
+	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 0.0f);
+	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 0.0f);
+	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 0.0f);
+	/*vector2d_set(&mesh->vertices[0].texture, 0.0f, 0.0f);
 	vector2d_set(&mesh->vertices[1].texture, 1.0f, 0.0f);
 	vector2d_set(&mesh->vertices[2].texture, 1.0f, 1.0f);
-	vector2d_set(&mesh->vertices[3].texture, 0.0f, 1.0f);
+	vector2d_set(&mesh->vertices[3].texture, 0.0f, 1.0f);*/
 	calculate_polygon_plane(polygon);
 	return 1;
 }

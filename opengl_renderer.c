@@ -72,7 +72,11 @@ void initialize_opengl_interface(renderer_t *renderer)
 int initialize_opengl(void)
 {
 	// Initialize GLEW.
-	glewInit();
+	GLenum error = glewInit();
+	if (error != GLEW_OK) {
+		printf("Unable to initialize GLEW: %s.\n", glewGetErrorString(error));
+		return 0;
+	}
 
 	// Set up GL rendering parameters.
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -414,8 +418,8 @@ void set_opengl_shader_program(renderer_shader_program_t *program)
 		attribute_size = get_attribute_size(attribute_type);
 		attribute_location = glGetAttribLocation(gl_program, attribute->name);
 		num_floats = get_num_attribute_floats(attribute_type);
-		glVertexAttribPointer(attribute_location, num_floats, GL_FLOAT, GL_FALSE, vertex_size, (GLvoid*)attribute_offset);
 		glEnableVertexAttribArray(attribute_location);
+		glVertexAttribPointer(attribute_location, num_floats, GL_FLOAT, GL_FALSE, 0, (GLvoid*)attribute_offset);
 		attribute_offset += attribute_size;
 	}
 }
