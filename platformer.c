@@ -92,10 +92,10 @@ int initialize_platformer(void)
 		printf("Failed to initialize polygon.\n");
 		return 0;
 	}
-	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 0.0f);
-	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 0.0f);
-	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 0.0f);
-	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 0.0f);
+	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 4.0f);
+	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 4.0f);
+	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 4.0f);
+	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 4.0f);
 	/*vector2d_set(&mesh->vertices[0].texture, 0.0f, 0.0f);
 	vector2d_set(&mesh->vertices[1].texture, 1.0f, 0.0f);
 	vector2d_set(&mesh->vertices[2].texture, 1.0f, 1.0f);
