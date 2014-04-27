@@ -9,11 +9,7 @@
 // Structure representing OpenGL state.
 typedef struct opengl_context
 {
-	// Shader members.
-	GLuint vertex_shader;
-	GLuint fragment_shader;
-	GLuint program;
-	GLint timer_location;
+	int placeholder;
 } opengl_context_t;
 
 // OpenGL initialization/destruction.
@@ -28,15 +24,28 @@ void initialize_opengl_interface();
 // Renderer interface functions.
 int initialize_opengl(void);
 void destroy_opengl(void);
-int create_opengl_mesh_model(const mesh_t *mesh,
-	renderer_model_t **out);
-int create_opengl_indexed_mesh_model(const indexed_mesh_t *indexed_mesh,
-	renderer_model_t **out);
+int create_opengl_model(const void *vertex_data,
+	int num_vertices,
+	const renderer_shader_schema_t *schema,
+	renderer_model_t *out);
+int create_opengl_indexed_model(const void *vertex_data,
+	int num_vertices,
+	const unsigned int *index_data,
+	int num_indices,
+	const renderer_shader_schema_t *schema,
+	renderer_model_t *out);
 void destroy_opengl_model(renderer_model_t *model);
 void clear_opengl_scene(void);
 void render_opengl_model(const renderer_model_t *model);
+int create_opengl_shader_program(renderer_shader_program_t *out, const renderer_shader_schema_t *schema);
+void destroy_opengl_shader_program(renderer_shader_program_t *program);
 int create_opengl_shader(const char *filename,
 	renderer_shader_type_t type,
 	renderer_shader_t *out);
+void destroy_opengl_shader(renderer_shader_t *shader, renderer_shader_program_t *program);
+void link_opengl_shader(renderer_shader_t shader, renderer_shader_program_t *program);
+int compile_opengl_shader_program(renderer_shader_program_t *program);
+void set_opengl_shader_program(renderer_shader_program_t *program);
+void unset_opengl_shader_program(void);
 
 #endif // _OPENGL_RENDERER_H_

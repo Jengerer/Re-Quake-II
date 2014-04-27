@@ -10,6 +10,11 @@ typedef struct platformer_context
 {
 	player_t player;
 	map_t map;
+
+	// Rendering parameters.
+	renderer_shader_t vertex_shader;
+	renderer_shader_t fragment_shader;
+	renderer_shader_program_t program;
 } platformer_context_t;
 
 // Platformer context initialization.

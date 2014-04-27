@@ -19,7 +19,7 @@ typedef struct polygon
 	plane_t plane;
 
 	// Render context for this polygon.
-	renderer_model_t *model;
+	renderer_model_t model;
 } polygon_t;
 
 // Polygon initialization/destruction.
