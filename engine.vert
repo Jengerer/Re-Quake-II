@@ -1,8 +1,8 @@
 #version 120
 
-//attribute vec3 in_vertex;
-//attribute vec2 in_texture;
-//out vec3 ex_colour;
+attribute vec3 in_vertex;
+attribute vec2 in_texture;
+out vec3 ex_colour;
 
 // Create perspective projection matrix.
 mat4 view_frustrum(
@@ -36,6 +36,7 @@ mat4 scale(
  
 // Pass vertex colour to next shader.
 void main(void) {
-	gl_Position = gl_Vertex;
-    //ex_colour = vec3(in_texture, 1.0);
+	gl_Position = view_frustrum(radians(45.0), 4.0 / 3.0, 1.0, 100.0) *
+		vec4(in_vertex, 0.0);
+    ex_colour = vec3(in_texture, 1.0);
 }
