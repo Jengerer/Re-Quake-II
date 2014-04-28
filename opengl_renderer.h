@@ -9,7 +9,7 @@
 // Structure representing OpenGL state.
 typedef struct opengl_context
 {
-	int placeholder;
+	GLuint active_program;
 } opengl_context_t;
 
 // OpenGL initialization/destruction.

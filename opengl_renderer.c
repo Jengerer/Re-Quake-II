@@ -17,7 +17,7 @@ static int get_num_attribute_floats(const renderer_shader_attribute_type_t attri
  */
 void null_opengl_context(opengl_context_t *state)
 {
-	(void)state;
+	state->active_program = 0;
 }
 
 /*
@@ -138,9 +138,20 @@ int create_opengl_indexed_model(const void *vertex_data,
 	renderer_model_t *out)
 {
 	int vertex_size;
+	GLuint vertex_array;
 	GLuint vertex_buffer;
 	GLuint index_buffer;
 	opengl_model_t *model;
+
+	// Attribute setup.
+	int i;
+	int attribute_size;
+	int num_attributes;
+	int num_floats;
+	GLint location;
+	GLchar *offset;
+	const renderer_shader_attribute_t *attribute;
+	renderer_shader_attribute_type_t type;
 
 	// Allocate space for model.
 	model = (opengl_model_t*)malloc(sizeof(opengl_model_t));
@@ -151,6 +162,11 @@ int create_opengl_indexed_model(const void *vertex_data,
 
 	// Fill out allocated space.
 	out->reference.as_pointer = model;
+
+	// Create VAO.
+	glGenVertexArrays(1, &vertex_array);
+	glBindVertexArray(vertex_array);
+	model->vertex_array = vertex_array;
 
 	// Create vertex buffer.
 	glGenBuffers(1, &vertex_buffer);
@@ -167,9 +183,22 @@ int create_opengl_indexed_model(const void *vertex_data,
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(unsigned int), index_data, GL_STATIC_DRAW);
 
-	// Unbind buffers.
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	// Set up attributes.
+	offset = 0;
+	num_attributes = schema->num_attributes;
+	for (i = 0; i < num_attributes; ++i) {
+		attribute = &schema->attributes[i];
+		type = attribute->type;
+		attribute_size = get_attribute_size(type);
+		num_floats = get_num_attribute_floats(type);
+		location = glGetAttribLocation(opengl.active_program, attribute->name);
+		glVertexAttribPointer(location, num_floats, GL_FLOAT, GL_FALSE, vertex_size, offset);
+		glEnableVertexAttribArray(location);
+		offset += attribute_size;
+	}
+
+	// Unbind array.
+	glBindVertexArray(0);
 
 	model->vertex_buffer = vertex_buffer;
 	model->index_buffer = index_buffer;
@@ -185,7 +214,7 @@ void destroy_opengl_model(renderer_model_t *model)
 	GLuint vertex_buffer;
 	GLuint index_buffer;
 	opengl_model_t *opengl_model;
-
+	
 	// Check if anything was actually allocated.
 	opengl_model = (opengl_model_t*)model->reference.as_pointer;
 	if (opengl_model == NULL) {
@@ -225,14 +254,15 @@ void render_opengl_model(const renderer_model_t *model)
 
 	// Draw differently depending on indexed or not.
 	if (opengl_model->index_buffer != 0) {
-		glBindBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opengl_model->index_buffer);
+		glBindVertexArray(opengl_model->vertex_array);
 		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_UNSIGNED_INT, NULL);
 	}
 	else if (opengl_model->vertex_buffer != 0) {
-		glBindBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer);
+		glBindVertexArray(opengl_model->vertex_array);
 		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_FLOAT, NULL);
 	}
+
+	glBindVertexArray(0);
 }
 
 /*
@@ -392,36 +422,10 @@ int compile_opengl_shader_program(renderer_shader_program_t *program)
  */
 void set_opengl_shader_program(renderer_shader_program_t *program)
 {
-	int i;
-	int vertex_size;
-	int attribute_offset;
-	int attribute_size;
-	int attribute_location;
-	int num_floats;
-	int num_attributes;
-	const renderer_shader_schema_t *schema;
-	const renderer_shader_attribute_t *attribute;
-	renderer_shader_attribute_type_t attribute_type;
-
 	// Set program as active.
 	GLuint gl_program = (GLuint)program->reference.as_integer;
 	glUseProgram(gl_program);
-	
-	// Set up attributes for active shader.
-	schema = program->schema;
-	attribute_offset = 0;
-	num_attributes = schema->num_attributes;
-	vertex_size = get_vertex_size(schema);
-	for (i = 0; i < num_attributes; ++i) {
-		attribute = &schema->attributes[i];
-		attribute_type = attribute->type;
-		attribute_size = get_attribute_size(attribute_type);
-		attribute_location = glGetAttribLocation(gl_program, attribute->name);
-		num_floats = get_num_attribute_floats(attribute_type);
-		glEnableVertexAttribArray(attribute_location);
-		glVertexAttribPointer(attribute_location, num_floats, GL_FLOAT, GL_FALSE, 0, (GLvoid*)attribute_offset);
-		attribute_offset += attribute_size;
-	}
+	opengl.active_program = gl_program;
 }
 
 /*

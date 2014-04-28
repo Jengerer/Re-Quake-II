@@ -8,7 +8,7 @@
 typedef struct mesh_vertex
 {
 	vector3d_t position;
-	//vector2d_t texture;
+	vector2d_t texture;
 } mesh_vertex_t;
 
 // Generic mesh of vertices.

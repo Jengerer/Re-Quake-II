@@ -6,6 +6,7 @@
 // Representation of a mesh for rendering in OpenGL.
 typedef struct opengl_model
 {
+	GLuint vertex_array;
 	GLuint vertex_buffer;
 	GLuint index_buffer;
 	GLuint array_size;
