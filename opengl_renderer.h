@@ -2,50 +2,102 @@
 #define _OPENGL_RENDERER_H_
 
 #include <GL/glew.h>
-#include "opengl_model.h"
 #include "polygon.h"
 #include "renderer.h"
 
-// Structure representing OpenGL state.
+// Structure representing global OpenGL state.
 typedef struct opengl_context
 {
 	GLuint active_program;
 } opengl_context_t;
 
-// OpenGL initialization/destruction.
-void null_opengl_context(opengl_context_t *state);
+// Structure for representing an OpenGL shader.
+typedef struct opengl_shader
+{
+	GLuint handle;
+	char is_linked;
+} opengl_shader_t;
+
+// Structure for representing an OpenGL shader program.
+typedef struct opengl_program
+{
+	GLuint handle;
+} opengl_program_t;
+
+// Structure for representing an OpenGL shader attribute.
+typedef struct opengl_shader_attribute
+{
+	GLuint index;
+	GLint num_floats;
+} opengl_shader_attribute_t;
+
+// Structure for representing an OpenGL shader schema.
+typedef struct opengl_shader_schema
+{
+	GLsizei vertex_size;
+	opengl_shader_attribute_t *attributes;
+	int num_attributes;
+} opengl_shader_schema_t;
+
+// Representation of a mesh for rendering in OpenGL.
+typedef struct opengl_model
+{
+	GLuint vertex_buffer;
+	GLuint index_buffer;
+	GLuint array_size;
+} opengl_model_t;
+
+// Structure nulling functions.
+void opengl_null_context(opengl_context_t *state);
+void opengl_null_shader(opengl_shader_t *shader);
+void opengl_null_program(opengl_program_t *program);
+void opengl_null_shader_schema(opengl_shader_schema_t *schema);
+void opengl_null_model(opengl_model_t *model);
 
 // Renderer/OpenGL conversions.
 GLenum get_opengl_shader_type(renderer_shader_type_t type);
 
 // Filling out renderer interface.
-void initialize_opengl_interface();
+void initialize_opengl_interface(renderer_t *renderer);
 
-// Renderer interface functions.
-int initialize_opengl(void);
-void destroy_opengl(void);
-int create_opengl_model(const void *vertex_data,
+// Renderer initialization and clean-up.
+int opengl_initialize(void);
+void opengl_destroy(void);
+
+// Renderer shader functions.
+int opengl_create_shader(const char *filename,
+	renderer_shader_type_t type,
+	renderer_shader_t *out);
+void opengl_destroy_shader(renderer_shader_t *shader, renderer_program_t program);
+
+// Renderer shader program functions.
+int opengl_create_program(renderer_program_t *out);
+void opengl_destroy_program(renderer_program_t *out);
+void opengl_link_shader(renderer_shader_t shader, renderer_program_t program);
+int opengl_compile_program(renderer_program_t program);
+void opengl_set_program(renderer_program_t program);
+void opengl_unset_program(void);
+int opengl_create_shader_schema(renderer_program_t program,
+	renderer_shader_attribute_t *attributes,
+	int num_attributes,
+	renderer_shader_schema_t *out);
+void opengl_destroy_shader_schema(renderer_shader_schema_t *schema);
+
+// Renderer model functions.
+int opengl_create_model(const void *vertex_data,
 	int num_vertices,
-	const renderer_shader_schema_t *schema,
+	renderer_shader_schema_t schema,
 	renderer_model_t *out);
-int create_opengl_indexed_model(const void *vertex_data,
+int opengl_create_indexed_model(const void *vertex_data,
 	int num_vertices,
 	const unsigned int *index_data,
 	int num_indices,
-	const renderer_shader_schema_t *schema,
+	renderer_shader_schema_t schema,
 	renderer_model_t *out);
-void destroy_opengl_model(renderer_model_t *model);
-void clear_opengl_scene(void);
-void render_opengl_model(const renderer_model_t *model);
-int create_opengl_shader_program(renderer_shader_program_t *out, const renderer_shader_schema_t *schema);
-void destroy_opengl_shader_program(renderer_shader_program_t *program);
-int create_opengl_shader(const char *filename,
-	renderer_shader_type_t type,
-	renderer_shader_t *out);
-void destroy_opengl_shader(renderer_shader_t *shader, renderer_shader_program_t *program);
-void link_opengl_shader(renderer_shader_t shader, renderer_shader_program_t *program);
-int compile_opengl_shader_program(renderer_shader_program_t *program);
-void set_opengl_shader_program(renderer_shader_program_t *program);
-void unset_opengl_shader_program(void);
+void opengl_destroy_model(renderer_model_t *model);
+void opengl_draw_model(renderer_model_t model, renderer_shader_schema_t schema);
+
+// Renderer drawing functions.
+void opengl_clear_scene(void);
 
 #endif // _OPENGL_RENDERER_H_

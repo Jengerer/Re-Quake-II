@@ -48,9 +48,6 @@
     <ClCompile Include="indexed_mesh.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="opengl_model.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="engine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -107,9 +104,6 @@
     <ClInclude Include="world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="opengl_model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -144,6 +138,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -88,7 +88,6 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="mesh.c" />
-    <ClCompile Include="opengl_model.c" />
     <ClCompile Include="opengl_renderer.c" />
     <ClCompile Include="platformer.c" />
     <ClCompile Include="player.c" />
@@ -110,8 +109,8 @@
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="keyboard_manager.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="memory_manager.h" />
     <ClInclude Include="mesh.h" />
-    <ClInclude Include="opengl_model.h" />
     <ClInclude Include="opengl_renderer.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="platformer.h" />
