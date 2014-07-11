@@ -130,7 +130,7 @@ int load_platformer_resources(renderer_t *renderer)
 	}
 
 	// Set up shader for models.
-	renderer->set_shader_program(&platformer.program);
+	renderer->set_shader_program(platformer.program);
 
 	// Create models for the map polygons.
 	map = &platformer.map;
@@ -179,7 +179,7 @@ int render_platformer(renderer_t *renderer)
 
 	// Clear the scene.
 	renderer->clear_scene();
-	renderer->set_shader_program(&platformer.program);
+	renderer->set_shader_program(platformer.program);
 
 	// Render the map polygons.
 	map = &platformer.map;

@@ -1,7 +1,7 @@
 #version 150
 
-attribute vec3 in_vertex;
-attribute vec2 in_texture;
+in vec3 in_vertex;
+in vec2 in_texture;
 out vec3 ex_colour;
 
 // Create perspective projection matrix.
