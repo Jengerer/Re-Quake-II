@@ -72,6 +72,9 @@
     <ClCompile Include="renderer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="memory_manager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">

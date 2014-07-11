@@ -8,9 +8,7 @@
 static opengl_context_t opengl;
 
 // Private functions.
-static int get_vertex_size(const renderer_shader_schema_t *schema);
-static int get_attribute_size(const renderer_variable_type_t attribute_type);
-static int get_num_attribute_floats(const renderer_variable_type_t attribute_type);
+static int get_num_variable_floats(const renderer_variable_type_t variable_type);
 
 /* Null OpenGL state to uninitialized state. */
 void opengl_null_context(opengl_context_t *state)
@@ -70,7 +68,7 @@ GLenum get_opengl_shader_type(renderer_shader_type_t type)
 void initialize_opengl_interface(renderer_t *renderer)
 {
 	// Null OpenGL state here for clean up.
-	null_opengl_context(&opengl);
+	opengl_null_context(&opengl);
 
 	// Fill out interface functions.
 	// Initialization and destruction.
@@ -167,22 +165,22 @@ int opengl_create_shader(const char *filename,
 	}
 	glShaderSource(shader_handle, 1, (const GLchar**)&source, 0);
 	glCompileShader(shader_handle);
-	free(source);
+	memory_free(source);
 	shader->handle = shader_handle;
 
 	// Print error/warning.
-	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_length);
+	glGetShaderiv(shader_handle, GL_INFO_LOG_LENGTH, &log_length);
 	if (log_length != 0) {
-		log = (char*)malloc(log_length * sizeof(GLchar));
+		log = (char*)memory_allocate(log_length * sizeof(GLchar));
 		if (log != NULL) {
-			glGetShaderInfoLog(shader, log_length, &log_length, log);
+			glGetShaderInfoLog(shader_handle, log_length, &log_length, log);
 			fprintf(stderr, "%s\n", log);
-			free(log);
+			memory_free(log);
 		}
 	}
 
 	// Check that it compiled properly.
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_status);
+	glGetShaderiv(shader_handle, GL_COMPILE_STATUS, &compile_status);
 	if (compile_status == GL_FALSE) {
 		printf("Failed to compile shader '%s'.\n", filename);
 		return 0;
@@ -194,7 +192,7 @@ int opengl_create_shader(const char *filename,
 * Destroy OpenGL shader.
 * Takes in the program that it's attached to.
 */
-void destroy_opengl_shader(renderer_shader_t *shader, renderer_program_t program)
+void opengl_destroy_shader(renderer_shader_t *shader, renderer_program_t program)
 {
 	opengl_shader_t *opengl_shader;
 	opengl_program_t *opengl_program;
@@ -217,26 +215,215 @@ void destroy_opengl_shader(renderer_shader_t *shader, renderer_program_t program
 	}
 }
 
+/* Create an OpenGL shader program. */
+int opengl_create_program(renderer_program_t *out)
+{
+	opengl_program_t *opengl_program;
+	GLuint program_handle;
+
+	// Allocate space for the structure.
+	opengl_program = (opengl_program_t*)memory_allocate(sizeof(opengl_program_t));
+	if (opengl_program == NULL) {
+		return 0;
+	}
+	opengl_null_program(opengl_program);
+	out->buffer = opengl_program;
+
+	// Create OpenGL program handle.
+	program_handle = glCreateProgram();
+	if (program_handle == 0) {
+		return 0;
+	}
+	opengl_program->handle = program_handle;
+	return 1;
+}
+
+/* Clean up OpenGL shader program. */
+void opengl_destroy_program(renderer_program_t *out)
+{
+	opengl_program_t *opengl_program;
+	GLuint program_handle;
+
+	// Check if anything to free.
+	opengl_program = out->buffer;
+	if (opengl_program != NULL) {
+		// Free the program handle if there is one.
+		program_handle = opengl_program->handle;
+		if (program_handle != 0) {
+			glDeleteProgram(program_handle);
+		}
+
+		// Free the structure.
+		memory_free(opengl_program);
+		renderer_null_program(out);
+	}
+}
+
+/* Link a shader to a program. */
+void opengl_link_shader(renderer_shader_t shader, renderer_program_t program)
+{
+	opengl_shader_t *opengl_shader;
+	opengl_program_t *opengl_program;
+	GLuint shader_handle;
+	GLuint program_handle;
+
+	// Link the shader to the program.
+	opengl_shader = (opengl_shader_t*)shader.buffer;
+	opengl_program = (opengl_program_t*)program.buffer;
+	shader_handle = opengl_shader->handle;
+	program_handle = opengl_program->handle;
+	glAttachShader(program_handle, shader_handle);
+}
+
+/*
+ * Link and compile an OpenGL shader program.
+ */
+int opengl_compile_program(renderer_program_t program)
+{
+	opengl_program_t *opengl_program;
+	char *log;
+	GLint log_length;
+	GLint link_status;
+	GLuint program_handle;
+
+	// Link program and check status.
+	opengl_program = (opengl_program_t*)program.buffer;
+	program_handle = opengl_program->handle;
+	glLinkProgram(program_handle);
+
+	// Print error/warning.
+	glGetProgramiv(program_handle, GL_INFO_LOG_LENGTH, &log_length);
+	if (log_length != 0) {
+		log = (char*)memory_allocate(log_length * sizeof(GLchar));
+		if (log != NULL) {
+			glGetProgramInfoLog(program_handle, log_length, &log_length, log);
+			fprintf(stderr, "%s\n", log);
+			memory_free(log);
+		}
+	}
+
+	glGetProgramiv(program_handle, GL_LINK_STATUS, &link_status);
+	if (link_status == GL_FALSE) {
+		printf("Failed to link shader program.\n");
+		return 0;
+	}
+	return 1;
+}
+
+/*
+ * Set the program to be used in rendering.
+ */
+void opengl_set_program(renderer_program_t program)
+{
+	opengl_program_t *opengl_program;
+	GLuint program_handle;
+
+	// Set program as active.
+	opengl_program = (opengl_program_t*)program.buffer;
+	program_handle = opengl_program->handle;
+	glUseProgram(program_handle);
+	opengl.active_program = program_handle;
+}
+
+/*
+ * Unset a program from rendering.
+ */
+void opengl_unset_program(void)
+{
+	glUseProgram(0);
+}
+
+/* Generate an OpenGL shader schema for generic renderer schema. */
+int opengl_create_shader_schema(
+	renderer_program_t program,
+	const renderer_shader_attribute_t *attributes,
+	int num_attributes,
+	renderer_shader_schema_t *out)
+{
+	opengl_program_t *opengl_program;
+	opengl_shader_schema_t *opengl_schema;
+	opengl_shader_attribute_t *opengl_attributes;
+	opengl_shader_attribute_t *current_attribute;
+	const renderer_shader_attribute_t *attribute;
+	GLuint program_handle;
+	GLint location;
+	GLsizei vertex_size;
+	GLint num_floats;
+	int i;
+
+	// Allocate space for OpenGL schema and attributes.
+	opengl_schema = (opengl_shader_schema_t*)memory_allocate(sizeof(opengl_shader_schema_t));
+	if (opengl_schema == NULL) {
+		return 0;
+	}
+	opengl_null_shader_schema(opengl_schema);
+	out->buffer = opengl_schema;
+
+	// Allocate space for the attributes.
+	opengl_attributes = (opengl_shader_attribute_t*)memory_array_allocate(sizeof(opengl_shader_attribute_t), num_attributes);
+	if (opengl_attributes == NULL) {
+		return 0;
+	}
+	opengl_schema->attributes = opengl_attributes;
+	opengl_schema->num_attributes = num_attributes;
+
+	// Fill out attribute information.
+	vertex_size = 0;
+	opengl_program = (opengl_program_t*)program.buffer;
+	program_handle = opengl_program->handle;
+	for (i = 0; i < num_attributes; ++i) {
+		attribute = &attributes[i];
+		current_attribute = &opengl_attributes[i];
+
+		// Get attribute data and fill out data.
+		num_floats = get_num_variable_floats(attribute->type);
+		location = glGetAttribLocation(program_handle, attribute->name);
+		current_attribute->location = location;
+		current_attribute->num_floats = num_floats;
+		current_attribute->offset = (GLchar*)vertex_size;
+		vertex_size += num_floats * sizeof(float);
+	}
+	opengl_schema->vertex_size = vertex_size;
+	return 1;
+}
+
+/* Destroy the OpenGL schema structure. */
+void opengl_destroy_shader_schema(renderer_shader_schema_t *schema)
+{
+	opengl_shader_schema_t *opengl_schema;
+
+	// Check if anything to clean up.
+	opengl_schema = (opengl_shader_schema_t*)schema->buffer;
+	if (opengl_schema != NULL) {
+		// Check if we should free attributes.
+		if (opengl_schema->num_attributes != 0) {
+			memory_free(opengl_schema->attributes);
+		}
+		memory_free(opengl_schema);
+		renderer_null_shader_schema(schema);
+	}
+}
+
 /*
 * Create a renderer context for a given mesh.
 * Returns 1 and fills out struct on success, returns 0 otherwise.
 */
-int create_opengl_model(const void *vertex_data,
+int opengl_create_model(const void *vertex_data,
 	int num_vertices,
 	renderer_shader_schema_t schema,
 	renderer_model_t *out)
 {
-	int vertex_size;
-	GLuint vertex_buffer;
 	opengl_model_t *model;
 	opengl_shader_schema_t *opengl_schema;
+	int vertex_size;
+	GLuint vertex_buffer;
 
 	// Allocate space for model.
 	model = (opengl_model_t*)memory_allocate(sizeof(opengl_model_t));
 	if (model == NULL) {
 		return 0;
 	}
-	null_opengl_model(model);
+	opengl_null_model(model);
 	out->buffer = model;
 
 	// Create vertex buffer.
@@ -247,6 +434,7 @@ int create_opengl_model(const void *vertex_data,
 	vertex_size = opengl_schema->vertex_size;
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, num_vertices * vertex_size, vertex_data, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Fill out handles and size.
 	model->vertex_buffer = vertex_buffer;
@@ -258,66 +446,56 @@ int create_opengl_model(const void *vertex_data,
 * Create a renderer context for a given indexed mesh.
 * Returns 1 and fills out struct on success, returns 0 otherwise.
 */
-int create_opengl_indexed_model(const void *vertex_data,
+int opengl_create_indexed_model(const void *vertex_data,
 	int num_vertices,
 	const unsigned int *index_data,
 	int num_indices,
-	const renderer_shader_schema_t *schema,
+	renderer_shader_schema_t schema,
 	renderer_model_t *out)
 {
+	opengl_model_t *opengl_model;
+	opengl_shader_schema_t *opengl_schema;
 	int vertex_size;
-	GLuint vertex_array;
 	GLuint vertex_buffer;
 	GLuint index_buffer;
-	opengl_model_t *model;
-
-	// Attribute setup.
-	int i;
-	int attribute_size;
-	int num_attributes;
-	int num_floats;
-	GLint location;
-	GLchar *offset;
-	const renderer_shader_attribute_t *attribute;
-	renderer_variable_type_t type;
 
 	// Allocate space for model.
-	model = (opengl_model_t*)memory_allocate(sizeof(opengl_model_t));
-	if (model == NULL) {
+	opengl_model = (opengl_model_t*)memory_allocate(sizeof(opengl_model_t));
+	if (opengl_model == NULL) {
 		return 0;
 	}
-	null_opengl_model(model);
-	out->buffer = model;
+	opengl_null_model(opengl_model);
+	out->buffer = opengl_model;
 
 	// Create vertex buffer.
 	glGenBuffers(1, &vertex_buffer);
+	opengl_model->vertex_buffer = vertex_buffer;
 
 	// Load buffer data.
-	vertex_size = get_vertex_size(schema);
+	opengl_schema = (opengl_shader_schema_t*)schema.buffer;
+	vertex_size = opengl_schema->vertex_size;
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, num_vertices * vertex_size, vertex_data, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Create index buffer.
 	glGenBuffers(1, &index_buffer);
+	opengl_model->index_buffer = index_buffer;
 
 	// Load index data.
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(unsigned int), index_data, GL_STATIC_DRAW);
-
-	// Unbind array.
-	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	// Fill out handles and size.
-	model->vertex_buffer = vertex_buffer;
-	model->index_buffer = index_buffer;
-	model->array_size = num_indices;
+	opengl_model->array_size = num_indices;
 	return 1;
 }
 
 /*
  * Destroy the OpenGL model.
  */
-void destroy_opengl_model(renderer_model_t *model)
+void opengl_destroy_model(renderer_model_t *model)
 {
 	GLuint vertex_buffer;
 	GLuint index_buffer;
@@ -325,25 +503,23 @@ void destroy_opengl_model(renderer_model_t *model)
 	
 	// Check if anything was actually allocated.
 	opengl_model = (opengl_model_t*)model->buffer;
-	if (opengl_model == NULL) {
-		return;
-	}
+	if (opengl_model != NULL) {
+		// Free vertex buffer if there is one.
+		vertex_buffer = opengl_model->vertex_buffer;
+		if (vertex_buffer != 0) {
+			glDeleteBuffers(1, &vertex_buffer);
 
-	// Free vertex buffer if there is one.
-	vertex_buffer = opengl_model->vertex_buffer;
-	if (vertex_buffer != 0) {
-		glDeleteBuffers(1, &vertex_buffer);
-
-		// We won't have index buffer if we have no vertex buffer.
-		index_buffer = opengl_model->index_buffer;
-		if (index_buffer != 0) {
-			glDeleteBuffers(1, &index_buffer);
+			// We won't have index buffer if we have no vertex buffer.
+			index_buffer = opengl_model->index_buffer;
+			if (index_buffer != 0) {
+				glDeleteBuffers(1, &index_buffer);
+			}
 		}
-	}
 	
-	// Free the struct.
-	memory_free(opengl_model);
-	renderer_null_model(model);
+		// Free the struct.
+		memory_free(opengl_model);
+		renderer_null_model(model);
+	}
 }
 
 /*
@@ -357,141 +533,64 @@ void opengl_clear_scene(void)
 /*
 * Render an OpenGL model.
 */
-void render_opengl_model(const renderer_model_t *model)
+void opengl_draw_model(renderer_model_t model, renderer_shader_schema_t schema)
 {
-	const opengl_model_t *opengl_model = (const opengl_model_t*)model->reference.as_pointer;
+	const opengl_model_t *opengl_model;
+	const opengl_shader_schema_t *opengl_schema;
+	const opengl_shader_attribute_t *opengl_attribute;
+	GLint location;
+	GLsizei vertex_size;
+	int i;
+	int num_attributes;
 
 	// Draw differently depending on indexed or not.
+	opengl_model = (const opengl_model_t*)model.buffer;
+	opengl_schema = (const opengl_shader_schema_t*)schema.buffer;
+	vertex_size = opengl_schema->vertex_size;
 	if (opengl_model->index_buffer != 0) {
-		glBindVertexBuffer(GL_VERTEX_ARRAY, opengl_model->vertex_buffer,);
-		glBindVertexBuffer(GL_INDEX_ARRAY, opengl_model->index_buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opengl_model->index_buffer);
+
+		// Set up attributes from schema.
+		num_attributes = opengl_schema->num_attributes;
+		for (i = 0; i < num_attributes; ++i) {
+			opengl_attribute = &opengl_schema->attributes[i];
+			location = opengl_attribute->location;
+			glEnableVertexAttribArray(location);
+			glVertexAttribPointer(
+				location,
+				opengl_attribute->num_floats,
+				GL_FLOAT,
+				GL_FALSE,
+				vertex_size,
+				opengl_attribute->offset);
+		}
 		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_UNSIGNED_INT, NULL);
 	}
 	else if (opengl_model->vertex_buffer != 0) {
-		glBindVertexArray(opengl_model->vertex_array);
-		glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_FLOAT, NULL);
+		//glBindVertexBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer, )
+		//glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_FLOAT, NULL);
 	}
 
 	glBindVertexArray(0);
 }
 
 /*
- * Link a shader to a program.
+ * Get number of floats that are in a given (non-matrix) variable type.
  */
-void link_opengl_shader(renderer_shader_t shader, renderer_shader_program_t *program)
-{
-	GLuint gl_shader;
-	GLuint gl_program;
-
-	// Link the shader to the program.
-	gl_shader = (GLuint)shader.reference.as_integer;
-	gl_program = (GLuint)program->reference.as_integer;
-	glAttachShader(gl_program, gl_shader);
-}
-
-/*
- * Link and compile an OpenGL shader program.
- */
-int compile_opengl_shader_program(renderer_shader_program_t *program)
-{
-	char *log;
-	GLint log_length;
-	GLint link_status;
-	GLuint gl_program;
-
-	// Link program and check status.
-	gl_program = (GLuint)program->reference.as_integer;
-	glLinkProgram(gl_program);
-
-	// Print error/warning.
-	glGetProgramiv(gl_program, GL_INFO_LOG_LENGTH, &log_length);
-	if (log_length != 0) {
-		log = (char*)malloc(log_length * sizeof(GLchar));
-		if (log != NULL) {
-			glGetProgramInfoLog(gl_program, log_length, &log_length, log);
-			fprintf(stderr, "%s\n", log);
-			free(log);
-		}
-	}
-
-	glGetProgramiv(gl_program, GL_LINK_STATUS, &link_status);
-	if (link_status == GL_FALSE) {
-		printf("Failed to link shader program.\n");
-		return 0;
-	}
-	return 1;
-}
-
-/*
- * Set the program to be used in rendering.
- */
-void set_opengl_shader_program(renderer_program_t program)
-{
-	// Set program as active.
-	
-	glUseProgram(gl_program);
-	opengl.active_program = gl_program;
-}
-
-/*
- * Unset a program from rendering.
- */
-void unset_opengl_shader_program(void)
-{
-	glUseProgram(0);
-}
-
-/*
- * Get the size of a full vertex by its schema.
- */
-static int get_vertex_size(const renderer_shader_schema_t *schema)
-{
-	int i;
-	int size;
-	int num_attributes;
-	const renderer_shader_attribute_t *attribute;
-	renderer_shader_attribute_type_t attribute_type;
-
-	// Sum up all attribute sizes.
-	size = 0;
-	num_attributes = schema->num_attributes;
-	for (i = 0; i < num_attributes; ++i) {
-		attribute = &schema->attributes[i];
-		attribute_type = attribute->type;
-		size += get_attribute_size(attribute_type);
-	}
-	return size;
-}
-
-/*
- * Get the total size of a given attribute type.
- */
-static int get_attribute_size(const renderer_shader_attribute_type_t attribute_type)
-{
-	return sizeof(float) * get_num_attribute_floats(attribute_type);
-}
-
-/*
- * Get number of floats that are in a given attribute type.
- */
-static int get_num_attribute_floats(const renderer_shader_attribute_type_t attribute_type)
+static int get_num_variable_floats(const renderer_variable_type_t variable_type)
 {
 	// Get number of floats per attribute type.
-	switch (attribute_type)
+	switch (variable_type)
 	{
-	case ATTRIBUTE_FLOAT:
+	case VARIABLE_FLOAT:
 		return 1;
-	
-	case ATTRIBUTE_TEXTURE_COORDINATE:
-	case ATTRIBUTE_VERTEX_2D:
+	case VARIABLE_VERTEX_2D:
 		return 2;
-
-	case ATTRIBUTE_VERTEX_3D:
+	case VARIABLE_VERTEX_3D:
 		return 3;
-
-	case ATTRIBUTE_VERTEX_4D:
+	case VARIABLE_VERTEX_4D:
 		return 4;
-
 	default:
 		break;
 	}

@@ -87,6 +87,7 @@
     <ClCompile Include="keyboard_manager.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
+    <ClCompile Include="memory_manager.c" />
     <ClCompile Include="mesh.c" />
     <ClCompile Include="opengl_renderer.c" />
     <ClCompile Include="platformer.c" />

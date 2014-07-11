@@ -16,13 +16,8 @@ static platformer_context_t platformer;
 
 // Renderer shader schemas.
 const renderer_shader_attribute_t mesh_attributes[NUM_PERSPECTIVE_SHADER_ATTRIBUTES] = {
-	{"in_vertex", ATTRIBUTE_VERTEX_3D},
-	{"in_texture", ATTRIBUTE_TEXTURE_COORDINATE}
-};
-
-// Initialize schema.
-const renderer_shader_schema_t mesh_schema = {
-	mesh_attributes, NUM_PERSPECTIVE_SHADER_ATTRIBUTES
+	{"in_vertex", VARIABLE_VERTEX_3D},
+	{"in_texture", VARIABLE_VERTEX_2D}
 };
 
 // Private functions.
@@ -130,7 +125,7 @@ int load_platformer_resources(renderer_t *renderer)
 	}
 
 	// Set up shader for models.
-	renderer->set_shader_program(platformer.program);
+	renderer->set_program(platformer.program);
 
 	// Create models for the map polygons.
 	map = &platformer.map;
@@ -142,7 +137,7 @@ int load_platformer_resources(renderer_t *renderer)
 			mesh->num_vertices,
 			indexed_mesh->indices,
 			indexed_mesh->num_indices,
-			&mesh_schema,
+			platformer.schema,
 			&polygon->model))
 		{
 			return 0;
@@ -179,13 +174,13 @@ int render_platformer(renderer_t *renderer)
 
 	// Clear the scene.
 	renderer->clear_scene();
-	renderer->set_shader_program(platformer.program);
+	renderer->set_program(platformer.program);
 
 	// Render the map polygons.
 	map = &platformer.map;
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
-		renderer->render_model(&polygon->model);
+		renderer->draw_model(polygon->model, platformer.schema);
 	}
 	return 1;
 }
@@ -225,13 +220,14 @@ int initialize_shaders(renderer_t *renderer)
 {
 	renderer_shader_t vertex_shader;
 	renderer_shader_t fragment_shader;
-	renderer_shader_program_t *shader_program;
+	renderer_program_t program;
+	renderer_shader_schema_t schema;
 
 	// Load the perspective shader.
-	shader_program = &platformer.program;
-	if (!renderer->create_shader_program(shader_program, &mesh_schema)) {
+	if (!renderer->create_program(&program)) {
 		return 0;
 	}
+	platformer.program = program;
 
 	// Create vertex and fragment shaders.
 	if (!renderer->create_shader(VERTEX_SHADER_FILE, VERTEX_SHADER, &vertex_shader)) {
@@ -244,11 +240,17 @@ int initialize_shaders(renderer_t *renderer)
 	platformer.fragment_shader = fragment_shader;
 
 	// Link both shaders.
-	renderer->link_shader(vertex_shader, shader_program);
-	renderer->link_shader(fragment_shader, shader_program);
-	if (!renderer->compile_shader_program(shader_program)) {
+	renderer->link_shader(vertex_shader, program);
+	renderer->link_shader(fragment_shader, program);
+	if (!renderer->compile_program(program)) {
 		return 0;
 	}
+
+	// Get the renderer schema from the program.
+	if (!renderer->create_shader_schema(program, mesh_attributes, NUM_PERSPECTIVE_SHADER_ATTRIBUTES, &schema)) {
+		return 0;
+	}
+	platformer.schema = schema;
 	
 	return 1;
 }

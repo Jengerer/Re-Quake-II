@@ -71,9 +71,7 @@ typedef void (*renderer_destroy_shader_fn)(
 	renderer_program_t program);
 
 // Creating a full shader program.
-typedef int (*renderer_create_program_fn)(
-	renderer_shader_schema_t schema,
-	renderer_program_t *out);
+typedef int (*renderer_create_program_fn)(renderer_program_t *out);
 
 // Destroying a full shader program.
 typedef void (*renderer_destroy_program_fn)(renderer_program_t *program);
@@ -95,12 +93,12 @@ typedef void (*renderer_unset_program_fn)(void);
 // Generating a renderer-specific shader schema reference.
 typedef int(*renderer_create_shader_schema_fn)(
 	renderer_program_t program,
-	renderer_shader_attribute_t *attributes,
+	const renderer_shader_attribute_t *attributes,
 	int num_attributes,
 	renderer_shader_schema_t *out);
 
 // Clean up renderer-specific shader schema.
-typedef void(*renderer_destroy_shader_schema_fn)(renderer_shader_schema_t schema);
+typedef void(*renderer_destroy_shader_schema_fn)(renderer_shader_schema_t *schema);
 
 // Creating an unindexed renderable model.
 typedef int (*renderer_create_model_fn)(
@@ -162,9 +160,9 @@ typedef struct renderer
 
 // Null renderer state for cleanup.
 void renderer_null_interface(renderer_t *renderer);
-void renderer_null_shader(renderer_shader_t *renderer);
+void renderer_null_shader(renderer_shader_t *shader);
 void renderer_null_program(renderer_program_t *program);
 void renderer_null_shader_schema(renderer_shader_schema_t *schema);
-void renderer_null_model(renderer_shader_schema_t *schema);
+void renderer_null_model(renderer_model_t *schema);
 
 #endif // _RENDERER_H_ 

@@ -27,8 +27,9 @@ typedef struct opengl_program
 // Structure for representing an OpenGL shader attribute.
 typedef struct opengl_shader_attribute
 {
-	GLuint index;
+	GLint location;
 	GLint num_floats;
+	GLchar* offset;
 } opengl_shader_attribute_t;
 
 // Structure for representing an OpenGL shader schema.
@@ -77,18 +78,21 @@ void opengl_link_shader(renderer_shader_t shader, renderer_program_t program);
 int opengl_compile_program(renderer_program_t program);
 void opengl_set_program(renderer_program_t program);
 void opengl_unset_program(void);
-int opengl_create_shader_schema(renderer_program_t program,
-	renderer_shader_attribute_t *attributes,
+int opengl_create_shader_schema(
+	renderer_program_t program,
+	const renderer_shader_attribute_t *attributes,
 	int num_attributes,
 	renderer_shader_schema_t *out);
 void opengl_destroy_shader_schema(renderer_shader_schema_t *schema);
 
 // Renderer model functions.
-int opengl_create_model(const void *vertex_data,
+int opengl_create_model(
+	const void *vertex_data,
 	int num_vertices,
 	renderer_shader_schema_t schema,
 	renderer_model_t *out);
-int opengl_create_indexed_model(const void *vertex_data,
+int opengl_create_indexed_model(
+	const void *vertex_data,
 	int num_vertices,
 	const unsigned int *index_data,
 	int num_indices,

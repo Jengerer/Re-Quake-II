@@ -14,7 +14,8 @@ typedef struct platformer_context
 	// Rendering parameters.
 	renderer_shader_t vertex_shader;
 	renderer_shader_t fragment_shader;
-	renderer_shader_program_t program;
+	renderer_program_t program;
+	renderer_shader_schema_t schema;
 } platformer_context_t;
 
 // Platformer context initialization.

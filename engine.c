@@ -7,7 +7,7 @@
 void null_engine(engine_t *engine)
 {
 	null_window(&engine->window);
-	null_renderer(&engine->renderer);
+	renderer_null_interface(&engine->renderer);
 	null_game(&engine->game);
 }
 
