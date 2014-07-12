@@ -33,7 +33,7 @@ void null_platformer_context(platformer_context_t *context)
 	renderer_null_shader(&context->fragment_shader);
 	renderer_null_program(&context->program);
 	renderer_null_shader_schema(&context->schema);
-	renderer_null_uniform(&context->offset);
+	renderer_null_uniform(&context->projection);
 }
 
 /*
@@ -123,6 +123,7 @@ int load_platformer_resources(renderer_t *renderer)
 	polygon_t *polygon;
 	indexed_mesh_t *indexed_mesh;
 	mesh_t *mesh;
+	matrix4x4_t perspective_matrix;
 
 	// Initialize shaders.
 	if (!initialize_shaders(renderer)) {
@@ -149,10 +150,14 @@ int load_platformer_resources(renderer_t *renderer)
 		}
 	}
 
-	// Get the location to the uniform variable.
-	if (!renderer->get_uniform(platformer.program, "offset", &platformer.offset)) {
+	// Get the location to the projection matrix.
+	if (!renderer->get_uniform(platformer.program, "projection", &platformer.projection)) {
 		return 0;
 	}
+
+	// Generate projection matrix.
+	matrix4x4_perspective(4.0f / 3.0f, 75.0f, 1.0f, 1000.0f, &perspective_matrix);
+	renderer->set_uniform_matrix4x4(platformer.projection, &perspective_matrix);
 	return 1;
 }
 
@@ -181,17 +186,14 @@ int render_platformer(renderer_t *renderer)
 	int i;
 	map_t *map;
 	polygon_t *polygon;
-	matrix4x4_t transform;
+	matrix4x4_t perspective_matrix;
 
 	// Clear the scene.
 	renderer->clear_scene();
 	renderer->set_program(platformer.program);
 
-	// Update position.
-	platformer.player.entity.origin.z += 0.0001f;
-	matrix4x4_identity(&transform);
-	matrix4x4_translation(&platformer.player.entity.origin, &transform);
-	renderer->set_uniform_matrix4x4(platformer.offset, &transform);
+	matrix4x4_perspective(4.0f / 3.0f, 45.0f, 1.0f, 1000.0f, &perspective_matrix);
+	renderer->set_uniform_matrix4x4(platformer.projection, &perspective_matrix);
 
 	// Render the map polygons.
 	map = &platformer.map;
