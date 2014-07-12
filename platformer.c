@@ -29,6 +29,11 @@ int initialize_shaders(renderer_t *renderer);
 void null_platformer_context(platformer_context_t *context)
 {
 	null_map(&context->map);
+	renderer_null_shader(&context->vertex_shader);
+	renderer_null_shader(&context->fragment_shader);
+	renderer_null_program(&context->program);
+	renderer_null_shader_schema(&context->schema);
+	renderer_null_uniform(&context->offset);
 }
 
 /*
@@ -143,6 +148,11 @@ int load_platformer_resources(renderer_t *renderer)
 			return 0;
 		}
 	}
+
+	// Get the location to the uniform variable.
+	if (!renderer->get_uniform(platformer.program, "offset", &platformer.offset)) {
+		return 0;
+	}
 	return 1;
 }
 
@@ -176,6 +186,10 @@ int render_platformer(renderer_t *renderer)
 	renderer->clear_scene();
 	renderer->set_program(platformer.program);
 
+	// Update position.
+	platformer.player.entity.origin.z += 0.0001f;
+	renderer->set_uniform_vector3d(platformer.offset, &platformer.player.entity.origin);
+
 	// Render the map polygons.
 	map = &platformer.map;
 	for (i = 0; i < map->num_polygons; ++i) {
@@ -198,7 +212,7 @@ void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 
 	player = &platformer.player;
 	move = &player->move;
-	player_entity = &player->entity.base;
+	player_entity = &player->entity;
 	position = &player_entity->origin;
 	velocity = &move->move_direction;
 	

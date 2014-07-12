@@ -40,6 +40,12 @@ typedef struct opengl_shader_schema
 	int num_attributes;
 } opengl_shader_schema_t;
 
+// Structure for representing a uniform variable.
+typedef struct opengl_uniform
+{
+	GLint location;
+} opengl_uniform_t;
+
 // Representation of a mesh for rendering in OpenGL.
 typedef struct opengl_model
 {
@@ -53,6 +59,7 @@ void opengl_null_context(opengl_context_t *state);
 void opengl_null_shader(opengl_shader_t *shader);
 void opengl_null_program(opengl_program_t *program);
 void opengl_null_shader_schema(opengl_shader_schema_t *schema);
+void opengl_null_uniform(opengl_uniform_t *uniform);
 void opengl_null_model(opengl_model_t *model);
 
 // Renderer/OpenGL conversions.
@@ -78,12 +85,22 @@ void opengl_link_shader(renderer_shader_t shader, renderer_program_t program);
 int opengl_compile_program(renderer_program_t program);
 void opengl_set_program(renderer_program_t program);
 void opengl_unset_program(void);
+
+// Shader attribute and variable functions.
 int opengl_create_shader_schema(
 	renderer_program_t program,
 	const renderer_shader_attribute_t *attributes,
 	int num_attributes,
 	renderer_shader_schema_t *out);
 void opengl_destroy_shader_schema(renderer_shader_schema_t *schema);
+int opengl_get_uniform(
+	renderer_program_t program,
+	const char *name,
+	renderer_uniform_t *out);
+void opengl_destroy_uniform(renderer_uniform_t *out);
+void opengl_set_uniform_vector3d(
+	renderer_uniform_t uniform,
+	const vector3d_t *vector);
 
 // Renderer model functions.
 int opengl_create_model(

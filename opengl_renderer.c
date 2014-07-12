@@ -36,6 +36,12 @@ void opengl_null_shader_schema(opengl_shader_schema_t *schema)
 	schema->num_attributes = 0;
 }
 
+/* Null OpenGL uniform variable structure. */
+void opengl_null_uniform(opengl_uniform_t *uniform)
+{
+	uniform->location = -1;
+}
+
 /* Null OpenGL model. */
 void opengl_null_model(opengl_model_t *model)
 {
@@ -88,6 +94,12 @@ void initialize_opengl_interface(renderer_t *renderer)
 	renderer->compile_program = &opengl_compile_program;
 	renderer->set_program = &opengl_set_program;
 	renderer->unset_program = &opengl_unset_program;
+
+	// Shader attribute and variable functions.
+	renderer->create_shader_schema = &opengl_create_shader_schema;
+	renderer->destroy_shader_schema = &opengl_destroy_shader_schema;
+	renderer->get_uniform = &opengl_get_uniform;
+	renderer->set_uniform_vector3d = &opengl_set_uniform_vector3d;
 
 	// Model functions.
 	renderer->create_model = &opengl_create_model;
@@ -402,6 +414,63 @@ void opengl_destroy_shader_schema(renderer_shader_schema_t *schema)
 		memory_free(opengl_schema);
 		renderer_null_shader_schema(schema);
 	}
+}
+
+/* Return a handle to an OpenGL shader uniform variable. */
+int opengl_get_uniform(
+	renderer_program_t program,
+	const char *name,
+	renderer_uniform_t *out)
+{
+	opengl_program_t *opengl_program;
+	opengl_uniform_t *opengl_uniform;
+	GLuint program_handle;
+	GLint location;
+
+	// Allocate space for the structure.
+	opengl_uniform = (opengl_uniform_t*)memory_allocate(sizeof(opengl_uniform_t));
+	if (opengl_uniform == NULL) {
+		return 0;
+	}
+	opengl_null_uniform(opengl_uniform);
+	out->buffer = opengl_uniform;
+
+	// Find the variable location.
+	opengl_program = (opengl_program_t*)program.buffer;
+	program_handle = opengl_program->handle;
+	location = glGetUniformLocation(program_handle, (const GLchar*)name);
+	if (location == -1) {
+		return 0;
+	}
+	opengl_uniform->location = location;
+	return 1;
+}
+
+/* Free a handle to a uniform variable. */
+void opengl_destroy_uniform(renderer_uniform_t *out)
+{
+	opengl_uniform_t *opengl_uniform;
+
+	// Check if there's anything to destroy.
+	opengl_uniform = (opengl_uniform_t*)out->buffer;
+	if (opengl_uniform != NULL) {
+		memory_free(opengl_uniform);
+		renderer_null_uniform(out);
+	}
+}
+
+/* Set the value of a 3D vector uniform variable. */
+void opengl_set_uniform_vector3d(
+	renderer_uniform_t uniform,
+	const vector3d_t *vector)
+{
+	opengl_uniform_t *opengl_uniform;
+	GLint location;
+
+	// Vector class is just three floats, so should be compatible with float[3].
+	opengl_uniform = (opengl_uniform_t*)uniform.buffer;
+	location = opengl_uniform->location;
+	glUniform3fv(location, 1, (const GLfloat*)vector);
 }
 
 /*

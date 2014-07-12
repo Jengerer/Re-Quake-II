@@ -21,8 +21,13 @@ void renderer_null_interface(renderer_t *renderer)
 	renderer->compile_program = NULL;
 	renderer->set_program = NULL;
 	renderer->unset_program = NULL;
+
+	// Shader attribute and variable functions.
 	renderer->create_shader_schema = NULL;
 	renderer->destroy_shader_schema = NULL;
+	renderer->get_uniform = NULL;
+	renderer->destroy_uniform = NULL;
+	renderer->set_uniform_vector3d = NULL;
 
 	// Model functions.
 	renderer->create_model = NULL;
@@ -50,6 +55,12 @@ void renderer_null_program(renderer_program_t *program)
 void renderer_null_shader_schema(renderer_shader_schema_t *schema)
 {
 	schema->buffer = NULL;
+}
+
+/* Null pointer to uniform variable. */
+void renderer_null_uniform(renderer_uniform_t *uniform)
+{
+	uniform->buffer = NULL;
 }
 
 /* Null pointer to model for safe cleanup. */

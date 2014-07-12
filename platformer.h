@@ -16,6 +16,7 @@ typedef struct platformer_context
 	renderer_shader_t fragment_shader;
 	renderer_program_t program;
 	renderer_shader_schema_t schema;
+	renderer_uniform_t offset;
 } platformer_context_t;
 
 // Platformer context initialization.

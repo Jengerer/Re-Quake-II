@@ -1,7 +1,7 @@
 #ifndef _RENDERER_H_
 #define _RENDERER_H_
 
-#include "indexed_mesh.h"
+#include "vector3d.h"
 
 // Generic shader types.
 typedef enum renderer_shader_type
@@ -53,6 +53,12 @@ typedef struct renderer_program
 	void *buffer;
 } renderer_program_t;
 
+// Shader uniform variable.
+typedef struct renderer_uniform
+{
+	void *buffer;
+} renderer_uniform_t;
+
 // Renderer self-initialization function.
 typedef int (*renderer_initialize_fn)(void);
 
@@ -91,14 +97,28 @@ typedef void (*renderer_set_program_fn)(renderer_program_t program);
 typedef void (*renderer_unset_program_fn)(void);
 
 // Generating a renderer-specific shader schema reference.
-typedef int(*renderer_create_shader_schema_fn)(
+typedef int (*renderer_create_shader_schema_fn)(
 	renderer_program_t program,
 	const renderer_shader_attribute_t *attributes,
 	int num_attributes,
 	renderer_shader_schema_t *out);
 
 // Clean up renderer-specific shader schema.
-typedef void(*renderer_destroy_shader_schema_fn)(renderer_shader_schema_t *schema);
+typedef void (*renderer_destroy_shader_schema_fn)(renderer_shader_schema_t *schema);
+
+// Gets a handle to a shader uniform variable.
+typedef int (*renderer_get_uniform_fn)(
+	renderer_program_t program,
+	const char *name,
+	renderer_uniform_t *out);
+
+// Destroy a handle to a shader uniform variable.
+typedef void (*renderer_destroy_uniform_fn)(renderer_uniform_t *out);
+
+// Sets a 3D vector value for a uniform value.
+typedef void (*renderer_set_uniform_vector3d_fn)(
+	renderer_uniform_t uniform,
+	const vector3d_t *vector);
 
 // Creating an unindexed renderable model.
 typedef int (*renderer_create_model_fn)(
@@ -145,8 +165,13 @@ typedef struct renderer
 	renderer_compile_program_fn compile_program;
 	renderer_set_program_fn set_program;
 	renderer_unset_program_fn unset_program;
+
+	// Shader attribute and variable functions.
 	renderer_create_shader_schema_fn create_shader_schema;
 	renderer_destroy_shader_schema_fn destroy_shader_schema;
+	renderer_get_uniform_fn get_uniform;
+	renderer_destroy_uniform_fn destroy_uniform;
+	renderer_set_uniform_vector3d_fn set_uniform_vector3d;
 
 	// Model functions.
 	renderer_create_model_fn create_model;
@@ -163,6 +188,7 @@ void renderer_null_interface(renderer_t *renderer);
 void renderer_null_shader(renderer_shader_t *shader);
 void renderer_null_program(renderer_program_t *program);
 void renderer_null_shader_schema(renderer_shader_schema_t *schema);
+void renderer_null_uniform(renderer_uniform_t *uniform);
 void renderer_null_model(renderer_model_t *schema);
 
 #endif // _RENDERER_H_ 
