@@ -1,7 +1,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-#include "aabb_entity.h"
+#include "entity.h"
 #include "player_move.h"
 #include "vector3d.h"
 
@@ -9,9 +9,9 @@
 typedef struct player
 {
 	// Player entity.
-	aabb_entity_t entity;
+	entity_t entity;
 
-	// Player movement cparameters.
+	// Player movement parameters.
 	player_move_t move;
 } player_t;
 

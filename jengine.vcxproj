@@ -87,6 +87,8 @@
     <ClCompile Include="keyboard_manager.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
+    <ClCompile Include="matrix3x3.c" />
+    <ClCompile Include="matrix4x4.c" />
     <ClCompile Include="memory_manager.c" />
     <ClCompile Include="mesh.c" />
     <ClCompile Include="opengl_renderer.c" />
@@ -97,6 +99,7 @@
     <ClCompile Include="renderer.c" />
     <ClCompile Include="vector2d.c" />
     <ClCompile Include="vector3d.c" />
+    <ClCompile Include="vector4d.c" />
     <ClCompile Include="window.c" />
     <ClCompile Include="world.c" />
   </ItemGroup>
@@ -110,6 +113,8 @@
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="keyboard_manager.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="matrix3x3.h" />
+    <ClInclude Include="matrix4x4.h" />
     <ClInclude Include="memory_manager.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="opengl_renderer.h" />
@@ -122,6 +127,7 @@
     <ClInclude Include="trace.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="vector3d.h" />
+    <ClInclude Include="vector4d.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>

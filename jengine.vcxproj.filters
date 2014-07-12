@@ -75,6 +75,15 @@
     <ClCompile Include="memory_manager.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vector4d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix3x3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix4x4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -144,6 +153,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="memory_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector4d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix3x3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix4x4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
