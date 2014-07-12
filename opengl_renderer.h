@@ -101,6 +101,15 @@ void opengl_destroy_uniform(renderer_uniform_t *out);
 void opengl_set_uniform_vector3d(
 	renderer_uniform_t uniform,
 	const vector3d_t *vector);
+void opengl_set_uniform_vector4d(
+	renderer_uniform_t uniform,
+	const vector4d_t *vector);
+void opengl_set_uniform_matrix3x3(
+	renderer_uniform_t uniform,
+	const matrix3x3_t *matrix);
+void opengl_set_uniform_matrix4x4(
+	renderer_uniform_t uniform,
+	const matrix4x4_t *matrix);
 
 // Renderer model functions.
 int opengl_create_model(

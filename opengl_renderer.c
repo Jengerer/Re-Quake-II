@@ -100,6 +100,9 @@ void initialize_opengl_interface(renderer_t *renderer)
 	renderer->destroy_shader_schema = &opengl_destroy_shader_schema;
 	renderer->get_uniform = &opengl_get_uniform;
 	renderer->set_uniform_vector3d = &opengl_set_uniform_vector3d;
+	renderer->set_uniform_vector4d = &opengl_set_uniform_vector4d;
+	renderer->set_uniform_matrix3x3 = &opengl_set_uniform_matrix3x3;
+	renderer->set_uniform_matrix4x4 = &opengl_set_uniform_matrix4x4;
 
 	// Model functions.
 	renderer->create_model = &opengl_create_model;
@@ -467,10 +470,52 @@ void opengl_set_uniform_vector3d(
 	opengl_uniform_t *opengl_uniform;
 	GLint location;
 
-	// Vector class is just three floats, so should be compatible with float[3].
+	// Vector struct is just three floats, so should be compatible with float[3].
 	opengl_uniform = (opengl_uniform_t*)uniform.buffer;
 	location = opengl_uniform->location;
 	glUniform3fv(location, 1, (const GLfloat*)vector);
+}
+
+/* Set the value of a 4D vector uniform variable. */
+void opengl_set_uniform_vector4d(
+	renderer_uniform_t uniform,
+	const vector4d_t *vector)
+{
+	opengl_uniform_t *opengl_uniform;
+	GLint location;
+
+	// Vector struct is just four floats, so should be compatible with float[4].
+	opengl_uniform = (opengl_uniform_t*)uniform.buffer;
+	location = opengl_uniform->location;
+	glUniform4fv(location, 1, (const GLfloat*)vector);
+}
+
+/* Set the value of a 3x3 matrix uniform variable. */
+void opengl_set_uniform_matrix3x3(
+	renderer_uniform_t uniform,
+	const matrix3x3_t *matrix)
+{
+	opengl_uniform_t *opengl_uniform;
+	GLint location;
+
+	// Copy the matrix array to the shader variable.
+	opengl_uniform = (opengl_uniform_t*)uniform.buffer;
+	location = opengl_uniform->location;
+	glUniformMatrix3fv(location, 1, GL_TRUE, (const GLfloat*)matrix->array);
+}
+
+/* Set the value of a 4x4 matrix uniform variable. */
+void opengl_set_uniform_matrix4x4(
+	renderer_uniform_t uniform,
+	const matrix4x4_t *matrix)
+{
+	opengl_uniform_t *opengl_uniform;
+	GLint location;
+
+	// Copy the matrix array to the shader variable.
+	opengl_uniform = (opengl_uniform_t*)uniform.buffer;
+	location = opengl_uniform->location;
+	glUniformMatrix4fv(location, 1, GL_TRUE, (const GLfloat*)matrix->array);
 }
 
 /*

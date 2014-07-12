@@ -26,9 +26,9 @@ void matrix4x4_identity(matrix4x4_t *out)
 /* Fill the last column with a translation vector. */
 void matrix4x4_translation(const vector3d_t *translation, matrix4x4_t *out)
 {
-	out->array[3][0] = translation->x;
-	out->array[3][1] = translation->y;
-	out->array[3][2] = translation->z;
+	out->array[0][3] = translation->x;
+	out->array[1][3] = translation->y;
+	out->array[2][3] = translation->z;
 }
 
 /*

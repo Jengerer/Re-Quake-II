@@ -2,6 +2,9 @@
 #define _RENDERER_H_
 
 #include "vector3d.h"
+#include "vector4d.h"
+#include "matrix3x3.h"
+#include "matrix4x4.h"
 
 // Generic shader types.
 typedef enum renderer_shader_type
@@ -115,10 +118,25 @@ typedef int (*renderer_get_uniform_fn)(
 // Destroy a handle to a shader uniform variable.
 typedef void (*renderer_destroy_uniform_fn)(renderer_uniform_t *out);
 
-// Sets a 3D vector value for a uniform value.
+// Sets a 3D vector value for a uniform variable.
 typedef void (*renderer_set_uniform_vector3d_fn)(
 	renderer_uniform_t uniform,
 	const vector3d_t *vector);
+
+// Sets a 4D vector value for a uniform variable.
+typedef void (*renderer_set_uniform_vector4d_fn)(
+	renderer_uniform_t uniform,
+	const vector4d_t *vector);
+
+// Sets up a 3x3 matrix value for a uniform variable.
+typedef void (*renderer_set_uniform_matrix3x3_fn)(
+	renderer_uniform_t uniform,
+	const matrix3x3_t *matrix);
+
+// Sets up 4x4 matrix value for a uniform variable.
+typedef void (*renderer_set_uniform_matrix4x4_fn)(
+	renderer_uniform_t uniform,
+	const matrix4x4_t *matrix);
 
 // Creating an unindexed renderable model.
 typedef int (*renderer_create_model_fn)(
@@ -172,6 +190,9 @@ typedef struct renderer
 	renderer_get_uniform_fn get_uniform;
 	renderer_destroy_uniform_fn destroy_uniform;
 	renderer_set_uniform_vector3d_fn set_uniform_vector3d;
+	renderer_set_uniform_vector4d_fn set_uniform_vector4d;
+	renderer_set_uniform_matrix3x3_fn set_uniform_matrix3x3;
+	renderer_set_uniform_matrix4x4_fn set_uniform_matrix4x4;
 
 	// Model functions.
 	renderer_create_model_fn create_model;

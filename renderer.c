@@ -28,6 +28,9 @@ void renderer_null_interface(renderer_t *renderer)
 	renderer->get_uniform = NULL;
 	renderer->destroy_uniform = NULL;
 	renderer->set_uniform_vector3d = NULL;
+	renderer->set_uniform_vector4d = NULL;
+	renderer->set_uniform_matrix3x3 = NULL;
+	renderer->set_uniform_matrix4x4 = NULL;
 
 	// Model functions.
 	renderer->create_model = NULL;

@@ -181,6 +181,7 @@ int render_platformer(renderer_t *renderer)
 	int i;
 	map_t *map;
 	polygon_t *polygon;
+	matrix4x4_t transform;
 
 	// Clear the scene.
 	renderer->clear_scene();
@@ -188,7 +189,9 @@ int render_platformer(renderer_t *renderer)
 
 	// Update position.
 	platformer.player.entity.origin.z += 0.0001f;
-	renderer->set_uniform_vector3d(platformer.offset, &platformer.player.entity.origin);
+	matrix4x4_identity(&transform);
+	matrix4x4_translation(&platformer.player.entity.origin, &transform);
+	renderer->set_uniform_matrix4x4(platformer.offset, &transform);
 
 	// Render the map polygons.
 	map = &platformer.map;
