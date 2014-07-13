@@ -1,9 +1,8 @@
 #include "matrix4x4.h"
-#include <math.h>
+#include "math_common.h"
 
 // Constant so we can duplicate code easily for other matrix sizes.
 #define MATRIX_SIZE 4
-#define PI 3.1415926f
 
 /* Fill the matrix with identity values. */
 void matrix4x4_identity(matrix4x4_t *out)
@@ -25,12 +24,56 @@ void matrix4x4_identity(matrix4x4_t *out)
 	}
 }
 
-/* Fill the last column with a translation vector. */
+/* Generate a translation matrix. */
 void matrix4x4_translation(const vector3d_t *translation, matrix4x4_t *out)
 {
+	out->array[0][0] = 1.0f;
+	out->array[0][1] = 0.0f;
+	out->array[0][2] = 0.0f;
 	out->array[0][3] = translation->x;
+	out->array[1][0] = 0.0f;
+	out->array[1][1] = 1.0f;
+	out->array[1][2] = 0.0f;
 	out->array[1][3] = translation->y;
+	out->array[2][0] = 0.0f;
+	out->array[2][1] = 0.0f;
+	out->array[2][2] = 1.0f;
 	out->array[2][3] = translation->z;
+	out->array[3][0] = 0.0f;
+	out->array[3][1] = 0.0f;
+	out->array[3][2] = 0.0f;
+	out->array[3][3] = 1.0f;
+}
+
+/* Generate a rotation matrix around the X axis. */
+void matrix4x4_rotation_x(float angle, matrix4x4_t *out)
+{
+	float angle_radians;
+	float cos_angle;
+	float sin_angle;
+
+	// Calculate common values.
+	angle_radians = degrees_to_radians(angle);
+	cos_angle = cosf(angle_radians);
+	sin_angle = sinf(angle_radians);
+
+	// Fill in matrix.
+	out->array[0][0] = 1.0f;
+	out->array[0][1] = 0.0f;
+	out->array[0][2] = 0.0f;
+	out->array[0][3] = 0.0f;
+	out->array[1][0] = 0.0f;
+	out->array[1][1] = cos_angle;
+	out->array[1][2] = -sin_angle;
+	out->array[1][3] = 0.0f;
+	out->array[2][0] = 0.0f;
+	out->array[2][1] = sin_angle;
+	out->array[2][2] = cos_angle;
+	out->array[2][3] = 0.0f;
+	out->array[3][0] = 0.0f;
+	out->array[3][1] = 0.0f;
+	out->array[3][2] = 0.0f;
+	out->array[3][3] = 1.0f;
 }
 
 /* Generate a perspective projection matrix. */
@@ -46,7 +89,7 @@ void matrix4x4_perspective(
 	float inverse_far_near_diff;
 
 	// Calculate common values.
-	angle_radians = angle_of_view * (PI / 180.0f);
+	angle_radians = degrees_to_radians(angle_of_view);
 	inverse_tan_fov = 1.0f / tanf(angle_radians);
 	inverse_far_near_diff = 1.0f / (z_far - z_near);
 

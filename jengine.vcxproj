@@ -113,6 +113,7 @@
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="keyboard_manager.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="math_common.h" />
     <ClInclude Include="matrix3x3.h" />
     <ClInclude Include="matrix4x4.h" />
     <ClInclude Include="memory_manager.h" />

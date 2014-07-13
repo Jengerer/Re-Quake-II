@@ -92,10 +92,10 @@ int initialize_platformer(void)
 		printf("Failed to initialize polygon.\n");
 		return 0;
 	}
-	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 4.0f);
-	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 4.0f);
-	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 4.0f);
-	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 4.0f);
+	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 0.0f);
+	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 0.0f);
+	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 0.0f);
+	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 0.0f);
 	vector2d_set(&mesh->vertices[0].texture, 0.0f, 0.0f);
 	vector2d_set(&mesh->vertices[1].texture, 1.0f, 0.0f);
 	vector2d_set(&mesh->vertices[2].texture, 1.0f, 1.0f);
@@ -150,13 +150,16 @@ int load_platformer_resources(renderer_t *renderer)
 		}
 	}
 
-	// Get the location to the projection matrix.
+	// Get the location to the transform and projection matrix.
+	if (!renderer->get_uniform(platformer.program, "transform", &platformer.transform)) {
+		return 0;
+	}
 	if (!renderer->get_uniform(platformer.program, "projection", &platformer.projection)) {
 		return 0;
 	}
 
 	// Generate projection matrix.
-	matrix4x4_perspective(4.0f / 3.0f, 75.0f, 1.0f, 1000.0f, &perspective_matrix);
+	matrix4x4_perspective(4.0f / 3.0f, 45.0f, 1.0f, 1000.0f, &perspective_matrix);
 	renderer->set_uniform_matrix4x4(platformer.projection, &perspective_matrix);
 	return 1;
 }
@@ -186,14 +189,22 @@ int render_platformer(renderer_t *renderer)
 	int i;
 	map_t *map;
 	polygon_t *polygon;
-	matrix4x4_t perspective_matrix;
+	matrix4x4_t translation;
+	matrix4x4_t rotation;
+	matrix4x4_t transform;
+	static float angle = 0.0f;
 
 	// Clear the scene.
 	renderer->clear_scene();
 	renderer->set_program(platformer.program);
 
-	matrix4x4_perspective(4.0f / 3.0f, 45.0f, 1.0f, 1000.0f, &perspective_matrix);
-	renderer->set_uniform_matrix4x4(platformer.projection, &perspective_matrix);
+	// Move player.
+	angle += 0.00001f;
+	platformer.player.entity.origin.z = 4.0f;
+	matrix4x4_translation(&platformer.player.entity.origin, &translation);
+	matrix4x4_rotation_x(angle, &rotation);
+	matrix4x4_multiply(&translation, &rotation, &transform);
+	renderer->set_uniform_matrix4x4(platformer.transform, &transform);
 
 	// Render the map polygons.
 	map = &platformer.map;

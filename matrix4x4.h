@@ -13,6 +13,7 @@ typedef struct matrix4x4
 // Unary matrix operations.
 void matrix4x4_identity(matrix4x4_t *out);
 void matrix4x4_translation(const vector3d_t *translation, matrix4x4_t *out);
+void matrix4x4_rotation_x(float angle, matrix4x4_t *out);
 
 // Generate a perspective projection matrix.
 void matrix4x4_perspective(
