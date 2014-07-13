@@ -1,6 +1,6 @@
 #include "file.h"
+#include "memory_manager.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 /*
  * Read an entire file into memory.
@@ -31,7 +31,7 @@ int read_file(const char *filename, char **out)
 	}
 
 	// Allocate space for the file.
-	buffer = (char*)malloc(length + 1);
+	buffer = (char*)memory_allocate(length + 1);
 	if (buffer == NULL) {
 		fclose(file);
 		return 0;
@@ -39,7 +39,7 @@ int read_file(const char *filename, char **out)
 
 	// Read the file and fill out the pointer.
 	if (fread(buffer, length, 1, file) != 1) {
-		free(buffer);
+		memory_free(buffer);
 		fclose(file);
 		return 0;
 	}

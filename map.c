@@ -1,6 +1,6 @@
 #include "map.h"
+#include "memory_manager.h"
 #include <stdio.h> // TODO: Maybe remove.
-#include <stdlib.h>
 
 /*
  * Base initialization to have no polygons.
@@ -22,7 +22,7 @@ int initialize_map(map_t *map, int num_polygons)
 	null_map(map);
 
 	// Allocate space for polygons and null them.
-	polygons = (polygon_t*)malloc(num_polygons * sizeof(polygon_t));
+	polygons = (polygon_t*)memory_allocate(num_polygons * sizeof(polygon_t));
 	if (polygons == NULL) {
 		return 0;
 	}
@@ -45,6 +45,8 @@ void destroy_map(map_t *map)
 	for (i = 0; i < map->num_polygons; ++i) {
 		destroy_polygon(&map->polygons[i]);
 	}
+	memory_free(map->polygons);
+	null_map(map);
 }
 
 /*

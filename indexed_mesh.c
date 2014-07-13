@@ -1,5 +1,5 @@
 #include "indexed_mesh.h"
-#include <stdlib.h>
+#include "memory_manager.h"
 
 /*
  * Null the struct for safe destruction.
@@ -25,7 +25,7 @@ int initialize_indexed_mesh(indexed_mesh_t *mesh, int num_vertices, int num_indi
 	}
 
 	// Allocate for indices.
-	indices = (unsigned int*)malloc(num_indices * sizeof(unsigned int));
+	indices = (unsigned int*)memory_allocate(num_indices * sizeof(unsigned int));
 	if (indices == NULL) {
 		return 0;
 	}
@@ -43,8 +43,9 @@ void destroy_indexed_mesh(indexed_mesh_t *mesh)
 
 	// Free index buffer if we have one.
 	if (mesh->num_indices != 0) {
-
+		memory_free(mesh->indices);
 	}
+	null_indexed_mesh(mesh);
 }
 
 /*

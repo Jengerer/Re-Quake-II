@@ -99,6 +99,7 @@ void initialize_opengl_interface(renderer_t *renderer)
 	renderer->create_shader_schema = &opengl_create_shader_schema;
 	renderer->destroy_shader_schema = &opengl_destroy_shader_schema;
 	renderer->get_uniform = &opengl_get_uniform;
+	renderer->destroy_uniform = &opengl_destroy_uniform;
 	renderer->set_uniform_vector3d = &opengl_set_uniform_vector3d;
 	renderer->set_uniform_vector4d = &opengl_set_uniform_vector4d;
 	renderer->set_uniform_matrix3x3 = &opengl_set_uniform_matrix3x3;

@@ -179,6 +179,18 @@ void free_platformer_resources(renderer_t *renderer)
 		polygon = &map->polygons[i];
 		renderer->destroy_model(&polygon->model);
 	}
+
+	// Release uniform variable handles.
+	renderer->destroy_uniform(&platformer.transform);
+	renderer->destroy_uniform(&platformer.projection);
+
+	// Destroy schema.
+	renderer->destroy_shader_schema(&platformer.schema);
+
+	// Destroy program and shaders.
+	renderer->destroy_shader(&platformer.vertex_shader, platformer.program);
+	renderer->destroy_shader(&platformer.fragment_shader, platformer.program);
+	renderer->destroy_program(&platformer.program);
 }
 
 /*

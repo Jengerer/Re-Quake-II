@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "memory_manager.h"
 #include <stdio.h>
 
 /*
@@ -25,6 +26,9 @@ int initialize_engine(engine_t *engine)
 	window = &engine->window;
 	renderer = &engine->renderer;
 	game = &engine->game;
+
+	// Initialize memory manager.
+	memory_manager_initialize();
 
 	// Create SDL window.
 	if (!create_window(config->width, config->height, config->title, window)) {
@@ -72,6 +76,9 @@ void destroy_engine(engine_t *engine)
 	// Destroy window.
 	window = &engine->window;
 	destroy_window(window);
+
+	// Dump memory allocation.
+	memory_manager_destroy();
 }
 
 /*
