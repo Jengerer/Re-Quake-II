@@ -129,6 +129,9 @@ int opengl_initialize(void)
 		return 0;
 	}
 
+	// Enable vertical sync (TODO: make this an option).
+	
+
 	// Set up GL rendering parameters.
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	return 1;
@@ -434,6 +437,7 @@ int opengl_get_uniform(
 	// Allocate space for the structure.
 	opengl_uniform = (opengl_uniform_t*)memory_allocate(sizeof(opengl_uniform_t));
 	if (opengl_uniform == NULL) {
+		fprintf(stderr, "Failed to allocate uniform structure.\n");
 		return 0;
 	}
 	opengl_null_uniform(opengl_uniform);
@@ -444,6 +448,7 @@ int opengl_get_uniform(
 	program_handle = opengl_program->handle;
 	location = glGetUniformLocation(program_handle, (const GLchar*)name);
 	if (location == -1) {
+		fprintf(stderr, "Failed to get location for uniform variable '%s'.\n", name);
 		return 0;
 	}
 	opengl_uniform->location = location;

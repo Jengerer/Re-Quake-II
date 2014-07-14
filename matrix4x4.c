@@ -76,40 +76,141 @@ void matrix4x4_rotation_x(float angle, matrix4x4_t *out)
 	out->array[3][3] = 1.0f;
 }
 
-/* Generate a perspective projection matrix. */
-void matrix4x4_perspective(
-	float aspect_ratio,
-	float angle_of_view,
-	float z_near,
-	float z_far,
-	matrix4x4_t *out)
+/* Generate a rotation matrix around the Y axis. */
+void matrix4x4_rotation_y(float angle, matrix4x4_t *out)
 {
 	float angle_radians;
-	float inverse_tan_fov;
-	float inverse_far_near_diff;
+	float cos_angle;
+	float sin_angle;
 
 	// Calculate common values.
-	angle_radians = degrees_to_radians(angle_of_view);
-	inverse_tan_fov = 1.0f / tanf(angle_radians);
-	inverse_far_near_diff = 1.0f / (z_far - z_near);
+	angle_radians = degrees_to_radians(angle);
+	cos_angle = cosf(angle_radians);
+	sin_angle = sinf(angle_radians);
 
-	// Fill out matrix.
-	out->array[0][0] = inverse_tan_fov;
+	// Fill in matrix.
+	out->array[0][0] = cos_angle;
 	out->array[0][1] = 0.0f;
-	out->array[0][2] = 0.0f;
+	out->array[0][2] = sin_angle;
 	out->array[0][3] = 0.0f;
 	out->array[1][0] = 0.0f;
-	out->array[1][1] = aspect_ratio * inverse_tan_fov;
+	out->array[1][1] = 1.0f;
+	out->array[1][2] = 0.0f;
+	out->array[1][3] = 0.0f;
+	out->array[2][0] = -sin_angle;
+	out->array[2][1] = 0.0f;
+	out->array[2][2] = cos_angle;
+	out->array[2][3] = 0.0f;
+	out->array[3][0] = 0.0f;
+	out->array[3][1] = 0.0f;
+	out->array[3][2] = 0.0f;
+	out->array[3][3] = 1.0f;
+}
+
+/* Generate a rotation matrix around the Z axis. */
+void matrix4x4_rotation_z(float angle, matrix4x4_t *out)
+{
+	float angle_radians;
+	float cos_angle;
+	float sin_angle;
+
+	// Calculate common values.
+	angle_radians = degrees_to_radians(angle);
+	cos_angle = cosf(angle_radians);
+	sin_angle = sinf(angle_radians);
+
+	// Fill in matrix.
+	out->array[0][0] = cos_angle;
+	out->array[0][1] = -sin_angle;
+	out->array[0][2] = 0.0f;
+	out->array[0][3] = 0.0f;
+	out->array[1][0] = sin_angle;
+	out->array[1][1] = cos_angle;
 	out->array[1][2] = 0.0f;
 	out->array[1][3] = 0.0f;
 	out->array[2][0] = 0.0f;
 	out->array[2][1] = 0.0f;
+	out->array[2][2] = 1.0f;
+	out->array[2][3] = 0.0f;
+	out->array[3][0] = 0.0f;
+	out->array[3][1] = 0.0f;
+	out->array[3][2] = 0.0f;
+	out->array[3][3] = 1.0f;
+}
+
+/* 
+ * Get the transformation matrix for a set of rotation angles.
+ * Angles are applied in the order (in object space): Y, X, Z. 
+ */
+ void matrix4x4_rotation_euler(const vector3d_t *angles, matrix4x4_t *out)
+ {
+	 matrix4x4_t rotation_x, rotation_y, rotation_z;
+	 matrix4x4_t rotation_zx;
+
+	 // Need to apply matrices in reverse order.
+	 matrix4x4_rotation_z(angles->z, &rotation_z);
+	 matrix4x4_rotation_x(angles->x, &rotation_x);
+	 matrix4x4_rotation_y(angles->y, &rotation_y);
+	 matrix4x4_multiply(&rotation_x, &rotation_z, &rotation_zx);
+	 matrix4x4_multiply(&rotation_y, &rotation_zx, out);
+ }
+
+ /* Generate a perspective projection matrix by frustrum parameters. */
+ void matrix4x4_frustrum(
+	 float left,
+	 float right,
+	 float top,
+	 float bottom,
+	 float z_near,
+	 float z_far,
+	 matrix4x4_t *out)
+ {
+	float double_z_near;
+	float inverse_right_left_diff, inverse_top_bottom_diff, inverse_far_near_diff;
+
+	// Get common values.
+	double_z_near = 2.0f * z_near;
+	inverse_right_left_diff = 1.0f / (right - left);
+	inverse_top_bottom_diff = 1.0f / (top - bottom);
+	inverse_far_near_diff = 1.0f / (z_far - z_near);
+
+	// Fill in the matrix.
+	out->array[0][0] = double_z_near * inverse_right_left_diff;
+	out->array[0][1] = 0.0f;
+	out->array[0][2] = (right + left) * inverse_right_left_diff;
+	out->array[0][3] = 0.0f;
+	out->array[1][0] = 0.0f;
+	out->array[1][1] = double_z_near * inverse_top_bottom_diff;
+	out->array[1][2] = (top + bottom) * inverse_top_bottom_diff;
+	out->array[1][3] = 0.0f;
+	out->array[2][0] = 0.0f;
+	out->array[2][1] = 0.0f;
 	out->array[2][2] = (z_far + z_near) * inverse_far_near_diff;
-	out->array[2][3] = -2.0f * z_far * z_near * inverse_far_near_diff;
+	out->array[2][3] = -(double_z_near * z_far) * inverse_far_near_diff;
 	out->array[3][0] = 0.0f;
 	out->array[3][1] = 0.0f;
 	out->array[3][2] = 1.0f;
 	out->array[3][3] = 0.0f;
+ }
+
+/* Generate a perspective projection matrix. */
+void matrix4x4_perspective(
+	float aspect_ratio,
+	float field_of_view,
+	float z_near,
+	float z_far,
+	matrix4x4_t *out)
+{
+	float fov_radians;
+	float x_max, y_max;
+
+	// Calculate common values.
+	fov_radians = degrees_to_radians(field_of_view * 0.5f);
+	y_max = z_near * tanf(fov_radians);
+	x_max = y_max * aspect_ratio;
+
+	// Fill out matrix.
+	matrix4x4_frustrum(-x_max, x_max, y_max, -y_max, z_near, z_far, out);
 }
 
 /*
@@ -134,4 +235,13 @@ void matrix4x4_multiply(const matrix4x4_t *a, const matrix4x4_t *b, matrix4x4_t 
 			out->array[i][j] = product;
 		}
 	}
+}
+
+/* Multiply a matrix by a vector. */
+void matrix4x4_transform(const matrix4x4_t *mat, const vector4d_t *vec, vector4d_t *out)
+{
+	out->x = (vec->x * mat->array[0][0]) + (vec->y * mat->array[0][1]) + (vec->z * mat->array[0][2]) + (vec->w * mat->array[0][3]);
+	out->y = (vec->x * mat->array[1][0]) + (vec->y * mat->array[1][1]) + (vec->z * mat->array[1][2]) + (vec->w * mat->array[1][3]);
+	out->z = (vec->x * mat->array[2][0]) + (vec->y * mat->array[2][1]) + (vec->z * mat->array[2][2]) + (vec->w * mat->array[2][3]);
+	out->w = (vec->x * mat->array[3][0]) + (vec->y * mat->array[3][1]) + (vec->z * mat->array[3][2]) + (vec->w * mat->array[3][3]);
 }

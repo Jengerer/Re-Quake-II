@@ -14,16 +14,30 @@ typedef struct matrix4x4
 void matrix4x4_identity(matrix4x4_t *out);
 void matrix4x4_translation(const vector3d_t *translation, matrix4x4_t *out);
 void matrix4x4_rotation_x(float angle, matrix4x4_t *out);
+void matrix4x4_rotation_y(float angle, matrix4x4_t *out);
+void matrix4x4_rotation_z(float angle, matrix4x4_t *out);
+void matrix4x4_rotation_euler(const vector3d_t *angles, matrix4x4_t *out);
+
+// Generate a perspective projection frustrum matrix.
+void matrix4x4_frustrum(
+	float left,
+	float right,
+	float top,
+	float bottom,
+	float z_near,
+	float z_far,
+	matrix4x4_t *out);
 
 // Generate a perspective projection matrix.
 void matrix4x4_perspective(
 	float aspect_ratio,
-	float angle_of_view,
+	float field_of_view,
 	float z_near,
 	float z_far,
 	matrix4x4_t *out);
 
 // Binary matrix operations.
 void matrix4x4_multiply(const matrix4x4_t *a, const matrix4x4_t *b, matrix4x4_t *out);
+void matrix4x4_transform(const matrix4x4_t *mat, const vector4d_t *vec, vector4d_t *out);
 
 #endif // _MATRIX_4X4_H_

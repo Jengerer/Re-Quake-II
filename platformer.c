@@ -125,6 +125,8 @@ int load_platformer_resources(renderer_t *renderer)
 	indexed_mesh_t *indexed_mesh;
 	mesh_t *mesh;
 	matrix4x4_t perspective_matrix;
+	vector3d_t test3;
+	vector4d_t test, test2;
 
 	// Initialize shaders.
 	if (!initialize_shaders(renderer)) {
@@ -152,7 +154,10 @@ int load_platformer_resources(renderer_t *renderer)
 	}
 
 	// Get the location to the transform and projection matrix.
-	if (!renderer->get_uniform(platformer.program, "transform", &platformer.transform)) {
+	if (!renderer->get_uniform(platformer.program, "object", &platformer.object)) {
+		return 0;
+	}
+	if (!renderer->get_uniform(platformer.program, "view", &platformer.view)) {
 		return 0;
 	}
 	if (!renderer->get_uniform(platformer.program, "projection", &platformer.projection)) {
@@ -161,6 +166,12 @@ int load_platformer_resources(renderer_t *renderer)
 
 	// Generate projection matrix.
 	matrix4x4_perspective(4.0f / 3.0f, 45.0f, 1.0f, 1000.0f, &perspective_matrix);
+	test.x = -1.0f;
+	test.y = -1.0f;
+	test.z = 4.0f;
+	test.w = 1.0f;
+	matrix4x4_transform(&perspective_matrix, &test, &test2);
+	vector4d_to_vector3d(&test2, &test3);
 	renderer->set_uniform_matrix4x4(platformer.projection, &perspective_matrix);
 	return 1;
 }
@@ -182,7 +193,8 @@ void free_platformer_resources(renderer_t *renderer)
 	}
 
 	// Release uniform variable handles.
-	renderer->destroy_uniform(&platformer.transform);
+	renderer->destroy_uniform(&platformer.object);
+	renderer->destroy_uniform(&platformer.view);
 	renderer->destroy_uniform(&platformer.projection);
 
 	// Destroy schema.
@@ -200,24 +212,25 @@ void free_platformer_resources(renderer_t *renderer)
 int render_platformer(renderer_t *renderer)
 {
 	int i;
+	camera_t *camera;
 	map_t *map;
 	polygon_t *polygon;
 	matrix4x4_t translation;
-	matrix4x4_t rotation;
-	matrix4x4_t transform;
-	static float angle = 0.0f;
+	matrix4x4_t view;
 
 	// Clear the scene.
 	renderer->clear_scene();
 	renderer->set_program(platformer.program);
 
+	// Set up camera transform.
+	camera = &platformer.camera;
+	camera_world_to_view_transform(camera, &view);
+	renderer->set_uniform_matrix4x4(platformer.view, &view);
+
 	// Move player.
-	angle += 0.00001f;
 	platformer.player.entity.origin.z = 4.0f;
 	matrix4x4_translation(&platformer.player.entity.origin, &translation);
-	matrix4x4_rotation_x(angle, &rotation);
-	matrix4x4_multiply(&translation, &rotation, &transform);
-	renderer->set_uniform_matrix4x4(platformer.transform, &transform);
+	renderer->set_uniform_matrix4x4(platformer.object, &translation);
 
 	// Render the map polygons.
 	map = &platformer.map;
@@ -233,34 +246,41 @@ int render_platformer(renderer_t *renderer)
  */
 void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 {
+	camera_t *camera;
 	player_t *player;
 	player_move_t *move;
-	entity_t *player_entity;
-	vector3d_t *position;
-	vector3d_t *angles;
-	vector3d_t *velocity;
+	entity_t *camera_entity, *player_entity;
+	vector3d_t *camera_position, *camera_angles;
+	vector3d_t *move_velocity, *angular_velocity;
+	vector3d_t view_forward, view_right, view_velocity;
 
+	camera = &platformer.camera;
 	player = &platformer.player;
-	move = &player->move;
 	player_entity = &player->entity;
-	position = &player_entity->origin;
-	angles = &player_entity->angles;
-	velocity = &move->move_direction;
+	camera_entity = &camera->entity;
+	move = &player->move;
+	camera_position = &camera_entity->origin;
+	camera_angles = &camera_entity->angles;
+	move_velocity = &move->move_direction;
+	angular_velocity = &move->turn_angles;
 	
 	// Update player movement.
 	handle_player_move(keyboard, move);
 
-	// Move the player by the command.
-	vector3d_add(position, velocity, position);
-	if (vector3d_magnitude(velocity) != 0.0f) {
+	// Turn camera.
+	if (vector3d_magnitude(&move->turn_angles) != 0.0f) {
+		vector3d_add(camera_angles, angular_velocity, camera_angles);
+		clamp_angle(&camera_angles->x);
+		clamp_angle(&camera_angles->y);
 	}
 
-	// Turn player angles.
-	if (vector3d_magnitude(&move->turn_angles) != 0.0f) {
-		vector3d_add(angles, &move->turn_angles, angles);
-		clamp_angle(&angles->x);
-		clamp_angle(&angles->y);
-		printf("Yaw: %f, Pitch: %f\n", angles->y, angles->x);
+	// Move the camera by the command.
+	if (vector3d_magnitude(move_velocity) != 0.0f) {
+		// Get the direction vectors for camera view.
+		angles_to_vector3d(camera_angles, &view_forward, &view_right, NULL);
+		vector3d_scale(&view_forward, move_velocity->z, &view_velocity);
+		vector3d_scalar_add(&view_velocity,move_velocity->x, &view_right, &view_velocity);
+		vector3d_add(camera_position, &view_velocity, camera_position);
 	}
 }
 

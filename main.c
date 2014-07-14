@@ -10,6 +10,7 @@
 
 int main(int argc, char *argv[])
 {
+	int result;
 	(void)argc;
 	(void)argv;
 
@@ -30,15 +31,21 @@ int main(int argc, char *argv[])
 	initialize_platformer_interface(&engine.game);
 
 	// Initialize engine.
-	if (!initialize_engine(&engine)) {
-		// Destroy partially initialized state.
-		destroy_engine(&engine);
-		return -1;
+	if (initialize_engine(&engine)) {
+		run_engine(&engine);
+		result = -1;
+	}
+	else {
+		result = 0;
 	}
 
-	// Run engine and shut down.
-	run_engine(&engine);
+	// Shut down.
 	destroy_engine(&engine);
+
+	// Pause at the end so we can read errors.
+#if defined(_DEBUG)
+	system("pause");
+#endif
 
 	return 0;
 }

@@ -1,8 +1,8 @@
 #include "player_move.h"
 #include <stdio.h>
 
-#define PLAYER_SPEED 1.0f
-#define TURN_RATE 0.5f
+#define PLAYER_SPEED 0.05f
+#define TURN_RATE 1.0f
 
 /*
  * Handle keyboard input for the platformer.
@@ -43,16 +43,16 @@ void handle_player_move(keyboard_manager_t *keyboard, player_move_t *out)
 	// Handle look angles.
 	vector3d_clear(&turn_angles);
 	if ((look_left & FLAG_KEY_DOWN) != 0) {
-		turn_angles.y += TURN_RATE;
-	}
-	if ((look_right & FLAG_KEY_DOWN) != 0) {
 		turn_angles.y += -TURN_RATE;
 	}
+	if ((look_right & FLAG_KEY_DOWN) != 0) {
+		turn_angles.y += TURN_RATE;
+	}
 	if ((look_up & FLAG_KEY_DOWN) != 0) {
-		turn_angles.x += TURN_RATE;
+		turn_angles.x += -TURN_RATE;
 	}
 	if ((look_down & FLAG_KEY_DOWN) != 0) {
-		turn_angles.x += -TURN_RATE;
+		turn_angles.x += TURN_RATE;
 	}
 	vector3d_copy(&turn_angles, &out->turn_angles);
 }

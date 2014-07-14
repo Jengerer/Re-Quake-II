@@ -166,23 +166,23 @@ void angles_to_vector3d(
 
 	// Fill out forward.
 	if (forward != NULL) {
-		forward->x = sin_x;
-		forward->y = -cos_x * sin_y;
+		forward->x = cos_x * sin_y;
+		forward->y = -sin_x;
 		forward->z = cos_x * cos_y;
 	}
 
 	// Fill out right.
 	if (right != NULL) {
-		right->x = cos_x * cos_z;
-		right->y = (sin_x * sin_y * cos_z) + (cos_y * sin_z);
-		right->z = (sin_y * sin_z) - (sin_x * cos_y * cos_z);
+		right->x = (sin_x * sin_y * sin_z) + (cos_y * cos_z);
+		right->y = (cos_x * sin_z);
+		right->z = (sin_x * cos_y * sin_z) - (sin_y * cos_z);
 	}
 
 	// Fill out up.
 	if (up != NULL) {
-		up->x = -cos_x * sin_z;
-		up->y = (cos_y * cos_z) - (sin_x * sin_y * sin_z);
-		up->z = (sin_y * cos_z) + (sin_x * cos_y * sin_z);
+		up->x = (sin_x * sin_y * cos_z) - (cos_y * sin_z);
+		up->y = cos_x * cos_z;
+		up->z = (sin_y * sin_z) + (sin_x * cos_y * cos_z);
 	}
 }
 
@@ -194,6 +194,7 @@ void vector3d_scalar_add(const vector3d_t *base,
 	const vector3d_t *scaled,
 	vector3d_t *out)
 {
-	vector3d_scale(scaled, factor, out);
-	vector3d_add(base, out, out);
+	out->x = base->x + (factor * scaled->x);
+	out->y = base->y + (factor * scaled->y);
+	out->z = base->z + (factor * scaled->z);
 }

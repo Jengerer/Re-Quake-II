@@ -42,9 +42,6 @@ int create_window(int width, int height, const char *title, window_t *out)
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, WINDOW_BUFFER_DEPTH);
 
-	// Enable vertical sync.
-	SDL_GL_SetSwapInterval(1);
-
     // Create SDL window.
     result = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
     if (result == NULL) {
@@ -60,6 +57,9 @@ int create_window(int width, int height, const char *title, window_t *out)
         return 0;
     }
 	out->sdl_gl = context;
+
+	// Enable vertical sync.
+	SDL_GL_SetSwapInterval(1);
 
 	// Initialize keyboard manager.
 	initialize_keyboard_manager(&out->keyboard);

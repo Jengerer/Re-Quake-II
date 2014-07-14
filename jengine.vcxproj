@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.c" />
     <ClCompile Include="engine.c" />
     <ClCompile Include="file.c" />
     <ClCompile Include="game.c" />
@@ -107,6 +108,7 @@
   <ItemGroup>
     <ClInclude Include="aabb.h" />
     <ClInclude Include="aabb_entity.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="file.h" />

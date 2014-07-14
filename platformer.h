@@ -1,6 +1,7 @@
 #ifndef _PLATFORMER_H_
 #define _PLATFORMER_H_
 
+#include "camera.h"
 #include "game.h"
 #include "map.h"
 #include "player.h"
@@ -8,6 +9,7 @@
 // Platformer game state to test engine.
 typedef struct platformer_context
 {
+	camera_t camera;
 	player_t player;
 	map_t map;
 
@@ -16,7 +18,8 @@ typedef struct platformer_context
 	renderer_shader_t fragment_shader;
 	renderer_program_t program;
 	renderer_shader_schema_t schema;
-	renderer_uniform_t transform;
+	renderer_uniform_t object;
+	renderer_uniform_t view;
 	renderer_uniform_t projection;
 } platformer_context_t;
 

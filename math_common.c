@@ -4,13 +4,13 @@
 /* Convert from degrees to radians. */
 float degrees_to_radians(float angle)
 {
-	return angle * (180.0f / PI);
+	return angle * (PI / 180.0f);
 }
 
 /* Convert from radians to degrees. */
 float radians_to_degrees(float angle)
 {
-	return angle * (PI / 180.0f);
+	return angle * (180.0f / PI);
 }
 
 /* Clamp angle to range of -180.0 to 180.0. */
