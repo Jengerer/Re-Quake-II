@@ -1,5 +1,6 @@
 #include "vector3d.h"
 #include "math_common.h"
+#include <stdlib.h>
 
 /*
  * Set all vector components.
@@ -133,6 +134,56 @@ void vector3d_to_angles(const vector3d_t *vector, vector3d_t *out)
 	atan_y_z = atan2f(vector->y, xz_distance);
 	out->x = degrees_to_radians(atan_y_z);
 	out->z = 0.0f;
+}
+
+/*
+ * Convert a set of angles to direction vectors.
+ * Only fills out non-null vector pointers.
+ */
+void angles_to_vector3d(
+	const vector3d_t *angles,
+	vector3d_t *forward,
+	vector3d_t *right,
+	vector3d_t *up)
+{
+	float x_radians, y_radians, z_radians;
+	float sin_x, cos_x;
+	float sin_y, cos_y;
+	float sin_z, cos_z;
+
+	// Convert angles.
+	x_radians = degrees_to_radians(angles->x);
+	y_radians = degrees_to_radians(angles->y);
+	z_radians = degrees_to_radians(angles->z);
+
+	// Calculate common values.
+	sin_x = sinf(x_radians);
+	cos_x = cosf(x_radians);
+	sin_y = sinf(y_radians);
+	cos_y = cosf(y_radians);
+	sin_z = sinf(z_radians);
+	cos_z = cosf(z_radians);
+
+	// Fill out forward.
+	if (forward != NULL) {
+		forward->x = sin_x;
+		forward->y = -cos_x * sin_y;
+		forward->z = cos_x * cos_y;
+	}
+
+	// Fill out right.
+	if (right != NULL) {
+		right->x = cos_x * cos_z;
+		right->y = (sin_x * sin_y * cos_z) + (cos_y * sin_z);
+		right->z = (sin_y * sin_z) - (sin_x * cos_y * cos_z);
+	}
+
+	// Fill out up.
+	if (up != NULL) {
+		up->x = -cos_x * sin_z;
+		up->y = (cos_y * cos_z) - (sin_x * sin_y * sin_z);
+		up->z = (sin_y * cos_z) + (sin_x * cos_y * sin_z);
+	}
 }
 
 /*

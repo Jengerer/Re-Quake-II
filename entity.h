@@ -7,6 +7,7 @@
 typedef struct entity
 {
 	vector3d_t origin;
+	vector3d_t angles;
 } entity_t;
 
 #endif // _ENTITY_H_

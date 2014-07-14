@@ -7,6 +7,7 @@
 // Object for returning movement parameters.
 typedef struct player_move
 {
+	vector3d_t turn_angles;
 	vector3d_t move_direction;
 } player_move_t;
 

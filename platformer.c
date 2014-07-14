@@ -1,5 +1,6 @@
 #include "platformer.h"
 #include "player_move.h"
+#include "math_common.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -236,12 +237,14 @@ void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 	player_move_t *move;
 	entity_t *player_entity;
 	vector3d_t *position;
+	vector3d_t *angles;
 	vector3d_t *velocity;
 
 	player = &platformer.player;
 	move = &player->move;
 	player_entity = &player->entity;
 	position = &player_entity->origin;
+	angles = &player_entity->angles;
 	velocity = &move->move_direction;
 	
 	// Update player movement.
@@ -250,6 +253,14 @@ void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 	// Move the player by the command.
 	vector3d_add(position, velocity, position);
 	if (vector3d_magnitude(velocity) != 0.0f) {
+	}
+
+	// Turn player angles.
+	if (vector3d_magnitude(&move->turn_angles) != 0.0f) {
+		vector3d_add(angles, &move->turn_angles, angles);
+		clamp_angle(&angles->x);
+		clamp_angle(&angles->y);
+		printf("Yaw: %f, Pitch: %f\n", angles->y, angles->x);
 	}
 }
 

@@ -2,28 +2,27 @@
 #include <stdio.h>
 
 #define PLAYER_SPEED 1.0f
+#define TURN_RATE 0.5f
 
 /*
  * Handle keyboard input for the platformer.
  */
 void handle_player_move(keyboard_manager_t *keyboard, player_move_t *out)
 {
-	key_state_t left;
-	key_state_t right;
-	key_state_t forward;
-	key_state_t back;
-	key_state_t up;
-	key_state_t down;
+	key_state_t left, right, forward, back;
+	key_state_t look_left, look_right, look_up, look_down;
 	vector3d_t move_direction;
-	vector3d_t angles;
+	vector3d_t turn_angles;
 
 	// Simple player movement.
 	left = get_key_state(keyboard, ENGINE_KEY_A);
 	right = get_key_state(keyboard, ENGINE_KEY_D);
 	forward = get_key_state(keyboard, ENGINE_KEY_W);
 	back = get_key_state(keyboard, ENGINE_KEY_S);
-	up = get_key_state(keyboard, ENGINE_KEY_J);
-	down = get_key_state(keyboard, ENGINE_KEY_K);
+	look_left = get_key_state(keyboard, ENGINE_KEY_J);
+	look_right = get_key_state(keyboard, ENGINE_KEY_L);
+	look_up = get_key_state(keyboard, ENGINE_KEY_I);
+	look_down = get_key_state(keyboard, ENGINE_KEY_K);
 
 	// Set up movement vector.
 	vector3d_clear(&move_direction);
@@ -39,17 +38,21 @@ void handle_player_move(keyboard_manager_t *keyboard, player_move_t *out)
 	if ((back & FLAG_KEY_DOWN) != 0) {
 		move_direction.z += -PLAYER_SPEED;
 	}
-	if ((up & FLAG_KEY_DOWN) != 0) {
-		move_direction.y += PLAYER_SPEED;
-	}
-	if ((down & FLAG_KEY_DOWN) != 0) {
-		move_direction.y += -PLAYER_SPEED;
-	}
 	vector3d_copy(&move_direction, &out->move_direction);
 
-	// Print out angles.
-	if (vector3d_magnitude(&move_direction) != 0.0f) {
-		vector3d_to_angles(&move_direction, &angles);
-		fprintf(stderr, "Yaw: %f, Pitch: %f\n", angles.y, angles.x);
+	// Handle look angles.
+	vector3d_clear(&turn_angles);
+	if ((look_left & FLAG_KEY_DOWN) != 0) {
+		turn_angles.y += TURN_RATE;
 	}
+	if ((look_right & FLAG_KEY_DOWN) != 0) {
+		turn_angles.y += -TURN_RATE;
+	}
+	if ((look_up & FLAG_KEY_DOWN) != 0) {
+		turn_angles.x += TURN_RATE;
+	}
+	if ((look_down & FLAG_KEY_DOWN) != 0) {
+		turn_angles.x += -TURN_RATE;
+	}
+	vector3d_copy(&turn_angles, &out->turn_angles);
 }
