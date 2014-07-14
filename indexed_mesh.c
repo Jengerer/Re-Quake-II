@@ -6,6 +6,7 @@
  */
 void null_indexed_mesh(indexed_mesh_t *mesh)
 {
+	null_mesh(&mesh->mesh);
 	mesh->num_indices = 0;
 }
 
@@ -16,10 +17,7 @@ int initialize_indexed_mesh(indexed_mesh_t *mesh, int num_vertices, int num_indi
 {
 	unsigned int *indices;
 
-	null_indexed_mesh(mesh);
-
 	// Initialize base mesh.
-	null_mesh(&mesh->mesh);
 	if (!initialize_mesh(&mesh->mesh, num_vertices)) {
 		return 0;
 	}

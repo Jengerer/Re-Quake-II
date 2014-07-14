@@ -1,5 +1,5 @@
 #include "vector3d.h"
-#include <math.h>
+#include "math_common.h"
 
 /*
  * Set all vector components.
@@ -112,6 +112,27 @@ void vector3d_cross_product(const vector3d_t *a, const vector3d_t *b, vector3d_t
 	out->z = (a->x * b->y) - (a->y * b->x);
 	out->y = y;
 	out->x = x;
+}
+
+/*
+ * Convert a vector to a set of Euler angles.
+ * Assumes input vector is not the zero vector.
+ */
+void vector3d_to_angles(const vector3d_t *vector, vector3d_t *out)
+{
+	float xz_distance;
+	float atan_x_z;
+	float atan_y_z;
+
+	// Calculate yaw (rotation about Y axis).
+	atan_x_z = atan2f(vector->x, vector->z);
+	out->y = degrees_to_radians(atan_x_z);
+
+	// Calculate pitch (rotation about X axis).
+	xz_distance = sqrtf((vector->x * vector->x) + (vector->z * vector->z));
+	atan_y_z = atan2f(vector->y, xz_distance);
+	out->x = degrees_to_radians(atan_y_z);
+	out->z = 0.0f;
 }
 
 /*

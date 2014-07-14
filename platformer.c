@@ -250,8 +250,6 @@ void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 	// Move the player by the command.
 	vector3d_add(position, velocity, position);
 	if (vector3d_magnitude(velocity) != 0.0f) {
-		printf("VEL: (%f, %f, %f)\n", velocity->x, velocity->y, velocity->z);
-		printf("POS: (%f, %f, %f)\n", position->x, position->y, position->z);
 	}
 }
 

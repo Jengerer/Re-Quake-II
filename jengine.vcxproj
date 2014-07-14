@@ -87,6 +87,7 @@
     <ClCompile Include="keyboard_manager.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
+    <ClCompile Include="math_common.c" />
     <ClCompile Include="matrix3x3.c" />
     <ClCompile Include="matrix4x4.c" />
     <ClCompile Include="memory_manager.c" />

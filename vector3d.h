@@ -24,6 +24,14 @@ void vector3d_subtract(const vector3d_t *a, const vector3d_t *b, vector3d_t *out
 float vector3d_dot_product(const vector3d_t *a, const vector3d_t *b);
 void vector3d_cross_product(const vector3d_t *a, const vector3d_t *b, vector3d_t *out);
 
+// Operations for vectors as angles.
+void vector3d_to_angles(const vector3d_t *vector, vector3d_t *out);
+void angles_to_vector3d(
+	const vector3d_t *angles,
+	vector3d_t *forward,
+	vector3d_t *right,
+	vector3d_t *up);
+
 // Hybrid operations.
 void vector3d_scalar_add(const vector3d_t *base,
 	float factor,

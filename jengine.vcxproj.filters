@@ -84,6 +84,9 @@
     <ClCompile Include="matrix4x4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="math_common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
