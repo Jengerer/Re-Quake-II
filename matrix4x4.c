@@ -214,6 +214,30 @@ void matrix4x4_perspective(
 }
 
 /*
+ * Get the transpose of a 4x4 matrix.
+ */
+void matrix4x4_transpose(const matrix4x4_t *mat, matrix4x4_t *out)
+{
+	int i, j;
+	float temp;
+
+	// Copy diagonal.
+	for (i = 0; i < MATRIX_SIZE; ++i) {
+		out->array[i][i] = mat->array[i][i];
+	}
+
+	// Swap elements on opposide sides of the diagonal.
+	for (i = 0; i < MATRIX_SIZE; ++i) {
+		for (j = i + 1; j < MATRIX_SIZE; ++j) {
+			// Keep temporary in case out is the operand.
+			temp = mat->array[i][j];
+			out->array[i][j] = mat->array[j][i];
+			out->array[j][i] = temp;
+		}
+	}
+}
+
+/*
  * Multiply two matrices together. 
  * The output matrix cannot be one of the operands.
  */

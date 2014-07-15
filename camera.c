@@ -27,7 +27,7 @@ void camera_world_to_view_transform(camera_t *camera, matrix4x4_t *out)
 {
 	entity_t *camera_entity;
 	vector3d_t *camera_origin, *camera_angles;
-	vector3d_t transform_offset, transform_angles;
+	vector3d_t transform_offset;
 	matrix4x4_t rotation, translation;
 
 	// Get camera origin and angles.
@@ -35,14 +35,14 @@ void camera_world_to_view_transform(camera_t *camera, matrix4x4_t *out)
 	camera_origin = &camera_entity->origin;
 	camera_angles = &camera_entity->angles;
 
-	// Get translation matrix; negate camera position.
+	// Get the inverse (transpose) rotation matrix.
+	matrix4x4_rotation_euler(camera_angles, &rotation);
+	matrix4x4_transpose(&rotation, &rotation);
+
+	// Get the inverse translation matrix.
 	vector3d_negate(camera_origin, &transform_offset);
 	matrix4x4_translation(&transform_offset, &translation);
 
-	// Calculate the full rotation matrix; negate camera angles.
-	vector3d_negate(camera_angles, &transform_angles);
-	matrix4x4_rotation_euler(&transform_angles, &rotation);
-
-	// Multiply for result.
+	// Multiply the two.
 	matrix4x4_multiply(&rotation, &translation, out);
 }
