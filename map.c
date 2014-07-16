@@ -59,9 +59,7 @@ void trace_aabb(const map_t *map,
 	trace_t *trace)
 {
 	int i;
-	float start_dot;
-	float end_dot;
-	float aabb_dot;
+	float start_dot, end_dot, aabb_dot;
 	float fraction;
 	const plane_t *plane;
 	const polygon_t *polygon;
@@ -80,10 +78,10 @@ void trace_aabb(const map_t *map,
 		end_dot = vector3d_dot_product(end, &plane->normal) + aabb_dot;
 
 		// No collision of both start and end are on one side of plane.
-		if (start_dot > 0.0f && end_dot >= start_dot) {
+		if ((start_dot > 0.0f) && (end_dot >= start_dot)) {
 			continue;
 		}
-		if (start_dot <= 0.0f && end_dot <= 0.0f) {
+		if ((start_dot <= 0.0f) && (end_dot <= 0.0f)) {
 			continue;
 		}
 
@@ -94,8 +92,6 @@ void trace_aabb(const map_t *map,
 			vector3d_t new_end;
 			vector3d_subtract(end, start, &direction);
 			vector3d_scalar_add(start, fraction, &direction, &new_end);
-			printf("Fraction: %f\n", fraction);
-			printf("End at: (%f, %f, %f)\n", new_end.x, new_end.y, new_end.z);
 		}
 	}
 }

@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 	else {
 		result = 0;
 
-		// Pause at the end so we can read errors.
+	// Pause at the end so we can read errors.
 #if defined(_DEBUG)
 		system("pause");
 #endif
