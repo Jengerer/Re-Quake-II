@@ -94,7 +94,7 @@
     <ClCompile Include="memory_manager.c" />
     <ClCompile Include="mesh.c" />
     <ClCompile Include="opengl_renderer.c" />
-    <ClCompile Include="platformer.c" />
+    <ClCompile Include="arpg_game.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="player_move.c" />
     <ClCompile Include="polygon.c" />
@@ -123,7 +123,7 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="opengl_renderer.h" />
     <ClInclude Include="plane.h" />
-    <ClInclude Include="platformer.h" />
+    <ClInclude Include="arpg_game.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="player_move.h" />
     <ClInclude Include="polygon.h" />

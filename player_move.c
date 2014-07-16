@@ -5,7 +5,7 @@
 #define TURN_RATE 1.0f
 
 /*
- * Handle keyboard input for the platformer.
+ * Handle keyboard input for the arpg.
  */
 void handle_player_move(keyboard_manager_t *keyboard, player_move_t *out)
 {

@@ -1,6 +1,6 @@
 #include "engine.h"
 #include "opengl_renderer.h"
-#include "platformer.h"
+#include "arpg_game.h"
 #include <stdio.h>
 
 // Application constants.
@@ -27,8 +27,8 @@ int main(int argc, char *argv[])
 	// Set OpenGL as renderer.
 	initialize_opengl_interface(&engine.renderer);
 
-	// Load platformer as game.
-	initialize_platformer_interface(&engine.game);
+	// Load arpg as game.
+	initialize_arpg_interface(&engine.game);
 
 	// Initialize engine.
 	if (initialize_engine(&engine)) {

@@ -1,19 +1,19 @@
-#include "platformer.h"
+#include "arpg_game.h"
 #include "player_move.h"
 #include "math_common.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 // Game parameters.
-#define PLATFORMER_NAME "Platformer Test"
+#define PLATFORMER_NAME "ARPG Test"
 
 // Rendering parameters.
 #define NUM_PERSPECTIVE_SHADER_ATTRIBUTES 2
 #define VERTEX_SHADER_FILE "engine.vert"
 #define FRAGMENT_SHADER_FILE "engine.frag"
 
-// Global platformer context.
-static platformer_context_t platformer;
+// Global arpg context.
+static arpg_context_t arpg;
 
 // Renderer shader schemas.
 const renderer_shader_attribute_t mesh_attributes[NUM_PERSPECTIVE_SHADER_ATTRIBUTES] = {
@@ -25,9 +25,9 @@ const renderer_shader_attribute_t mesh_attributes[NUM_PERSPECTIVE_SHADER_ATTRIBU
 int initialize_shaders(renderer_t *renderer);
 
 /*
- * Null platformer context for safe destruction.
+ * Null arpg context for safe destruction.
  */
-void null_platformer_context(platformer_context_t *context)
+void null_arpg_context(arpg_context_t *context)
 {
 	null_map(&context->map);
 	renderer_null_shader(&context->vertex_shader);
@@ -38,37 +38,37 @@ void null_platformer_context(platformer_context_t *context)
 }
 
 /*
- * Fill out game interface with platformer functions.
+ * Fill out game interface with arpg functions.
  */
-void initialize_platformer_interface(game_t *game)
+void initialize_arpg_interface(game_t *game)
 {
 	// Null context here.
-	null_platformer_context(&platformer);
+	null_arpg_context(&arpg);
 
 	// Initialize interface functions.
-	game->get_name = &get_platformer_name;
-	game->initialize = &initialize_platformer;
-	game->destroy = &destroy_platformer;
-	game->load_resources = &load_platformer_resources;
-	game->free_resources = &free_platformer_resources;
-	game->render = &render_platformer;
-	game->handle_keyboard = &handle_platformer_keyboard;
+	game->get_name = &get_arpg_name;
+	game->initialize = &initialize_arpg;
+	game->destroy = &destroy_arpg;
+	game->load_resources = &load_arpg_resources;
+	game->free_resources = &free_arpg_resources;
+	game->render = &render_arpg;
+	game->handle_keyboard = &handle_arpg_keyboard;
 }
 
 /*
- * Return name of the platformer game.
+ * Return name of the arpg game.
  */
-const char* get_platformer_name(void)
+const char* get_arpg_name(void)
 {
 	return PLATFORMER_NAME;
 }
 
 /*
- * Initialize platformer game.
+ * Initialize arpg game.
  * Returns 1 on success, 0 otherwise.
  * Context is filled out as soon as there's something to clean.
  */
-int initialize_platformer(void)
+int initialize_arpg(void)
 {
 	player_t *player;
 	map_t *map;
@@ -77,11 +77,11 @@ int initialize_platformer(void)
 	indexed_mesh_t *indexed_mesh;
 
 	// Create player.
-	player = &platformer.player;
+	player = &arpg.player;
 	initialize_player(player);
 
 	// Initialize the map.
-	map = &platformer.map;
+	map = &arpg.map;
 	if (!initialize_map(map, 1)) {
 		printf("Failed to initialize map.\n");
 		return 0;
@@ -106,18 +106,18 @@ int initialize_platformer(void)
 }
 
 /*
- * Destroy the platformer context.
+ * Destroy the arpg context.
  */
-void destroy_platformer(void)
+void destroy_arpg(void)
 {
 	// Destroy the map.
-	destroy_map(&platformer.map);
+	destroy_map(&arpg.map);
 }
 
 /*
- * Load all base resources required by platformer.
+ * Load all base resources required by arpg.
  */
-int load_platformer_resources(renderer_t *renderer)
+int load_arpg_resources(renderer_t *renderer)
 {
 	int i;
 	map_t *map;
@@ -134,10 +134,10 @@ int load_platformer_resources(renderer_t *renderer)
 	}
 
 	// Set up shader for models.
-	renderer->set_program(platformer.program);
+	renderer->set_program(arpg.program);
 
 	// Create models for the map polygons.
-	map = &platformer.map;
+	map = &arpg.map;
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
 		indexed_mesh = &polygon->indexed_mesh;
@@ -146,7 +146,7 @@ int load_platformer_resources(renderer_t *renderer)
 			mesh->num_vertices,
 			indexed_mesh->indices,
 			indexed_mesh->num_indices,
-			platformer.schema,
+			arpg.schema,
 			&polygon->model))
 		{
 			return 0;
@@ -154,62 +154,58 @@ int load_platformer_resources(renderer_t *renderer)
 	}
 
 	// Get the location to the transform and projection matrix.
-	if (!renderer->get_uniform(platformer.program, "object", &platformer.object)) {
+	if (!renderer->get_uniform(arpg.program, "object", &arpg.object)) {
 		return 0;
 	}
-	if (!renderer->get_uniform(platformer.program, "view", &platformer.view)) {
+	if (!renderer->get_uniform(arpg.program, "view", &arpg.view)) {
 		return 0;
 	}
-	if (!renderer->get_uniform(platformer.program, "projection", &platformer.projection)) {
+	if (!renderer->get_uniform(arpg.program, "projection", &arpg.projection)) {
 		return 0;
 	}
 
 	// Generate projection matrix.
-	matrix4x4_perspective(4.0f / 3.0f, 45.0f, 1.0f, 1000.0f, &perspective_matrix);
-	test.x = -1.0f;
-	test.y = -1.0f;
-	test.z = 4.0f;
-	test.w = 1.0f;
+	matrix4x4_perspective(4.0f / 3.0f, 90.0f, 1.0f, 1000.0f, &perspective_matrix);
 	matrix4x4_transform(&perspective_matrix, &test, &test2);
 	vector4d_to_vector3d(&test2, &test3);
-	renderer->set_uniform_matrix4x4(platformer.projection, &perspective_matrix);
+	renderer->set_uniform_matrix4x4(arpg.projection, &perspective_matrix);
 	return 1;
 }
 
 /*
- * Free base resources for platformer.
+ * Free base resources for arpg.
  */
-void free_platformer_resources(renderer_t *renderer)
+void free_arpg_resources(renderer_t *renderer)
 {
 	int i;
 	map_t *map;
 	polygon_t *polygon;
 
 	// Destroy models for the map polygons.
-	map = &platformer.map;
+	map = &arpg.map;
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
 		renderer->destroy_model(&polygon->model);
 	}
 
 	// Release uniform variable handles.
-	renderer->destroy_uniform(&platformer.object);
-	renderer->destroy_uniform(&platformer.view);
-	renderer->destroy_uniform(&platformer.projection);
+	renderer->destroy_uniform(&arpg.object);
+	renderer->destroy_uniform(&arpg.view);
+	renderer->destroy_uniform(&arpg.projection);
 
 	// Destroy schema.
-	renderer->destroy_shader_schema(&platformer.schema);
+	renderer->destroy_shader_schema(&arpg.schema);
 
 	// Destroy program and shaders.
-	renderer->destroy_shader(&platformer.vertex_shader, platformer.program);
-	renderer->destroy_shader(&platformer.fragment_shader, platformer.program);
-	renderer->destroy_program(&platformer.program);
+	renderer->destroy_shader(&arpg.vertex_shader, arpg.program);
+	renderer->destroy_shader(&arpg.fragment_shader, arpg.program);
+	renderer->destroy_program(&arpg.program);
 }
 
 /*
- * Platformer rendering function.
+ * ARPG rendering function.
  */
-int render_platformer(renderer_t *renderer)
+int render_arpg(renderer_t *renderer)
 {
 	int i;
 	camera_t *camera;
@@ -220,23 +216,23 @@ int render_platformer(renderer_t *renderer)
 
 	// Clear the scene.
 	renderer->clear_scene();
-	renderer->set_program(platformer.program);
+	renderer->set_program(arpg.program);
 
 	// Set up camera transform.
-	camera = &platformer.camera;
+	camera = &arpg.camera;
 	camera_world_to_view_transform(camera, &view);
-	renderer->set_uniform_matrix4x4(platformer.view, &view);
+	renderer->set_uniform_matrix4x4(arpg.view, &view);
 
 	// Move player.
-	platformer.player.entity.origin.z = 4.0f;
-	matrix4x4_translation(&platformer.player.entity.origin, &translation);
-	renderer->set_uniform_matrix4x4(platformer.object, &translation);
+	arpg.player.entity.origin.z = 4.0f;
+	matrix4x4_translation(&arpg.player.entity.origin, &translation);
+	renderer->set_uniform_matrix4x4(arpg.object, &translation);
 
 	// Render the map polygons.
-	map = &platformer.map;
+	map = &arpg.map;
 	for (i = 0; i < map->num_polygons; ++i) {
 		polygon = &map->polygons[i];
-		renderer->draw_model(polygon->model, platformer.schema);
+		renderer->draw_model(polygon->model, arpg.schema);
 	}
 	return 1;
 }
@@ -244,7 +240,7 @@ int render_platformer(renderer_t *renderer)
 /*
  * Handle keyboard input for platjformer.
  */
-void handle_platformer_keyboard(keyboard_manager_t *keyboard)
+void handle_arpg_keyboard(keyboard_manager_t *keyboard)
 {
 	camera_t *camera;
 	player_t *player;
@@ -254,8 +250,8 @@ void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 	vector3d_t *move_velocity, *angular_velocity;
 	vector3d_t view_forward, view_right, view_velocity;
 
-	camera = &platformer.camera;
-	player = &platformer.player;
+	camera = &arpg.camera;
+	player = &arpg.player;
 	player_entity = &player->entity;
 	camera_entity = &camera->entity;
 	move = &player->move;
@@ -285,7 +281,7 @@ void handle_platformer_keyboard(keyboard_manager_t *keyboard)
 }
 
 /*
- * Initialize the platformer's shaders for rendering.
+ * Initialize the arpg's shaders for rendering.
  */
 int initialize_shaders(renderer_t *renderer)
 {
@@ -298,17 +294,17 @@ int initialize_shaders(renderer_t *renderer)
 	if (!renderer->create_program(&program)) {
 		return 0;
 	}
-	platformer.program = program;
+	arpg.program = program;
 
 	// Create vertex and fragment shaders.
 	if (!renderer->create_shader(VERTEX_SHADER_FILE, VERTEX_SHADER, &vertex_shader)) {
 		return 0;
 	}
-	platformer.vertex_shader = vertex_shader;
+	arpg.vertex_shader = vertex_shader;
 	if (!renderer->create_shader(FRAGMENT_SHADER_FILE, FRAGMENT_SHADER, &fragment_shader)) {
 		return 0;
 	}
-	platformer.fragment_shader = fragment_shader;
+	arpg.fragment_shader = fragment_shader;
 
 	// Link both shaders.
 	renderer->link_shader(vertex_shader, program);
@@ -321,7 +317,7 @@ int initialize_shaders(renderer_t *renderer)
 	if (!renderer->create_shader_schema(program, mesh_attributes, NUM_PERSPECTIVE_SHADER_ATTRIBUTES, &schema)) {
 		return 0;
 	}
-	platformer.schema = schema;
+	arpg.schema = schema;
 	
 	return 1;
 }

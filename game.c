@@ -12,6 +12,7 @@ void null_game(game_t *game)
 	game->load_resources = NULL;
 	game->free_resources = NULL;
 	game->render = NULL;
+	game->frame_begin = NULL;
+	game->frame_end = NULL;
 	game->handle_keyboard = NULL;
 }
-
