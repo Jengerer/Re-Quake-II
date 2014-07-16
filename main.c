@@ -37,16 +37,16 @@ int main(int argc, char *argv[])
 	}
 	else {
 		result = 0;
+
+		// Pause at the end so we can read errors.
+#if defined(_DEBUG)
+		system("pause");
+#endif
 	}
 
 	// Shut down.
 	destroy_engine(&engine);
 
-	// Pause at the end so we can read errors.
-#if defined(_DEBUG)
-	system("pause");
-#endif
-
-	return 0;
+	return result;
 }
 
