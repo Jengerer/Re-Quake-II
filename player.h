@@ -3,6 +3,7 @@
 
 #include "object.h"
 #include "player_move.h"
+#include "renderer.h"
 #include "vector3d.h"
 
 // Player state object.
@@ -10,6 +11,9 @@ typedef struct player
 {
 	// Player physics entity.
 	object_t *object;
+
+	// Renderable model.
+	renderer_model_t model;
 
 	// Player movement parameters.
 	player_move_t move;

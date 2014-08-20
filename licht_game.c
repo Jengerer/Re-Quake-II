@@ -110,15 +110,17 @@ void licht_destroy(void)
  */
 int licht_load_resources(renderer_t *renderer)
 {
+	player_t *player;
+	object_t *player_object;
+	polygon_t *player_polygon;
+	indexed_mesh_t *player_indexed_mesh;
+	mesh_t *player_mesh;
 	matrix4x4_t perspective_matrix;
 
 	// Initialize shaders.
 	if (!initialize_shaders(renderer)) {
 		return 0;
 	}
-
-	// Set up shader for models.
-	renderer->set_program(licht.program);
 
 	// Get the location to the transform and projection matrix.
 	if (!renderer->get_uniform(licht.program, "object", &licht.object)) {
@@ -128,6 +130,23 @@ int licht_load_resources(renderer_t *renderer)
 		return 0;
 	}
 	if (!renderer->get_uniform(licht.program, "projection", &licht.projection)) {
+		return 0;
+	}
+
+	// Create player model.
+	player = &licht.player;
+	player_object = player->object;
+	player_polygon = &player_object->polygon;
+	player_indexed_mesh = &player_polygon->indexed_mesh;
+	player_mesh = &player_indexed_mesh->mesh;
+	if (!renderer->create_indexed_model(
+		player_mesh->vertices,
+		player_mesh->num_vertices,
+		player_indexed_mesh->indices,
+		player_indexed_mesh->num_indices,
+		licht.schema,
+		&player->model))
+	{
 		return 0;
 	}
 
@@ -161,7 +180,8 @@ void licht_free_resources(renderer_t *renderer)
  */
 int licht_render(renderer_t *renderer)
 {
-	(void)renderer;
+	// Render the player.
+	renderer->draw_model(licht.player.model, licht.schema);
 	return 1;
 }
 

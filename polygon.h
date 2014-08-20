@@ -17,9 +17,6 @@ typedef struct polygon
 
 	// Plane that this polygon's vertices are on (calculated after filled).
 	plane_t plane;
-
-	// Render context for this polygon.
-	renderer_model_t model;
 } polygon_t;
 
 // Polygon initialization/destruction.
