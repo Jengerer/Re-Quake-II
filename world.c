@@ -12,15 +12,15 @@ void world_null(world_t *world)
 int world_initialize(world_t *world, int num_objects)
 {
 	int i;
-	world_object_t *objects;
+	object_t *objects;
 
 	// Allocate space for the objects and null them all.
-	objects = memory_array_allocate(sizeof(world_object_t), num_objects);
+	objects = memory_array_allocate(sizeof(object_t), num_objects);
 	if (objects == NULL) {
 		return 0;
 	}
 	for (i = 0; i < num_objects; ++i) {
-		world_object_null(&objects[i]);
+		object_null(&objects[i]);
 	}
 	world->objects = objects;
 	return 1;
@@ -29,7 +29,7 @@ int world_initialize(world_t *world, int num_objects)
 /* Destroy the world. */
 void world_destroy(world_t *world)
 {	
-	world_object_t *objects;
+	object_t *objects;
 
 	// Check if anything to destroy.
 	objects = world->objects;
@@ -39,7 +39,7 @@ void world_destroy(world_t *world)
 		// Clean up all objects.
 		num_objects = world->num_objects;
 		for (i = 0; i < num_objects; ++i) {
-			world_object_destroy(&objects[i]);
+			object_destroy(&objects[i]);
 		}
 	}
 	memory_free(objects);

@@ -104,7 +104,7 @@
     <ClCompile Include="vector4d.c" />
     <ClCompile Include="window.c" />
     <ClCompile Include="world.c" />
-    <ClCompile Include="world_object.c" />
+    <ClCompile Include="object.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
@@ -135,7 +135,7 @@
     <ClInclude Include="vector4d.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="world.h" />
-    <ClInclude Include="world_object.h" />
+    <ClInclude Include="object.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="engine.frag" />

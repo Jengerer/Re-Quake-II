@@ -10,7 +10,7 @@ void player_null(player_t *player)
 /*
  * Initialize player entity.
  */
-void player_initialize(player_t *player, world_object_t *object)
+void player_initialize(player_t *player, object_t *object)
 {
 	player->object = object;
 }

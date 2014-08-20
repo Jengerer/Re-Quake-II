@@ -70,37 +70,6 @@ const char* licht_get_name(void)
  */
 int licht_initialize(void)
 {
-	player_t *player;
-	map_t *map;
-	polygon_t *polygon;
-	mesh_t *mesh;
-	indexed_mesh_t *indexed_mesh;
-
-	// Create player.
-	player = &licht.player;
-
-	// Initialize the map.
-	map = &licht.map;
-	if (!initialize_map(map, 1)) {
-		printf("Failed to initialize map.\n");
-		return 0;
-	}
-	polygon = &map->polygons[0];
-	indexed_mesh = &polygon->indexed_mesh;
-	mesh = &indexed_mesh->mesh;
-	if (!polygon_initialize(polygon, 4)) {
-		printf("Failed to initialize polygon.\n");
-		return 0;
-	}
-	vector3d_set(&mesh->vertices[0].position, -1.0f, 1.0f, 0.0f);
-	vector3d_set(&mesh->vertices[1].position, 0.0, 1.0f, 0.0f);
-	vector3d_set(&mesh->vertices[2].position, 0.0f, 0.0f, 0.0f);
-	vector3d_set(&mesh->vertices[3].position, -1.0f, 0.0f, 0.0f);
-	vector2d_set(&mesh->vertices[0].texture, 0.0f, 0.0f);
-	vector2d_set(&mesh->vertices[1].texture, 1.0f, 0.0f);
-	vector2d_set(&mesh->vertices[2].texture, 1.0f, 1.0f);
-	vector2d_set(&mesh->vertices[3].texture, 0.0f, 1.0f);
-	polygon_calculate_plane(polygon);
 	return 1;
 }
 
@@ -118,14 +87,7 @@ void licht_destroy(void)
  */
 int licht_load_resources(renderer_t *renderer)
 {
-	int i;
-	map_t *map;
-	polygon_t *polygon;
-	indexed_mesh_t *indexed_mesh;
-	mesh_t *mesh;
 	matrix4x4_t perspective_matrix;
-	vector3d_t test3;
-	vector4d_t test, test2;
 
 	// Initialize shaders.
 	if (!initialize_shaders(renderer)) {
@@ -134,23 +96,6 @@ int licht_load_resources(renderer_t *renderer)
 
 	// Set up shader for models.
 	renderer->set_program(licht.program);
-
-	// Create models for the map polygons.
-	map = &licht.map;
-	for (i = 0; i < map->num_polygons; ++i) {
-		polygon = &map->polygons[i];
-		indexed_mesh = &polygon->indexed_mesh;
-		mesh = &indexed_mesh->mesh;
-		if (!renderer->create_indexed_model(mesh->vertices,
-			mesh->num_vertices,
-			indexed_mesh->indices,
-			indexed_mesh->num_indices,
-			licht.schema,
-			&polygon->model))
-		{
-			return 0;
-		}
-	}
 
 	// Get the location to the transform and projection matrix.
 	if (!renderer->get_uniform(licht.program, "object", &licht.object)) {
@@ -165,8 +110,6 @@ int licht_load_resources(renderer_t *renderer)
 
 	// Generate projection matrix.
 	matrix4x4_perspective(4.0f / 3.0f, 90.0f, 1.0f, 1000.0f, &perspective_matrix);
-	matrix4x4_transform(&perspective_matrix, &test, &test2);
-	vector4d_to_vector3d(&test2, &test3);
 	renderer->set_uniform_matrix4x4(licht.projection, &perspective_matrix);
 	return 1;
 }
@@ -176,17 +119,6 @@ int licht_load_resources(renderer_t *renderer)
  */
 void licht_free_resources(renderer_t *renderer)
 {
-	int i;
-	map_t *map;
-	polygon_t *polygon;
-
-	// Destroy models for the map polygons.
-	map = &licht.map;
-	for (i = 0; i < map->num_polygons; ++i) {
-		polygon = &map->polygons[i];
-		renderer->destroy_model(&polygon->model);
-	}
-
 	// Release uniform variable handles.
 	renderer->destroy_uniform(&licht.object);
 	renderer->destroy_uniform(&licht.view);
