@@ -27,7 +27,7 @@ int initialize_map(map_t *map, int num_polygons)
 		return 0;
 	}
 	for (i = 0; i < num_polygons; ++i) {
-		null_polygon(&polygons[i]);
+		polygon_null(&polygons[i]);
 	}
 
 	// Fill out struct and return.
@@ -43,7 +43,7 @@ void destroy_map(map_t *map)
 {
 	int i;
 	for (i = 0; i < map->num_polygons; ++i) {
-		destroy_polygon(&map->polygons[i]);
+		polygon_destroy(&map->polygons[i]);
 	}
 	memory_free(map->polygons);
 	null_map(map);

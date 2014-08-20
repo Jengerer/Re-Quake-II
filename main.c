@@ -1,6 +1,6 @@
 #include "engine.h"
 #include "opengl_renderer.h"
-#include "arpg_game.h"
+#include "licht_game.h"
 #include <stdio.h>
 
 // Application constants.
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 	// Engine state.
 	engine_t engine;
-	null_engine(&engine);
+	engine_null(&engine);
 
 	// Create configuration for engine.
 	engine_configuration_t *config = &engine.config;
@@ -27,12 +27,12 @@ int main(int argc, char *argv[])
 	// Set OpenGL as renderer.
 	initialize_opengl_interface(&engine.renderer);
 
-	// Load arpg as game.
-	initialize_arpg_interface(&engine.game);
+	// Load Licht as game.
+	licht_initialize_interface(&engine.game);
 
 	// Initialize engine.
-	if (initialize_engine(&engine)) {
-		run_engine(&engine);
+	if (engine_initialize(&engine)) {
+		engine_run(&engine);
 		result = -1;
 	}
 	else {
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Shut down.
-	destroy_engine(&engine);
+	engine_destroy(&engine);
 
 	return result;
 }

@@ -4,16 +4,16 @@
 /*
  * Set the polygon to be of size 0 so it doesn't get destroyed improperly.
  */
-void null_polygon(polygon_t *polygon)
+void polygon_null(polygon_t *polygon)
 {
-	null_indexed_mesh(&polygon->indexed_mesh);
+	indexed_mesh_null(&polygon->indexed_mesh);
 	renderer_null_model(&polygon->model);
 }
 
 /*
  * Allocate space for the vertices and indices.
  */
-int initialize_polygon(polygon_t *polygon, int num_vertices)
+int polygon_initialize(polygon_t *polygon, int num_vertices)
 {
 	indexed_mesh_t *indexed_mesh;
 	unsigned int *indices;
@@ -23,8 +23,8 @@ int initialize_polygon(polygon_t *polygon, int num_vertices)
 	
 	// Allocate mesh.
 	indexed_mesh = &polygon->indexed_mesh;
-	num_indices = calculate_polygon_index_count(num_vertices);
-	if (!initialize_indexed_mesh(indexed_mesh, num_vertices, num_indices)) {
+	num_indices = polygon_calculate_index_count(num_vertices);
+	if (!indexed_mesh_initialize(indexed_mesh, num_vertices, num_indices)) {
 		return 0;
 	}
 	indices = indexed_mesh->indices;
@@ -43,25 +43,25 @@ int initialize_polygon(polygon_t *polygon, int num_vertices)
 /*
  * Deallocate a polygon's vertices and indices.
  */
-void destroy_polygon(polygon_t *polygon)
+void polygon_destroy(polygon_t *polygon)
 {
-	destroy_indexed_mesh(&polygon->indexed_mesh);
+	indexed_mesh_destroy(&polygon->indexed_mesh);
 }
 
 /*
  * Calculate number of indices required for a given vertex count.
  */
-int calculate_polygon_index_count(int vertex_count)
+int polygon_calculate_index_count(int num_vertices)
 {
 	// For 3 vertices, need 1 triangle, for 4 vertices, need 2 triangles, etc.
-	return (vertex_count - 2) * 3;
+	return (num_vertices - 2) * 3;
 }
 
 /*
  * Calculate the front-facing normal for this polygon.
  * Fills out the normal in the polygon's structure.
  */
-void calculate_polygon_plane(polygon_t *polygon)
+void polygon_calculate_plane(polygon_t *polygon)
 {
 	vector3d_t a;
 	vector3d_t b;

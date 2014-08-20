@@ -7,7 +7,8 @@
 // Structure for representing a point of view.
 typedef struct camera
 {
-	entity_t entity;
+	vector3d_t origin;
+	vector3d_t angles;
 } camera_t;
 
 // Camera position and angle functions.

@@ -11,9 +11,9 @@ typedef struct indexed_mesh
 } indexed_mesh_t;
 
 // Indexed mesh initialization/destruction.
-void null_indexed_mesh(indexed_mesh_t *mesh);
-int initialize_indexed_mesh(indexed_mesh_t *mesh, int num_vertices, int num_indices);
-void destroy_indexed_mesh(indexed_mesh_t *mesh);
+void indexed_mesh_null(indexed_mesh_t *mesh);
+int indexed_mesh_initialize(indexed_mesh_t *mesh, int num_vertices, int num_indices);
+void indexed_mesh_destroy(indexed_mesh_t *mesh);
 
 // Vertex handling.
 const mesh_vertex_t* get_indexed_vertex(indexed_mesh_t *mesh, int index);

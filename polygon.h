@@ -23,14 +23,14 @@ typedef struct polygon
 } polygon_t;
 
 // Polygon initialization/destruction.
-void null_polygon(polygon_t *polygon);
-int initialize_polygon(polygon_t *polygon, int vertex_count);
-void destroy_polygon(polygon_t *polygon);
+void polygon_null(polygon_t *polygon);
+int polygon_initialize(polygon_t *polygon, int num_vertices);
+void polygon_destroy(polygon_t *polygon);
 
 // Index handling.
-int calculate_polygon_index_count(int vertex_count);
+int polygon_calculate_index_count(int num_vertices);
 
 // Polygon parameters.
-void calculate_polygon_plane(polygon_t *polygon);
+void polygon_calculate_plane(polygon_t *polygon);
 
 #endif // _POLYGON_H_

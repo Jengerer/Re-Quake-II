@@ -4,7 +4,7 @@
 /*
  * Null the mesh for safe destruction.
  */
-void null_mesh(mesh_t *mesh)
+void mesh_null(mesh_t *mesh)
 {
 	mesh->num_vertices = 0;
 }
@@ -12,7 +12,7 @@ void null_mesh(mesh_t *mesh)
 /*
  * Allocate space for vertices.
  */
-int initialize_mesh(mesh_t *mesh, int num_vertices)
+int mesh_initialize(mesh_t *mesh, int num_vertices)
 {
 	mesh_vertex_t *vertices = (mesh_vertex_t*)memory_allocate(num_vertices * sizeof(mesh_vertex_t));
 	if (vertices == NULL) {
@@ -26,7 +26,7 @@ int initialize_mesh(mesh_t *mesh, int num_vertices)
 /*
  * Destroy a mesh.
  */
-void destroy_mesh(mesh_t *mesh)
+void mesh_destroy(mesh_t *mesh)
 {
 	if (mesh->num_vertices != 0) {
 		memory_free(mesh->vertices);

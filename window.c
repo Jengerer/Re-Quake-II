@@ -12,7 +12,7 @@ static key_code_t sdl_key_to_engine(SDL_Keycode sdl_code);
 /*
  * Base window initialization for easier cleanup.
  */
-void null_window(window_t *window)
+void window_null(window_t *window)
 {
 	window->sdl_window = NULL;
 	window->sdl_gl = NULL;
@@ -22,7 +22,7 @@ void null_window(window_t *window)
  * Initialize SDL window with OpenGL context.
  * Returns 1 on success and fills output struct.
  */
-int create_window(int width, int height, const char *title, window_t *out)
+int window_initialize(int width, int height, const char *title, window_t *out)
 {
     SDL_Window *result;
     SDL_GLContext context;
@@ -71,7 +71,7 @@ int create_window(int width, int height, const char *title, window_t *out)
 /*
  * Clean up window and GL context.
  */
-void destroy_window(window_t *window)
+void window_destroy(window_t *window)
 {
     // Destroy context/window.
 	if (window->sdl_gl != NULL) {
@@ -86,7 +86,7 @@ void destroy_window(window_t *window)
  * Handle events for the window.
  * Returns 0 only if window close event was triggered, 1 otherwise.
  */
-int handle_window_events(window_t *window)
+int window_handle_events(window_t *window)
 {
 	(void)window;
 	SDL_Event event;
@@ -108,7 +108,7 @@ int handle_window_events(window_t *window)
 /*
  * Trigger buffer swap for the window.
  */
-void swap_buffer(window_t *window)
+void window_swap_buffer(window_t *window)
 {
 	SDL_GL_SwapWindow(window->sdl_window);
 }

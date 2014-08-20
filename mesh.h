@@ -20,8 +20,8 @@ typedef struct mesh
 } mesh_t;
 
 // Mesh initialization/destruction.
-void null_mesh(mesh_t *mesh);
-int initialize_mesh(mesh_t *mesh, int num_vertices);
-void destroy_mesh(mesh_t *mesh);
+void mesh_null(mesh_t *mesh);
+int mesh_initialize(mesh_t *mesh, int num_vertices);
+void mesh_destroy(mesh_t *mesh);
 
 #endif // _MESH_H_

@@ -5,18 +5,18 @@
 /*
  * Null engine for safe destruction.
  */
-void null_engine(engine_t *engine)
+void engine_null(engine_t *engine)
 {
-	null_window(&engine->window);
+	window_null(&engine->window);
 	renderer_null_interface(&engine->renderer);
-	null_game(&engine->game);
+	game_null(&engine->game);
 }
 
 /*
  * Initialize engine and game.
  * Engine's configuration struct and renderer interface should be filled out before called.
  */
-int initialize_engine(engine_t *engine)
+int engine_initialize(engine_t *engine)
 {
 	engine_configuration_t *config;
 	window_t *window;
@@ -31,7 +31,7 @@ int initialize_engine(engine_t *engine)
 	memory_manager_initialize();
 
 	// Create SDL window.
-	if (!create_window(config->width, config->height, config->title, window)) {
+	if (!window_initialize(config->width, config->height, config->title, window)) {
 		return 0;
 	}
 
@@ -56,7 +56,7 @@ int initialize_engine(engine_t *engine)
 /*
  * Destroy engine and game.
  */
-void destroy_engine(engine_t *engine)
+void engine_destroy(engine_t *engine)
 {
 	window_t *window;
 	renderer_t *renderer;
@@ -75,7 +75,7 @@ void destroy_engine(engine_t *engine)
 
 	// Destroy window.
 	window = &engine->window;
-	destroy_window(window);
+	window_destroy(window);
 
 	// Dump memory allocation.
 	memory_manager_destroy();
@@ -85,7 +85,7 @@ void destroy_engine(engine_t *engine)
  * Run engine main loop.
  * Returns 1 if no errors occured, 0 otherwise.
  */
-int run_engine(engine_t *engine)
+int engine_run(engine_t *engine)
 {
 	game_t *game;
 	window_t *window;
@@ -98,7 +98,7 @@ int run_engine(engine_t *engine)
 	done = 0;
 	while (!done) {
 		// Handle window events and break if closed.
-		if (!handle_window_events(window)) {
+		if (!window_handle_events(window)) {
 			done = 1;
 		}
 		else {
@@ -109,7 +109,7 @@ int run_engine(engine_t *engine)
 			game->render(&engine->renderer);
 
 			// Swap the buffer.
-			swap_buffer(&engine->window);
+			window_swap_buffer(&engine->window);
 		}
 	}
 	return 1;

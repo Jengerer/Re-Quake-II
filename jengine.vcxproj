@@ -94,7 +94,7 @@
     <ClCompile Include="memory_manager.c" />
     <ClCompile Include="mesh.c" />
     <ClCompile Include="opengl_renderer.c" />
-    <ClCompile Include="arpg_game.c" />
+    <ClCompile Include="licht_game.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="player_move.c" />
     <ClCompile Include="polygon.c" />
@@ -104,6 +104,7 @@
     <ClCompile Include="vector4d.c" />
     <ClCompile Include="window.c" />
     <ClCompile Include="world.c" />
+    <ClCompile Include="world_object.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
@@ -123,7 +124,7 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="opengl_renderer.h" />
     <ClInclude Include="plane.h" />
-    <ClInclude Include="arpg_game.h" />
+    <ClInclude Include="licht_game.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="player_move.h" />
     <ClInclude Include="polygon.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="vector4d.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="world.h" />
+    <ClInclude Include="world_object.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="engine.frag" />

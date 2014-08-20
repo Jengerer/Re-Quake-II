@@ -87,7 +87,10 @@
     <ClCompile Include="camera.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="arpg_game.c">
+    <ClCompile Include="world_object.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="licht_game.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -143,9 +146,6 @@
     <ClInclude Include="player_move.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -173,7 +173,13 @@
     <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="arpg_game.h">
+    <ClInclude Include="licht_game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="world_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

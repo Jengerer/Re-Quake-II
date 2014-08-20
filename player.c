@@ -1,18 +1,22 @@
 #include "player.h"
+#include "memory_manager.h"
+
+/* Null player object for safe destruction. */
+void player_null(player_t *player)
+{
+	player->object = NULL;
+}
 
 /*
  * Initialize player entity.
  */
-void initialize_player(player_t *player)
+void player_initialize(player_t *player, world_object_t *object)
 {
-	entity_t *entity;
-	vector3d_t *origin;
-	vector3d_t *angles;
+	player->object = object;
+}
 
-	// Set player position to zero.
-	entity = &player->entity;
-	origin = &entity->origin;
-	angles = &entity->angles;
-	vector3d_clear(origin);
-	vector3d_clear(angles);
+/* Destroy player entity. */
+void player_destroy(player_t *player)
+{
+	(void)player;
 }

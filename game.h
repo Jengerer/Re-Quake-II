@@ -37,6 +37,6 @@ typedef struct game
 } game_t;
 
 // Null game context.
-void null_game(game_t *game);
+void game_null(game_t *game);
 
 #endif // _GAME_H_

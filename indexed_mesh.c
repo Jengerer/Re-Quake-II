@@ -4,21 +4,21 @@
 /*
  * Null the struct for safe destruction.
  */
-void null_indexed_mesh(indexed_mesh_t *mesh)
+void indexed_mesh_null(indexed_mesh_t *mesh)
 {
-	null_mesh(&mesh->mesh);
+	mesh_null(&mesh->mesh);
 	mesh->num_indices = 0;
 }
 
 /*
  * Initialize the vertex and index buffers.
  */
-int initialize_indexed_mesh(indexed_mesh_t *mesh, int num_vertices, int num_indices)
+int indexed_mesh_initialize(indexed_mesh_t *mesh, int num_vertices, int num_indices)
 {
 	unsigned int *indices;
 
 	// Initialize base mesh.
-	if (!initialize_mesh(&mesh->mesh, num_vertices)) {
+	if (!mesh_initialize(&mesh->mesh, num_vertices)) {
 		return 0;
 	}
 
@@ -35,15 +35,15 @@ int initialize_indexed_mesh(indexed_mesh_t *mesh, int num_vertices, int num_indi
 /*
  * Destroy the index and vertex buffers.
  */
-void destroy_indexed_mesh(indexed_mesh_t *mesh)
+void indexed_mesh_destroy(indexed_mesh_t *mesh)
 {
-	destroy_mesh(&mesh->mesh);
+	mesh_destroy(&mesh->mesh);
 
 	// Free index buffer if we have one.
 	if (mesh->num_indices != 0) {
 		memory_free(mesh->indices);
 	}
-	null_indexed_mesh(mesh);
+	indexed_mesh_null(mesh);
 }
 
 /*

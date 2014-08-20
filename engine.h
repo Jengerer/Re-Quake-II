@@ -23,11 +23,11 @@ typedef struct engine
 } engine_t;
 
 // Engine initialization/destruction.
-void null_engine(engine_t *engine);
-int initialize_engine(engine_t *engine);
-void destroy_engine(engine_t *engine);
+void engine_null(engine_t *engine);
+int engine_initialize(engine_t *engine);
+void engine_destroy(engine_t *engine);
 
 // Engine run functions.
-int run_engine(engine_t *engine);
+int engine_run(engine_t *engine);
 
 #endif // _ENGINE_H_
