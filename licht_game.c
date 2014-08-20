@@ -5,12 +5,14 @@
 #include <stdlib.h>
 
 // Game parameters.
-#define PLATFORMER_NAME "ARPG Test"
+#define LICHT_NAME "Licht"
 
 // Rendering parameters.
 #define NUM_PERSPECTIVE_SHADER_ATTRIBUTES 2
 #define VERTEX_SHADER_FILE "engine.vert"
 #define FRAGMENT_SHADER_FILE "engine.frag"
+#define NEAR_DISTANCE 1.0f
+#define FAR_DISTANCE 1024.0f
 
 // Global game context.
 static licht_context_t licht;
@@ -29,7 +31,8 @@ int initialize_shaders(renderer_t *renderer);
  */
 void licht_null_context(licht_context_t *context)
 {
-	null_map(&context->map);
+	map_null(&context->map);
+	world_null(&context->world);
 	renderer_null_shader(&context->vertex_shader);
 	renderer_null_shader(&context->fragment_shader);
 	renderer_null_program(&context->program);
@@ -60,7 +63,7 @@ void licht_initialize_interface(game_t *game)
  */
 const char* licht_get_name(void)
 {
-	return PLATFORMER_NAME;
+	return LICHT_NAME;
 }
 
 /*
@@ -70,6 +73,23 @@ const char* licht_get_name(void)
  */
 int licht_initialize(void)
 {
+	world_t *world;
+	player_t *player;
+	object_t *player_object;
+
+	// Initialize the world.
+	world = &licht.world;
+	if (!world_initialize(world)) {
+		return 0;
+	}
+
+	// Create object for player.
+	player = &licht.player;
+	player_object = world_create_object(world);
+	if (player_object == NULL) {
+		return 0;
+	}
+	player_initialize(player, player_object);
 	return 1;
 }
 
@@ -79,7 +99,10 @@ int licht_initialize(void)
 void licht_destroy(void)
 {
 	// Destroy the map.
-	destroy_map(&licht.map);
+	map_destroy(&licht.map);
+
+	// Destroy the world.
+	world_destroy(&licht.world);
 }
 
 /*
@@ -109,7 +132,7 @@ int licht_load_resources(renderer_t *renderer)
 	}
 
 	// Generate projection matrix.
-	matrix4x4_perspective(4.0f / 3.0f, 90.0f, 1.0f, 1000.0f, &perspective_matrix);
+	matrix4x4_perspective(4.0f / 3.0f, 90.0f, NEAR_DISTANCE, FAR_DISTANCE, &perspective_matrix);
 	renderer->set_uniform_matrix4x4(licht.projection, &perspective_matrix);
 	return 1;
 }

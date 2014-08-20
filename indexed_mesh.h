@@ -16,6 +16,6 @@ int indexed_mesh_initialize(indexed_mesh_t *mesh, int num_vertices, int num_indi
 void indexed_mesh_destroy(indexed_mesh_t *mesh);
 
 // Vertex handling.
-const mesh_vertex_t* get_indexed_vertex(indexed_mesh_t *mesh, int index);
+mesh_vertex_t* indexed_mesh_get_vertex(indexed_mesh_t *mesh, int index);
 
 #endif // _INDEXED_MESH_H_

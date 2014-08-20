@@ -47,10 +47,10 @@ void indexed_mesh_destroy(indexed_mesh_t *mesh)
 }
 
 /*
- * Get an vector by its index in the index buffer.
+ * Get vertex by index. 
+ * Note: this is the index in the mesh, not by the indexed mesh indices.
  */
-const mesh_vertex_t* get_indexed_vertex(indexed_mesh_t *mesh, int index)
+mesh_vertex_t* indexed_mesh_get_vertex(indexed_mesh_t *indexed_mesh, int index)
 {
-	index = mesh->indices[index];
-	return &mesh->mesh.vertices[index];
+	return mesh_get_vertex(&indexed_mesh->mesh, index);
 }

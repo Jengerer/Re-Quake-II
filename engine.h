@@ -8,7 +8,6 @@
 // Struct that refers to generic game/engine configuration state.
 typedef struct engine_configuration
 {
-	const char* title;
 	int width;
 	int height;
 } engine_configuration_t;

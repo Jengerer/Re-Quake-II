@@ -27,10 +27,16 @@ void polygon_null(polygon_t *polygon);
 int polygon_initialize(polygon_t *polygon, int num_vertices);
 void polygon_destroy(polygon_t *polygon);
 
+// Polygon vertex functions.
+mesh_vertex_t* polygon_get_vertex(polygon_t *polygon, int index);
+
 // Index handling.
 int polygon_calculate_index_count(int num_vertices);
 
 // Polygon parameters.
 void polygon_calculate_plane(polygon_t *polygon);
+
+// Miscellaneous polygon setting.
+int polygon_create_rectangle(polygon_t *polygon, float width, float height);
 
 #endif // _POLYGON_H_

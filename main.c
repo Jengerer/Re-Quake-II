@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 // Application constants.
-#define APPLICATION_TITLE "Engine Test"
 #define APPLICATION_WIDTH 1024
 #define APPLICATION_HEIGHT 768
 
@@ -20,7 +19,6 @@ int main(int argc, char *argv[])
 
 	// Create configuration for engine.
 	engine_configuration_t *config = &engine.config;
-	config->title = APPLICATION_TITLE;
 	config->width = APPLICATION_WIDTH;
 	config->height = APPLICATION_HEIGHT;
 

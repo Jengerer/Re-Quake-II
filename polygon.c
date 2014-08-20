@@ -48,6 +48,12 @@ void polygon_destroy(polygon_t *polygon)
 	indexed_mesh_destroy(&polygon->indexed_mesh);
 }
 
+/* Get a vertex from the polygon. */
+mesh_vertex_t* polygon_get_vertex(polygon_t *polygon, int index)
+{
+	return indexed_mesh_get_vertex(&polygon->indexed_mesh, index);
+}
+
 /*
  * Calculate number of indices required for a given vertex count.
  */
@@ -86,4 +92,44 @@ void polygon_calculate_plane(polygon_t *polygon)
 
 	// Get the distance by projecting any of the points onto the normal.
 	plane->distance = vector3d_dot_product(v0, &plane->normal);
+}
+
+/* Initialize a rectangular polygon. */
+int polygon_create_rectangle(polygon_t *polygon, float width, float height)
+{
+	float half_width;
+	float half_height;
+	mesh_vertex_t *vertex;
+
+	// Initialize four vertices.
+	if (!polygon_initialize(polygon, 4)) {
+		return 0;
+	}
+
+	// Set up vertices.
+	half_width = width / 2.0f;
+	half_height = height / 2.0f;
+
+	// Top left.
+	vertex = polygon_get_vertex(polygon, 0);
+	vector3d_set(&vertex->position, -half_width, -half_height, 0.0f);
+	vector2d_set(&vertex->texture, 0.0f, 0.0f);
+	
+	// Top right.
+	vertex = polygon_get_vertex(polygon, 1);
+	vector3d_set(&vertex->position, half_width, -half_height, 0.0f);
+	vector2d_set(&vertex->texture, 1.0f, 0.0f);
+
+	// Bottom right.
+	vertex = polygon_get_vertex(polygon, 2);
+	vector3d_set(&vertex->position, half_width, half_height, 0.0f);
+	vector2d_set(&vertex->texture, 1.0f, 1.0f);
+
+	// Bottom left.
+	vertex = polygon_get_vertex(polygon, 3);
+	vector3d_set(&vertex->position, -half_width, half_height, 0.0f);
+	vector2d_set(&vertex->texture, 0.0f, 1.0f);
+
+	// Success.
+	return 1;
 }

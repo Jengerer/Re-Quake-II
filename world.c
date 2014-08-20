@@ -4,43 +4,71 @@
 /* Null world for safe deletion. */
 void world_null(world_t *world)
 {
-	world->objects = NULL;
-	world->num_objects = 0;
+	world->head = NULL;
 }
 
 /* Initialize the world for some number of objects. */
-int world_initialize(world_t *world, int num_objects)
+int world_initialize(world_t *world)
 {
-	int i;
-	object_t *objects;
-
-	// Allocate space for the objects and null them all.
-	objects = memory_array_allocate(sizeof(object_t), num_objects);
-	if (objects == NULL) {
-		return 0;
-	}
-	for (i = 0; i < num_objects; ++i) {
-		object_null(&objects[i]);
-	}
-	world->objects = objects;
+	(void)world;
 	return 1;
 }
 
 /* Destroy the world. */
 void world_destroy(world_t *world)
 {	
-	object_t *objects;
+	object_t *object;
 
-	// Check if anything to destroy.
-	objects = world->objects;
-	if (objects != NULL) {
-		int i, num_objects;
-
-		// Clean up all objects.
-		num_objects = world->num_objects;
-		for (i = 0; i < num_objects; ++i) {
-			object_destroy(&objects[i]);
-		}
+	// Destroy the objects.
+	object = world->head;
+	while (object != NULL) {
+		object_t *next = object->next;
+		object_destroy(object);
+		object = next;
 	}
-	memory_free(objects);
+	world_null(world);
+}
+
+/*
+ * Create an object and add it to the world.
+ * Returns the object on success, NULL otherwise.
+ */
+object_t* world_create_object(world_t *world)
+{
+	object_t *object;
+
+	// Allocate an object.
+	object = memory_allocate(sizeof(object_t));
+	if (object == NULL) {
+		return NULL;
+	}
+	object_null(object);
+
+	// Initialize object.
+	if (!object_initialize(object)) {
+		object_destroy(object);
+		return NULL;
+	}
+
+	// Add it to the list and return.
+	object->next = world->head;
+	world->head = object;
+	return object;
+}
+
+/* Remove and destroy the object from the world. */
+void world_destroy_object(world_t *world, object_t *object)
+{
+	// Check if we need to update the head.
+	if (world->head == object) {
+		world->head = object->next;
+	}
+
+	// Remove object from the chain.
+	if (object->next != NULL) {
+		object->next->prev = object->prev;
+	}
+	if (object->prev != NULL) {
+		object->prev->next = object->next;
+	}
 }

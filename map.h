@@ -14,8 +14,8 @@ typedef struct map
 } map_t;
 
 // Map initialization and destruction.
-void null_map(map_t *map);
-int initialize_map(map_t *map, int num_objects);
-void destroy_map(map_t *map);
+void map_null(map_t *map);
+int map_initialize(map_t *map, int num_objects);
+void map_destroy(map_t *map);
 
 #endif // _MAP_H_

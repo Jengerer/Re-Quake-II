@@ -22,6 +22,7 @@ int engine_initialize(engine_t *engine)
 	window_t *window;
 	renderer_t *renderer;
 	game_t *game;
+	const char* title;
 	config = &engine->config;
 	window = &engine->window;
 	renderer = &engine->renderer;
@@ -31,7 +32,8 @@ int engine_initialize(engine_t *engine)
 	memory_manager_initialize();
 
 	// Create SDL window.
-	if (!window_initialize(config->width, config->height, config->title, window)) {
+	title = game->get_name();
+	if (!window_initialize(config->width, config->height, title, window)) {
 		return 0;
 	}
 

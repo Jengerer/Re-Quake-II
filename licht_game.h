@@ -5,6 +5,7 @@
 #include "game.h"
 #include "map.h"
 #include "player.h"
+#include "world.h"
 
 // Licht game state to test engine.
 typedef struct licht_context
@@ -12,6 +13,7 @@ typedef struct licht_context
 	camera_t camera;
 	player_t player;
 	map_t map;
+	world_t world;
 
 	// Rendering parameters.
 	renderer_shader_t vertex_shader;

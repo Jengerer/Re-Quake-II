@@ -32,3 +32,9 @@ void mesh_destroy(mesh_t *mesh)
 		memory_free(mesh->vertices);
 	}
 }
+
+/* Get a vertex by index. */
+mesh_vertex_t* mesh_get_vertex(mesh_t *mesh, int index)
+{
+	return &mesh->vertices[index];
+}

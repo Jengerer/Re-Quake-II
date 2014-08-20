@@ -5,7 +5,7 @@
 /*
  * Base initialization to have no objects.
  */
-void null_map(map_t *map)
+void map_null(map_t *map)
 {
 	map->objects = NULL;
 	map->num_objects = 0;
@@ -14,7 +14,7 @@ void null_map(map_t *map)
 /*
  * Allocate space for a certain number of objects.
  */
-int initialize_map(map_t *map, int num_objects)
+int map_initialize(map_t *map, int num_objects)
 {
 	int i;
 	object_t *objects;
@@ -37,12 +37,12 @@ int initialize_map(map_t *map, int num_objects)
 /*
  * Deallocate all polygons.
  */
-void destroy_map(map_t *map)
+void map_destroy(map_t *map)
 {
 	int i;
 	for (i = 0; i < map->num_objects; ++i) {
 		object_destroy(&map->objects[i]);
 	}
 	memory_free(map->objects);
-	null_map(map);
+	map_null(map);
 }

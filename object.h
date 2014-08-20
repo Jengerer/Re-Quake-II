@@ -17,7 +17,7 @@ typedef struct object
 
 // Null a world polygon. 
 void object_null(object_t *object);
-int object_initialize(object_t *object, int vertex_count);
+int object_initialize(object_t *object);
 void object_destroy(object_t *object);
 
 #endif // _OBJECT_H_

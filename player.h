@@ -17,7 +17,7 @@ typedef struct player
 
 // Player initialization.
 void player_null(player_t *player);
-void player_initialize(player_t *player, object_t *object);
+int player_initialize(player_t *player, object_t *object);
 void player_destroy(player_t *player);
 
 #endif // _PLAYER_H_
