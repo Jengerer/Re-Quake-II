@@ -14,6 +14,8 @@ typedef struct licht_context
 	player_t player;
 	map_t map;
 	world_t world;
+	object_t *box;
+	renderer_model_t box_model;
 
 	// Rendering parameters.
 	renderer_shader_t vertex_shader;

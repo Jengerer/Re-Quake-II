@@ -31,8 +31,10 @@ int initialize_shaders(renderer_t *renderer);
  */
 void licht_null_context(licht_context_t *context)
 {
+	player_null(&context->player);
 	map_null(&context->map);
 	world_null(&context->world);
+	renderer_null_model(&context->box_model);
 	renderer_null_shader(&context->vertex_shader);
 	renderer_null_shader(&context->fragment_shader);
 	renderer_null_program(&context->program);
@@ -76,6 +78,7 @@ int licht_initialize(void)
 	world_t *world;
 	player_t *player;
 	object_t *player_object;
+	polygon_t *box_polygon;
 
 	// Initialize the world.
 	world = &licht.world;
@@ -90,6 +93,20 @@ int licht_initialize(void)
 		return 0;
 	}
 	player_initialize(player, player_object);
+
+	// Create collision object.
+	licht.box = world_create_object(world);
+	if (licht.box == NULL) {
+		return 0;
+	}
+	box_polygon = &licht.box->polygon;
+	if (!polygon_create_rectangle(box_polygon, 16.0f, 32.0f)) {
+		return 0;
+	}
+
+	// Move box to the side.
+	licht.box->origin.z = 100.0f;
+	licht.box->origin.x = 64.0f;
 
 	// Move player back.
 	player_object->origin.z = 100.0f;
@@ -115,9 +132,9 @@ int licht_load_resources(renderer_t *renderer)
 {
 	player_t *player;
 	object_t *player_object;
-	polygon_t *player_polygon;
-	indexed_mesh_t *player_indexed_mesh;
-	mesh_t *player_mesh;
+	polygon_t *polygon;
+	indexed_mesh_t *indexed_mesh;
+	mesh_t *mesh;
 	matrix4x4_t perspective_matrix;
 
 	// Initialize shaders.
@@ -142,16 +159,31 @@ int licht_load_resources(renderer_t *renderer)
 	// Create player model.
 	player = &licht.player;
 	player_object = player->object;
-	player_polygon = &player_object->polygon;
-	player_indexed_mesh = &player_polygon->indexed_mesh;
-	player_mesh = &player_indexed_mesh->mesh;
+	polygon = &player_object->polygon;
+	indexed_mesh = &polygon->indexed_mesh;
+	mesh = &indexed_mesh->mesh;
 	if (!renderer->create_indexed_model(
-		player_mesh->vertices,
-		player_mesh->num_vertices,
-		player_indexed_mesh->indices,
-		player_indexed_mesh->num_indices,
+		mesh->vertices,
+		mesh->num_vertices,
+		indexed_mesh->indices,
+		indexed_mesh->num_indices,
 		licht.schema,
 		&player->model))
+	{
+		return 0;
+	}
+
+	// Create box model.
+	polygon = &licht.box->polygon;
+	indexed_mesh = &polygon->indexed_mesh;
+	mesh = &indexed_mesh->mesh;
+	if (!renderer->create_indexed_model(
+		mesh->vertices,
+		mesh->num_vertices,
+		indexed_mesh->indices,
+		indexed_mesh->num_indices,
+		licht.schema,
+		&licht.box_model))
 	{
 		return 0;
 	}
@@ -188,6 +220,16 @@ int licht_render(renderer_t *renderer)
 {
 	matrix4x4_t object_transform;
 
+	// Clear the scene.
+	renderer->clear_scene();
+
+	// Set up box render.
+	matrix4x4_translation(&licht.box->origin, &object_transform);
+	renderer->set_uniform_matrix4x4(licht.object, &object_transform);
+
+	// Render the box.
+	renderer->draw_model(licht.box_model, licht.schema);
+
 	// Set up player render.
 	matrix4x4_translation(&licht.player.object->origin, &object_transform);
 	renderer->set_uniform_matrix4x4(licht.object, &object_transform);
@@ -202,7 +244,19 @@ int licht_render(renderer_t *renderer)
  */
 void licht_handle_keyboard(keyboard_manager_t *keyboard)
 {
-	(void)keyboard;
+	key_state_t key;
+
+	// Move player right.
+	key = get_key_state(keyboard, ENGINE_KEY_D);
+	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
+		licht.player.object->origin.x += 1.0f;
+	}
+
+	// Move player left.
+	key = get_key_state(keyboard, ENGINE_KEY_A);
+	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
+		licht.player.object->origin.x -= 1.0f;
+	}
 }
 
 /*

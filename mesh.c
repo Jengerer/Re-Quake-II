@@ -23,9 +23,7 @@ int mesh_initialize(mesh_t *mesh, int num_vertices)
 	return 1;
 }
 
-/*
- * Destroy a mesh.
- */
+/* Destroy a mesh. */
 void mesh_destroy(mesh_t *mesh)
 {
 	if (mesh->num_vertices != 0) {
