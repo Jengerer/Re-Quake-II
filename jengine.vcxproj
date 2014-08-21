@@ -93,6 +93,7 @@
     <ClCompile Include="matrix4x4.c" />
     <ClCompile Include="memory_manager.c" />
     <ClCompile Include="mesh.c" />
+    <ClCompile Include="object_collision_2d.c" />
     <ClCompile Include="opengl_renderer.c" />
     <ClCompile Include="licht_game.c" />
     <ClCompile Include="player.c" />
@@ -122,6 +123,7 @@
     <ClInclude Include="matrix4x4.h" />
     <ClInclude Include="memory_manager.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="object_collision_2d.h" />
     <ClInclude Include="opengl_renderer.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="licht_game.h" />

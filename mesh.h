@@ -25,6 +25,7 @@ int mesh_initialize(mesh_t *mesh, int num_vertices);
 void mesh_destroy(mesh_t *mesh);
 
 // Mesh vertex functions.
+int mesh_get_num_vertices(const mesh_t *mesh);
 mesh_vertex_t* mesh_get_vertex(mesh_t *mesh, int index);
 
 #endif // _MESH_H_

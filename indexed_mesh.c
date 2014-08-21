@@ -46,6 +46,12 @@ void indexed_mesh_destroy(indexed_mesh_t *mesh)
 	indexed_mesh_null(mesh);
 }
 
+/* Get number of vertices in the indexed mesh. */
+int indexed_mesh_get_num_vertices(const indexed_mesh_t *indexed_mesh)
+{
+	return mesh_get_num_vertices(&indexed_mesh->mesh);
+}
+
 /*
  * Get vertex by index. 
  * Note: this is the index in the mesh, not by the indexed mesh indices.

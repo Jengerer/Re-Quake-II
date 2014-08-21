@@ -25,6 +25,7 @@ int polygon_initialize(polygon_t *polygon, int num_vertices);
 void polygon_destroy(polygon_t *polygon);
 
 // Polygon vertex functions.
+int polygon_get_num_vertices(const polygon_t *polygon);
 mesh_vertex_t* polygon_get_vertex(polygon_t *polygon, int index);
 
 // Index handling.

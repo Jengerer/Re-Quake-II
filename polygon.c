@@ -47,6 +47,12 @@ void polygon_destroy(polygon_t *polygon)
 	indexed_mesh_destroy(&polygon->indexed_mesh);
 }
 
+/* Get number of vertices in polygon. */
+int polygon_get_num_vertices(const polygon_t *polygon)
+{
+	return indexed_mesh_get_num_vertices(&polygon->indexed_mesh);
+}
+
 /* Get a vertex from the polygon. */
 mesh_vertex_t* polygon_get_vertex(polygon_t *polygon, int index)
 {

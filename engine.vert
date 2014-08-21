@@ -13,7 +13,7 @@ uniform mat4 projection;
 // Pass vertex colour to next shader.
 void main(void) {
 	gl_Position = projection *
-		view *
+		// view *
 		object *
 		vec4(in_vertex, 1.0);
     ex_colour = vec3(in_texture, 0.0);

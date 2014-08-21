@@ -90,6 +90,9 @@ int licht_initialize(void)
 		return 0;
 	}
 	player_initialize(player, player_object);
+
+	// Move player back.
+	player_object->origin.z = 100.0f;
 	return 1;
 }
 
@@ -122,13 +125,16 @@ int licht_load_resources(renderer_t *renderer)
 		return 0;
 	}
 
+	// Set up the program for the projection matrix.
+	renderer->set_program(licht.program);
+
 	// Get the location to the transform and projection matrix.
 	if (!renderer->get_uniform(licht.program, "object", &licht.object)) {
 		return 0;
 	}
-	if (!renderer->get_uniform(licht.program, "view", &licht.view)) {
+	/*if (!renderer->get_uniform(licht.program, "view", &licht.view)) {
 		return 0;
-	}
+	}*/
 	if (!renderer->get_uniform(licht.program, "projection", &licht.projection)) {
 		return 0;
 	}
@@ -180,6 +186,12 @@ void licht_free_resources(renderer_t *renderer)
  */
 int licht_render(renderer_t *renderer)
 {
+	matrix4x4_t object_transform;
+
+	// Set up player render.
+	matrix4x4_translation(&licht.player.object->origin, &object_transform);
+	renderer->set_uniform_matrix4x4(licht.object, &object_transform);
+
 	// Render the player.
 	renderer->draw_model(licht.player.model, licht.schema);
 	return 1;
@@ -198,28 +210,31 @@ void licht_handle_keyboard(keyboard_manager_t *keyboard)
  */
 int initialize_shaders(renderer_t *renderer)
 {
-	renderer_shader_t vertex_shader;
-	renderer_shader_t fragment_shader;
-	renderer_program_t program;
-	renderer_shader_schema_t schema;
+	renderer_shader_t vertex_shader, *licht_vertex_shader;
+	renderer_shader_t fragment_shader, *licht_fragment_shader;
+	renderer_program_t program, *licht_program;
+	renderer_shader_schema_t *licht_schema;
 
 	// Load the perspective shader.
-	if (!renderer->create_program(&program)) {
+	licht_program = &licht.program;
+	if (!renderer->create_program(licht_program)) {
 		return 0;
 	}
-	licht.program = program;
 
 	// Create vertex and fragment shaders.
-	if (!renderer->create_shader(VERTEX_SHADER_FILE, VERTEX_SHADER, &vertex_shader)) {
+	licht_vertex_shader = &licht.vertex_shader;
+	if (!renderer->create_shader(VERTEX_SHADER_FILE, VERTEX_SHADER, licht_vertex_shader)) {
 		return 0;
 	}
-	licht.vertex_shader = vertex_shader;
-	if (!renderer->create_shader(FRAGMENT_SHADER_FILE, FRAGMENT_SHADER, &fragment_shader)) {
+	licht_fragment_shader = &licht.fragment_shader;
+	if (!renderer->create_shader(FRAGMENT_SHADER_FILE, FRAGMENT_SHADER, licht_fragment_shader)) {
 		return 0;
 	}
-	licht.fragment_shader = fragment_shader;
 
 	// Link both shaders.
+	program = *licht_program;
+	vertex_shader = *licht_vertex_shader;
+	fragment_shader = *licht_fragment_shader;
 	renderer->link_shader(vertex_shader, program);
 	renderer->link_shader(fragment_shader, program);
 	if (!renderer->compile_program(program)) {
@@ -227,10 +242,10 @@ int initialize_shaders(renderer_t *renderer)
 	}
 
 	// Get the renderer schema from the program.
-	if (!renderer->create_shader_schema(program, mesh_attributes, NUM_PERSPECTIVE_SHADER_ATTRIBUTES, &schema)) {
+	licht_schema = &licht.schema;
+	if (!renderer->create_shader_schema(program, mesh_attributes, NUM_PERSPECTIVE_SHADER_ATTRIBUTES, licht_schema)) {
 		return 0;
 	}
-	licht.schema = schema;
 	
 	return 1;
 }

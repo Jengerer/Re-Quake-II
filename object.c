@@ -5,6 +5,7 @@
 void object_null(object_t *object)
 {
 	vector3d_clear(&object->origin);
+	vector3d_clear(&object->velocity);
 	polygon_null(&object->polygon);
 
 	// Clear the intrusive list nodes.

@@ -33,6 +33,12 @@ void mesh_destroy(mesh_t *mesh)
 	}
 }
 
+/* Get number of vertices in the mesh. */
+int mesh_get_num_vertices(const mesh_t *mesh)
+{
+	return mesh->num_vertices;
+}
+
 /* Get a vertex by index. */
 mesh_vertex_t* mesh_get_vertex(mesh_t *mesh, int index)
 {

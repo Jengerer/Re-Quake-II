@@ -93,6 +93,9 @@
     <ClCompile Include="object.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="object_collision_2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -180,6 +183,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="object_collision_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

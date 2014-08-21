@@ -8,6 +8,7 @@
 typedef struct object
 {
 	vector3d_t origin;
+	vector3d_t velocity;
 	polygon_t polygon;
 
 	// Intrusive list nodes.
