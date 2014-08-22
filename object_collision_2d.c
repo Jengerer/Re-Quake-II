@@ -7,6 +7,7 @@
 int object_trace_collision_2d(
 	object_t *a,
 	object_t *b,
+	const vector3d_t *velocity,
 	float time,
 	trace_result_t *result)
 {
@@ -15,14 +16,14 @@ int object_trace_collision_2d(
 
 	// Set up result and time sentinel.
 	inner_trace.collision_time = time;
-	vector3d_copy(&a->velocity, &inner_trace.movement);
+	vector3d_copy(velocity, &inner_trace.movement);
 
 	// Trace against axes of object A and then B.
 	collided = 1;
-	if (!object_trace_against_axes_2d(a, b, a, time, &inner_trace)) {
+	if (!object_trace_against_axes_2d(a, b, a, velocity, time, &inner_trace)) {
 		collided = 0;
 	}
-	else if (!object_trace_against_axes_2d(a, b, b, time, &inner_trace)) {
+	else if (!object_trace_against_axes_2d(a, b, b, velocity, time, &inner_trace)) {
 		collided = 0;
 	}
 	
@@ -40,6 +41,7 @@ int object_trace_against_axes_2d(
 	object_t *a,
 	object_t *b,
 	object_t *object_axes,
+	const vector3d_t *velocity,
 	float time,
 	trace_result_t *result)
 {
@@ -67,7 +69,7 @@ int object_trace_against_axes_2d(
 		object_project_to_axis(b, &axis, &b_min, &b_max);
 
 		// Check intersection and fill out result/time.
-		velocity_dot = vector3d_dot_product(&a->velocity, &axis);
+		velocity_dot = vector3d_dot_product(velocity, &axis);
 		if (a_max <= b_min) {
 			// No collision yet, but check for future.
 			if (velocity_dot > 0.0f) {
@@ -76,7 +78,7 @@ int object_trace_against_axes_2d(
 					// We can hit, but is this the furthest collision?
 					if (hit_time > inner_trace.collision_time) {
 						inner_trace.collision_time = hit_time;
-						vector3d_scale(&a->velocity, hit_time, &inner_trace.movement);
+						vector3d_scale(velocity, hit_time, &inner_trace.movement);
 					}
 					continue;
 				}
@@ -91,7 +93,7 @@ int object_trace_against_axes_2d(
 					// We can hit, but is this the furthest collision?
 					if (hit_time > result->collision_time) {
 						inner_trace.collision_time = hit_time;
-						vector3d_scale(&a->velocity, hit_time, &inner_trace.movement);
+						vector3d_scale(velocity, hit_time, &inner_trace.movement);
 					}
 					continue;
 				}

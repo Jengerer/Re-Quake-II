@@ -4,26 +4,31 @@
 /* Null world for safe deletion. */
 void world_null(world_t *world)
 {
-	world->head = NULL;
+	world->dynamic_head = NULL;
+	map_null(&world->map);
 }
 
 /* Initialize the world for some number of objects. */
 int world_initialize(world_t *world)
 {
-	(void)world;
+	// Initialize the map.
+	if (!map_initialize(&world->map)) {
+		return 0;
+	}
 	return 1;
 }
 
 /* Destroy the world. */
 void world_destroy(world_t *world)
 {	
-	object_t *object;
+	dynamic_object_t *object;
 
 	// Destroy the objects.
-	object = world->head;
+	object = world->dynamic_head;
 	while (object != NULL) {
-		object_t *next = object->next;
-		object_destroy(object);
+		dynamic_object_t *next = object->next;
+		dynamic_object_destroy(object);
+		memory_free(object);
 		object = next;
 	}
 	world_null(world);
@@ -33,42 +38,43 @@ void world_destroy(world_t *world)
  * Create an object and add it to the world.
  * Returns the object on success, NULL otherwise.
  */
-object_t* world_create_object(world_t *world)
+dynamic_object_t* world_create_dynamic_object(world_t *world)
 {
-	object_t *object;
+	dynamic_object_t *dynamic;
 
 	// Allocate an object.
-	object = memory_allocate(sizeof(object_t));
-	if (object == NULL) {
+	dynamic = memory_allocate(sizeof(dynamic_object_t));
+	if (dynamic == NULL) {
 		return NULL;
 	}
-	object_null(object);
+	dynamic_object_null(dynamic);
 
 	// Initialize object.
-	if (!object_initialize(object)) {
-		object_destroy(object);
+	if (!dynamic_object_initialize(dynamic)) {
+		dynamic_object_destroy(dynamic);
+		memory_free(dynamic);
 		return NULL;
 	}
 
 	// Add it to the list and return.
-	object->next = world->head;
-	world->head = object;
-	return object;
+	dynamic->next = world->dynamic_head;
+	world->dynamic_head = dynamic;
+	return dynamic;
 }
 
 /* Remove and destroy the object from the world. */
-void world_destroy_object(world_t *world, object_t *object)
+void world_destroy_dynamic_object(world_t *world, dynamic_object_t *dynamic)
 {
 	// Check if we need to update the head.
-	if (world->head == object) {
-		world->head = object->next;
+	if (world->dynamic_head == dynamic) {
+		world->dynamic_head = dynamic->next;
 	}
 
 	// Remove object from the chain.
-	if (object->next != NULL) {
-		object->next->prev = object->prev;
+	if (dynamic->next != NULL) {
+		dynamic->next->prev = dynamic->prev;
 	}
-	if (object->prev != NULL) {
-		object->prev->next = object->next;
+	if (dynamic->prev != NULL) {
+		dynamic->prev->next = dynamic->next;
 	}
 }

@@ -99,6 +99,7 @@
     <ClCompile Include="player.c" />
     <ClCompile Include="player_move.c" />
     <ClCompile Include="polygon.c" />
+    <ClCompile Include="renderable_object.c" />
     <ClCompile Include="renderer.c" />
     <ClCompile Include="vector2d.c" />
     <ClCompile Include="vector3d.c" />
@@ -130,8 +131,8 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="player_move.h" />
     <ClInclude Include="polygon.h" />
+    <ClInclude Include="renderable_object.h" />
     <ClInclude Include="renderer.h" />
-    <ClInclude Include="trace.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="vector3d.h" />
     <ClInclude Include="vector4d.h" />

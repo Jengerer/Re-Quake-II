@@ -647,6 +647,7 @@ void opengl_destroy_model(renderer_model_t *model)
  */
 void opengl_clear_scene(void)
 {
+	// TODO: If we're completely drawing over a scene, we don't need this.
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 

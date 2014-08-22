@@ -5,6 +5,7 @@
 #include "game.h"
 #include "map.h"
 #include "player.h"
+#include "renderable_object.h"
 #include "world.h"
 
 // Licht game state to test engine.
@@ -12,10 +13,10 @@ typedef struct licht_context
 {
 	camera_t camera;
 	player_t player;
-	map_t map;
 	world_t world;
-	object_t *box;
-	renderer_model_t box_model;
+
+	// Rendering world.
+	renderable_object_t *renderable_head;
 
 	// Rendering parameters.
 	renderer_shader_t vertex_shader;
@@ -37,9 +38,9 @@ void licht_initialize_interface(game_t *game);
 const char* licht_get_name(void);
 int licht_initialize(void);
 void licht_destroy(void);
-int licht_load_resources(renderer_t *renderer);
-void licht_free_resources(renderer_t *renderer);
-int licht_render(renderer_t *renderer);
-void licht_handle_keyboard(keyboard_manager_t *keyboard);
+int licht_load_resources(const renderer_t *renderer);
+void licht_free_resources(const renderer_t *renderer);
+int licht_render(const renderer_t *renderer);
+void licht_handle_keyboard(const keyboard_manager_t *keyboard);
 
 #endif // _LICHT_GAME_H_

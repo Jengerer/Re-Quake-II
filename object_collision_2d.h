@@ -15,6 +15,7 @@ typedef struct trace_result
 int object_trace_collision_2d(
 	object_t *a,
 	object_t *b,
+	const vector3d_t *velocity,
 	float time,
 	trace_result_t *result);
 
@@ -22,7 +23,8 @@ int object_trace_collision_2d(
 int object_trace_against_axes_2d(
 	object_t *a,
 	object_t *b,
-	object_t *object_axes,	
+	object_t *object_axes,
+	const vector3d_t *velocity,
 	float time,
 	trace_result_t *result);
 

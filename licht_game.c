@@ -2,8 +2,8 @@
 #include "player_move.h"
 #include "math_common.h"
 #include "object_collision_2d.h"
+#include "memory_manager.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 // Game parameters.
 #define LICHT_NAME "Licht"
@@ -25,7 +25,10 @@ const renderer_shader_attribute_t mesh_attributes[NUM_PERSPECTIVE_SHADER_ATTRIBU
 };
 
 // Private functions.
-int initialize_shaders(renderer_t *renderer);
+int initialize_shaders(const renderer_t *renderer);
+int add_renderable_object(const object_t *object);
+int load_renderable_object_resources(const renderer_t *renderer, renderer_shader_schema_t schema);
+void free_renderable_object_resources(const renderer_t *renderer);
 
 /*
  * Null licht context for safe destruction.
@@ -33,13 +36,18 @@ int initialize_shaders(renderer_t *renderer);
 void licht_null_context(licht_context_t *context)
 {
 	player_null(&context->player);
-	map_null(&context->map);
 	world_null(&context->world);
-	renderer_null_model(&context->box_model);
+
+	// Null renderables list.
+	context->renderable_head = NULL;
+
+	// Null rendering parameters.
 	renderer_null_shader(&context->vertex_shader);
 	renderer_null_shader(&context->fragment_shader);
 	renderer_null_program(&context->program);
 	renderer_null_shader_schema(&context->schema);
+	renderer_null_uniform(&context->object);
+	renderer_null_uniform(&context->view);
 	renderer_null_uniform(&context->projection);
 }
 
@@ -78,8 +86,7 @@ int licht_initialize(void)
 {
 	world_t *world;
 	player_t *player;
-	object_t *player_object;
-	polygon_t *box_polygon;
+	dynamic_object_t *player_object;
 
 	// Initialize the world.
 	world = &licht.world;
@@ -89,28 +96,17 @@ int licht_initialize(void)
 
 	// Create object for player.
 	player = &licht.player;
-	player_object = world_create_object(world);
+	player_object = world_create_dynamic_object(world);
 	if (player_object == NULL) {
 		return 0;
 	}
-	player_initialize(player, player_object);
-
-	// Create collision object.
-	licht.box = world_create_object(world);
-	if (licht.box == NULL) {
+	if (!player_initialize(player, player_object)) {
 		return 0;
 	}
-	box_polygon = &licht.box->polygon;
-	if (!polygon_create_rectangle(box_polygon, 16.0f, 32.0f)) {
+	if (!add_renderable_object(&player_object->object)) {
 		return 0;
 	}
 
-	// Move box to the side.
-	licht.box->origin.z = 100.0f;
-	licht.box->origin.x = 64.0f;
-
-	// Move player back.
-	player_object->origin.z = 100.0f;
 	return 1;
 }
 
@@ -119,9 +115,6 @@ int licht_initialize(void)
  */
 void licht_destroy(void)
 {
-	// Destroy the map.
-	map_destroy(&licht.map);
-
 	// Destroy the world.
 	world_destroy(&licht.world);
 }
@@ -129,13 +122,8 @@ void licht_destroy(void)
 /*
  * Load all base resources required by licht.
  */
-int licht_load_resources(renderer_t *renderer)
+int licht_load_resources(const renderer_t *renderer)
 {
-	player_t *player;
-	object_t *player_object;
-	polygon_t *polygon;
-	indexed_mesh_t *indexed_mesh;
-	mesh_t *mesh;
 	matrix4x4_t perspective_matrix;
 
 	// Initialize shaders.
@@ -157,37 +145,8 @@ int licht_load_resources(renderer_t *renderer)
 		return 0;
 	}
 
-	// Create player model.
-	player = &licht.player;
-	player_object = player->object;
-	polygon = &player_object->polygon;
-	indexed_mesh = &polygon->indexed_mesh;
-	mesh = &indexed_mesh->mesh;
-	if (!renderer->create_indexed_model(
-		mesh->vertices,
-		mesh->num_vertices,
-		indexed_mesh->indices,
-		indexed_mesh->num_indices,
-		licht.schema,
-		&player->model))
-	{
-		return 0;
-	}
-
-	// Create box model.
-	polygon = &licht.box->polygon;
-	indexed_mesh = &polygon->indexed_mesh;
-	mesh = &indexed_mesh->mesh;
-	if (!renderer->create_indexed_model(
-		mesh->vertices,
-		mesh->num_vertices,
-		indexed_mesh->indices,
-		indexed_mesh->num_indices,
-		licht.schema,
-		&licht.box_model))
-	{
-		return 0;
-	}
+	// Create renderable models.
+	load_renderable_object_resources(renderer, licht.schema);
 
 	// Generate projection matrix.
 	matrix4x4_perspective(4.0f / 3.0f, 90.0f, NEAR_DISTANCE, FAR_DISTANCE, &perspective_matrix);
@@ -198,7 +157,7 @@ int licht_load_resources(renderer_t *renderer)
 /*
  * Free base resources for licht.
  */
-void licht_free_resources(renderer_t *renderer)
+void licht_free_resources(const renderer_t *renderer)
 {
 	// Release uniform variable handles.
 	renderer->destroy_uniform(&licht.object);
@@ -217,71 +176,121 @@ void licht_free_resources(renderer_t *renderer)
 /*
  * ARPG rendering function.
  */
-int licht_render(renderer_t *renderer)
+int licht_render(const renderer_t *renderer)
 {
-	matrix4x4_t object_transform;
-	trace_result_t trace;
+	renderable_object_t *renderable;
 
 	// Clear the scene.
 	renderer->clear_scene();
 
-	// Set up box render.
-	matrix4x4_translation(&licht.box->origin, &object_transform);
-	renderer->set_uniform_matrix4x4(licht.object, &object_transform);
-
-	// Render the box if not colliding.
-	renderer->draw_model(licht.box_model, licht.schema);
-
-	// Collide.
-	object_trace_collision_2d(licht.player.object, licht.box, 1.0f, &trace);
-	vector3d_add(&licht.player.object->origin, &trace.movement, &licht.player.object->origin);
-
-	// Set up player render.
-	matrix4x4_translation(&licht.player.object->origin, &object_transform);
-	renderer->set_uniform_matrix4x4(licht.object, &object_transform);
-
-	// Render the player.
-	renderer->draw_model(licht.player.model, licht.schema);
+	// Draw the renderable objects.
+	renderable = licht.renderable_head;
+	while (renderable != NULL) {
+		renderable_object_render(renderable, renderer, licht.object, licht.schema);
+		renderable = renderable->next;
+	}
+	
 	return 1;
 }
 
 /*
  * Handle keyboard input for platjformer.
  */
-void licht_handle_keyboard(keyboard_manager_t *keyboard)
+void licht_handle_keyboard(const keyboard_manager_t *keyboard)
 {
 	key_state_t key;
+	dynamic_object_t *dynamic;
+	vector3d_t *velocity;
 
 	// Move player right.
-	vector3d_clear(&licht.player.object->velocity);
+	dynamic = licht.player.dynamic;
+	velocity = &dynamic->velocity;
+	vector3d_clear(velocity);
 	key = get_key_state(keyboard, ENGINE_KEY_D);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		licht.player.object->velocity.x = 5.0f;
+		velocity->x = 5.0f;
 	}
 
 	// Move player left.
 	key = get_key_state(keyboard, ENGINE_KEY_A);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		licht.player.object->velocity.x = -5.0f;
+		velocity->x = -5.0f;
 	}
 
 	// Move player up.
 	key = get_key_state(keyboard, ENGINE_KEY_W);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		licht.player.object->velocity.y = 5.0f;
+		velocity->y = 5.0f;
 	}
 
 	// Move player down.
 	key = get_key_state(keyboard, ENGINE_KEY_S);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		licht.player.object->velocity.y = -5.0f;
+		velocity->y = -5.0f;
+	}
+}
+
+/* Add an object to the rendering list. */
+int add_renderable_object(const object_t *object)
+{
+	renderable_object_t *renderable;
+
+	// Create renderable object.
+	renderable = memory_allocate(sizeof(renderable_object_t));
+	if (renderable == NULL) {
+		return 0;
+	}
+	renderable_object_null(renderable);
+
+	// Add to list to be destroyed in case of failure.
+	if (licht.renderable_head != NULL) {
+		licht.renderable_head->prev = renderable;
+	}
+	renderable->next = licht.renderable_head;
+	licht.renderable_head = renderable;
+
+	// Initialize renderable.
+	if (!renderable_object_initialize(renderable, object)) {
+		return 0;
+	}
+
+	return 1;
+}
+
+/* Load all models for the renderables. */
+int load_renderable_object_resources(const renderer_t *renderer, renderer_shader_schema_t schema)
+{
+	renderable_object_t *renderable;
+
+	// Go through each renderable. 
+	renderable = licht.renderable_head;
+	while (renderable != NULL) {
+		if (!renderable_object_load_resources(renderable, renderer, schema)) {
+			return 0;
+		}
+		renderable = renderable->next;
+	}
+
+	return 1;
+}
+
+/* Destroy all models for the renderables. */
+void free_renderable_object_resources(const renderer_t *renderer)
+{
+	renderable_object_t *renderable;
+
+	// Go through each renderable.
+	renderable = licht.renderable_head;
+	while (renderable != NULL) {
+		renderable_object_free_resources(renderable, renderer);
+		renderable = renderable->next;
 	}
 }
 
 /*
- * Initialize the licht's shaders for rendering.
+ * Initialize the game's shaders for rendering.
  */
-int initialize_shaders(renderer_t *renderer)
+int initialize_shaders(const renderer_t *renderer)
 {
 	renderer_shader_t vertex_shader, *licht_vertex_shader;
 	renderer_shader_t fragment_shader, *licht_fragment_shader;

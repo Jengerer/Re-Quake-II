@@ -10,10 +10,7 @@
 typedef struct player
 {
 	// Player physics entity.
-	object_t *object;
-
-	// Renderable model.
-	renderer_model_t model;
+	dynamic_object_t *dynamic;
 
 	// Player movement parameters.
 	player_move_t move;
@@ -21,7 +18,7 @@ typedef struct player
 
 // Player initialization.
 void player_null(player_t *player);
-int player_initialize(player_t *player, object_t *object);
+int player_initialize(player_t *player, dynamic_object_t *dynamic);
 void player_destroy(player_t *player);
 
 #endif // _PLAYER_H_

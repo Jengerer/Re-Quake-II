@@ -8,22 +8,25 @@
 /* Null player object for safe destruction. */
 void player_null(player_t *player)
 {
-	player->object = NULL;
+	player->dynamic = NULL;
 }
 
 /*
  * Initialize player entity.
  */
-int player_initialize(player_t *player, object_t *object)
+int player_initialize(player_t *player, dynamic_object_t *dynamic)
 {
+	object_t *object;
 	polygon_t *polygon;
 
 	// Set player object in case initializing fails.
-	player->object = object;
+	player->dynamic = dynamic;
 
 	// Create the polygon.
+	object = &dynamic->object;
 	polygon = &object->polygon;
 	if (!polygon_create_rectangle(polygon, PLAYER_WIDTH, PLAYER_HEIGHT)) {
+		return 0;
 	}
 	return 1;
 }
