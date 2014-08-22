@@ -3,7 +3,7 @@
 
 // Player world object parameters.
 #define PLAYER_WIDTH 32.0f
-#define PLAYER_HEIGHT 64.0f
+#define PLAYER_HEIGHT 32.0f
 
 /* Null player object for safe destruction. */
 void player_null(player_t *player)

@@ -10,22 +10,26 @@ int object_trace_collision_2d(
 	float time,
 	trace_result_t *result)
 {
-	int collision;
 	trace_result_t inner_trace;
-	(void)result;
+	int collided;
 
-	// Set up result.
-	collision = 1;
+	// Set up result and time sentinel.
+	inner_trace.collision_time = time;
+	vector3d_copy(&a->velocity, &inner_trace.movement);
 
 	// Trace against axes of object A and then B.
+	collided = 1;
 	if (!object_trace_against_axes_2d(a, b, a, time, &inner_trace)) {
-		collision = 0;
+		collided = 0;
 	}
 	else if (!object_trace_against_axes_2d(a, b, b, time, &inner_trace)) {
-		collision = 0;
+		collided = 0;
 	}
-
-	return collision;
+	
+	// Copy trace result.
+	result->collision_time = inner_trace.collision_time;
+	vector3d_copy(&inner_trace.movement, &result->movement);
+	return collided;
 }
 
 /*
@@ -40,18 +44,19 @@ int object_trace_against_axes_2d(
 	trace_result_t *result)
 {
 	int i, num_axes;
-	int did_collide;
 	const polygon_t *axes_polygon;
-	(void)time;
-	(void)result;
+	trace_result_t inner_trace;
 	
+	// Set up trace.
+	inner_trace.collision_time = -1.0f;
+
 	// Go through each axis.
-	did_collide = 1;
 	axes_polygon = &object_axes->polygon;
 	num_axes = polygon_get_num_vertices(axes_polygon);
 	for (i = 0; i < num_axes; ++i) {
 		float a_min, a_max;
 		float b_min, b_max;
+		float velocity_dot;
 		vector3d_t axis;
 
 		// Get the axis and project both objects.
@@ -62,19 +67,43 @@ int object_trace_against_axes_2d(
 		object_project_to_axis(b, &axis, &b_min, &b_max);
 
 		// Check intersection and fill out result/time.
-		if ((a_max > b_min) && (a_max <= b_max)) {
-			// Collision happened.
+		velocity_dot = vector3d_dot_product(&a->velocity, &axis);
+		if (a_max <= b_min) {
+			// No collision yet, but check for future.
+			if (velocity_dot > 0.0f) {
+				float hit_time = (b_min - a_max) / (velocity_dot);
+				if (hit_time < time) {
+					// We can hit, but is this the furthest collision?
+					if (hit_time > inner_trace.collision_time) {
+						inner_trace.collision_time = hit_time;
+						vector3d_scale(&a->velocity, hit_time, &inner_trace.movement);
+					}
+					continue;
+				}
+			}
+			return 0;
 		}
-		else if ((a_min >= b_min) && (a_min < b_max)) {
-			// Collision happened.
-		}
-		else {
-			// Found separating axis, no collision.
-			did_collide = 0;
+		else if (a_min >= b_max) {
+			// No collision yet, but check for future.
+			if (velocity_dot < 0.0f) {
+				float hit_time = (b_max - a_min) / (velocity_dot);
+				if (hit_time < time) {
+					// We can hit, but is this the furthest collision?
+					if (hit_time > result->collision_time) {
+						inner_trace.collision_time = hit_time;
+						vector3d_scale(&a->velocity, hit_time, &inner_trace.movement);
+					}
+					continue;
+				}
+			}
+			return 0;
 		}
 	}
 
-	return did_collide;
+	// Collision on all axes, return result.
+	result->collision_time = inner_trace.collision_time;
+	vector3d_copy(&inner_trace.movement, &result->movement);
+	return 1;
 }
 
 /*

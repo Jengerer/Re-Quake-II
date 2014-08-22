@@ -1,6 +1,7 @@
 #include "licht_game.h"
 #include "player_move.h"
 #include "math_common.h"
+#include "object_collision_2d.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -219,6 +220,7 @@ void licht_free_resources(renderer_t *renderer)
 int licht_render(renderer_t *renderer)
 {
 	matrix4x4_t object_transform;
+	trace_result_t trace;
 
 	// Clear the scene.
 	renderer->clear_scene();
@@ -227,8 +229,12 @@ int licht_render(renderer_t *renderer)
 	matrix4x4_translation(&licht.box->origin, &object_transform);
 	renderer->set_uniform_matrix4x4(licht.object, &object_transform);
 
-	// Render the box.
+	// Render the box if not colliding.
 	renderer->draw_model(licht.box_model, licht.schema);
+
+	// Collide.
+	object_trace_collision_2d(licht.player.object, licht.box, 1.0f, &trace);
+	vector3d_add(&licht.player.object->origin, &trace.movement, &licht.player.object->origin);
 
 	// Set up player render.
 	matrix4x4_translation(&licht.player.object->origin, &object_transform);
@@ -247,15 +253,28 @@ void licht_handle_keyboard(keyboard_manager_t *keyboard)
 	key_state_t key;
 
 	// Move player right.
+	vector3d_clear(&licht.player.object->velocity);
 	key = get_key_state(keyboard, ENGINE_KEY_D);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		licht.player.object->origin.x += 1.0f;
+		licht.player.object->velocity.x = 5.0f;
 	}
 
 	// Move player left.
 	key = get_key_state(keyboard, ENGINE_KEY_A);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		licht.player.object->origin.x -= 1.0f;
+		licht.player.object->velocity.x = -5.0f;
+	}
+
+	// Move player up.
+	key = get_key_state(keyboard, ENGINE_KEY_W);
+	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
+		licht.player.object->velocity.y = 5.0f;
+	}
+
+	// Move player down.
+	key = get_key_state(keyboard, ENGINE_KEY_S);
+	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
+		licht.player.object->velocity.y = -5.0f;
 	}
 }
 

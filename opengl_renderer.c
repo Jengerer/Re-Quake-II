@@ -691,8 +691,6 @@ void opengl_draw_model(renderer_model_t model, renderer_shader_schema_t schema)
 		//glBindVertexBuffer(GL_ARRAY_BUFFER, opengl_model->vertex_buffer, )
 		//glDrawElements(GL_TRIANGLES, opengl_model->array_size, GL_FLOAT, NULL);
 	}
-
-	glBindVertexArray(0);
 }
 
 /*
