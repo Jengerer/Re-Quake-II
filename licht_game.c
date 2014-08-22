@@ -106,6 +106,7 @@ int licht_initialize(void)
 	if (!add_renderable_object(&player_object->object)) {
 		return 0;
 	}
+	player_object->object.origin.z = 100.0f;
 
 	return 1;
 }
@@ -151,6 +152,9 @@ int licht_load_resources(const renderer_t *renderer)
 	// Generate projection matrix.
 	matrix4x4_perspective(4.0f / 3.0f, 90.0f, NEAR_DISTANCE, FAR_DISTANCE, &perspective_matrix);
 	renderer->set_uniform_matrix4x4(licht.projection, &perspective_matrix);
+
+	// Unset program.
+	renderer->unset_program();
 	return 1;
 }
 
@@ -181,7 +185,10 @@ int licht_render(const renderer_t *renderer)
 	renderable_object_t *renderable;
 
 	// Clear the scene.
-	renderer->clear_scene();
+	//renderer->clear_scene();
+
+	// Set up the program.
+	renderer->set_program(licht.program);
 
 	// Draw the renderable objects.
 	renderable = licht.renderable_head;
