@@ -107,6 +107,11 @@ int engine_run(engine_t *engine)
 			// Handle game input.
 			game->handle_keyboard(keyboard);
 
+			// Run game pre-frame event.
+			if (!game->frame_begin(1.0f / 60.0f)) {
+				return 0;
+			}
+
 			// Render a new scene.
 			game->render(&engine->renderer);
 

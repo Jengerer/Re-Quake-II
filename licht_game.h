@@ -41,6 +41,8 @@ void licht_destroy(void);
 int licht_load_resources(const renderer_t *renderer);
 void licht_free_resources(const renderer_t *renderer);
 int licht_render(const renderer_t *renderer);
+int licht_frame_begin(float time);
+int licht_frame_end(void);
 void licht_handle_keyboard(const keyboard_manager_t *keyboard);
 
 #endif // _LICHT_GAME_H_

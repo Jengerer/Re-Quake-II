@@ -11,6 +11,9 @@ typedef struct trace_result
 	vector3d_t normal;
 } trace_result_t;
 
+// Trace result initialization.
+void trace_result_initialize(trace_result_t *trace, float time, const vector3d_t *velocity);
+
 // Object collision tracing along the XY plane.
 int object_trace_collision_2d(
 	object_t *a,

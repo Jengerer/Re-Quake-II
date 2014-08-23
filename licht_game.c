@@ -8,6 +8,9 @@
 // Game parameters.
 #define LICHT_NAME "Licht"
 
+// Player control parameters.
+#define PLAYER_SPEED 100.0f
+
 // Rendering parameters.
 #define NUM_PERSPECTIVE_SHADER_ATTRIBUTES 2
 #define VERTEX_SHADER_FILE "engine.vert"
@@ -66,6 +69,8 @@ void licht_initialize_interface(game_t *game)
 	game->load_resources = &licht_load_resources;
 	game->free_resources = &licht_free_resources;
 	game->render = &licht_render;
+	game->frame_begin = &licht_frame_begin;
+	game->frame_end = &licht_frame_end;
 	game->handle_keyboard = &licht_handle_keyboard;
 }
 
@@ -86,7 +91,8 @@ int licht_initialize(void)
 {
 	world_t *world;
 	player_t *player;
-	dynamic_object_t *player_object;
+	dynamic_object_t *dynamic;
+	object_t *object;
 
 	// Initialize the world.
 	world = &licht.world;
@@ -96,17 +102,33 @@ int licht_initialize(void)
 
 	// Create object for player.
 	player = &licht.player;
-	player_object = world_create_dynamic_object(world);
-	if (player_object == NULL) {
+	dynamic = world_create_dynamic_object(world);
+	if (dynamic == NULL) {
 		return 0;
 	}
-	if (!player_initialize(player, player_object)) {
+	if (!player_initialize(player, dynamic)) {
 		return 0;
 	}
-	if (!add_renderable_object(&player_object->object)) {
+	object = &dynamic->object;
+	if (!add_renderable_object(object)) {
 		return 0;
 	}
-	player_object->object.origin.z = 100.0f;
+	object->origin.z = 100.0f;
+
+	// Add test object.
+	dynamic = world_create_dynamic_object(world);
+	if (dynamic == NULL) {
+		return 0;
+	}
+	object = &dynamic->object;
+	if (!add_renderable_object(&dynamic->object)) {
+		return 0;
+	}
+	if (!polygon_create_rectangle(&object->polygon, 32.0f, 32.0f)) {
+		return 0;
+	}
+	object->origin.x = 100.0f;
+	object->origin.z = 100.0f;
 
 	return 1;
 }
@@ -178,14 +200,14 @@ void licht_free_resources(const renderer_t *renderer)
 }
 
 /*
- * ARPG rendering function.
+ * Game rendering function.
  */
 int licht_render(const renderer_t *renderer)
 {
 	renderable_object_t *renderable;
 
 	// Clear the scene.
-	//renderer->clear_scene();
+	renderer->clear_scene();
 
 	// Set up the program.
 	renderer->set_program(licht.program);
@@ -197,6 +219,20 @@ int licht_render(const renderer_t *renderer)
 		renderable = renderable->next;
 	}
 	
+	return 1;
+}
+
+/* Handle pre-frame event. */
+int licht_frame_begin(float time)
+{
+	// Simulate the world by frame time.
+	world_simulate(&licht.world, time);
+	return 1;
+}
+
+/* Handle post-frame event. */
+int licht_frame_end(void)
+{
 	return 1;
 }
 
@@ -215,25 +251,25 @@ void licht_handle_keyboard(const keyboard_manager_t *keyboard)
 	vector3d_clear(velocity);
 	key = get_key_state(keyboard, ENGINE_KEY_D);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		velocity->x = 5.0f;
+		velocity->x = PLAYER_SPEED;
 	}
 
 	// Move player left.
 	key = get_key_state(keyboard, ENGINE_KEY_A);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		velocity->x = -5.0f;
+		velocity->x = -PLAYER_SPEED;
 	}
 
 	// Move player up.
 	key = get_key_state(keyboard, ENGINE_KEY_W);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		velocity->y = 5.0f;
+		velocity->y = PLAYER_SPEED;
 	}
 
 	// Move player down.
 	key = get_key_state(keyboard, ENGINE_KEY_S);
 	if ((key & FLAG_KEY_DOWN) == FLAG_KEY_DOWN) {
-		velocity->y = -5.0f;
+		velocity->y = -PLAYER_SPEED;
 	}
 }
 

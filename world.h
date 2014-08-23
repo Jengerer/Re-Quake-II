@@ -24,4 +24,7 @@ void world_destroy(world_t *world);
 dynamic_object_t* world_create_dynamic_object(world_t *world);
 void world_destroy_dynamic_object(world_t *world, dynamic_object_t *dynamic);
 
+// World simulation functions.
+void world_simulate(world_t *world, float time);
+
 #endif // _WORLD_H_
