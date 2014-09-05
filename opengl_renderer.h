@@ -46,6 +46,12 @@ typedef struct opengl_uniform
 	GLint location;
 } opengl_uniform_t;
 
+// Structure for representing an OpenGL texture.
+typedef struct opengl_texture
+{
+	GLuint handle;
+} opengl_texture_t;
+
 // Representation of a mesh for rendering in OpenGL.
 typedef struct opengl_model
 {
@@ -60,6 +66,7 @@ void opengl_null_shader(opengl_shader_t *shader);
 void opengl_null_program(opengl_program_t *program);
 void opengl_null_shader_schema(opengl_shader_schema_t *schema);
 void opengl_null_uniform(opengl_uniform_t *uniform);
+void opengl_null_texture(opengl_texture_t *texture);
 void opengl_null_model(opengl_model_t *model);
 
 // Renderer/OpenGL conversions.
@@ -110,6 +117,18 @@ void opengl_set_uniform_matrix3x3(
 void opengl_set_uniform_matrix4x4(
 	renderer_uniform_t uniform,
 	const matrix4x4_t *matrix);
+void opengl_set_uniform_integer(
+	renderer_uniform_t uniform,
+	int value);
+
+// Renderer texture functions.
+int opengl_create_texture2d(
+	const image_t *image,
+	renderer_texture_t *out);
+void opengl_bind_texture2d(
+	renderer_texture_t texture,
+	renderer_uniform_t shader_texture);
+void opengl_unbind_texture2d(void);
 
 // Renderer model functions.
 int opengl_create_model(

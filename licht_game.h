@@ -26,6 +26,8 @@ typedef struct licht_context
 	renderer_uniform_t object;
 	renderer_uniform_t view;
 	renderer_uniform_t projection;
+	renderer_uniform_t texture2d;
+	renderer_texture_t swag;
 } licht_context_t;
 
 // Licht context initialization.

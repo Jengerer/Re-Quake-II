@@ -31,6 +31,12 @@ void renderer_null_interface(renderer_t *renderer)
 	renderer->set_uniform_vector4d = NULL;
 	renderer->set_uniform_matrix3x3 = NULL;
 	renderer->set_uniform_matrix4x4 = NULL;
+	renderer->set_uniform_integer = NULL;
+
+	// Texture functions.
+	renderer->create_texture2d = NULL;
+	renderer->bind_texture2d = NULL;
+	renderer->unbind_texture2d = NULL;
 
 	// Model functions.
 	renderer->create_model = NULL;

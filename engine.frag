@@ -1,8 +1,11 @@
 #version 150
 
-in vec3 ex_colour;
+in vec2 ex_texture;
 out vec4 frag_colour;
 
+// Texture variables.
+uniform sampler2D texture2d;
+
 void main(void) {
-	frag_colour = vec4(ex_colour, 1.0);
+	frag_colour = texture(texture2d, ex_texture);
 }

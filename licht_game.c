@@ -53,6 +53,7 @@ void licht_null_context(licht_context_t *context)
 	renderer_null_uniform(&context->object);
 	renderer_null_uniform(&context->view);
 	renderer_null_uniform(&context->projection);
+	renderer_null_uniform(&context->texture2d);
 }
 
 /*
@@ -149,6 +150,7 @@ void licht_destroy(void)
 int licht_load_resources(const renderer_t *renderer)
 {
 	matrix4x4_t perspective_matrix;
+	image_t image;
 
 	// Initialize shaders.
 	if (!initialize_shaders(renderer)) {
@@ -166,6 +168,17 @@ int licht_load_resources(const renderer_t *renderer)
 		return 0;
 	}*/
 	if (!renderer->get_uniform(licht.program, "projection", &licht.projection)) {
+		return 0;
+	}
+
+	// Load the texture and bind it.
+	if (!image_load_png("swag.png", &image)) {
+		return 0;
+	}
+	if (!renderer->create_texture2d(&image, &licht.swag)) {
+		return 0;
+	}
+	if (!renderer->get_uniform(licht.program, "texture2d", &licht.texture2d)) {
 		return 0;
 	}
 
@@ -212,6 +225,9 @@ int licht_render(const renderer_t *renderer)
 
 	// Set up the program.
 	renderer->set_program(licht.program);
+
+	// Bind the texture.
+	renderer->bind_texture2d(licht.swag, licht.texture2d);
 
 	// Draw the renderable objects.
 	renderable = licht.renderable_head;

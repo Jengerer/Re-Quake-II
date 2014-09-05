@@ -118,22 +118,22 @@ int polygon_create_rectangle(polygon_t *polygon, float width, float height)
 	// Top left.
 	vertex = polygon_get_vertex(polygon, 0);
 	vector3d_set(&vertex->position, -half_width, -half_height, 0.0f);
-	vector2d_set(&vertex->texture, 0.0f, 0.0f);
+	vector2d_set(&vertex->texture, 0.0f, 1.0f);
 	
 	// Top right.
 	vertex = polygon_get_vertex(polygon, 1);
 	vector3d_set(&vertex->position, half_width, -half_height, 0.0f);
-	vector2d_set(&vertex->texture, 1.0f, 0.0f);
+	vector2d_set(&vertex->texture, 1.0f, 1.0f);
 
 	// Bottom right.
 	vertex = polygon_get_vertex(polygon, 2);
 	vector3d_set(&vertex->position, half_width, half_height, 0.0f);
-	vector2d_set(&vertex->texture, 1.0f, 1.0f);
+	vector2d_set(&vertex->texture, 1.0f, 0.0f);
 
 	// Bottom left.
 	vertex = polygon_get_vertex(polygon, 3);
 	vector3d_set(&vertex->position, -half_width, half_height, 0.0f);
-	vector2d_set(&vertex->texture, 0.0f, 1.0f);
+	vector2d_set(&vertex->texture, 0.0f, 0.0f);
 
 	// Success.
 	return 1;

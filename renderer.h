@@ -5,6 +5,7 @@
 #include "vector4d.h"
 #include "matrix3x3.h"
 #include "matrix4x4.h"
+#include "image.h"
 
 // Generic shader types.
 typedef enum renderer_shader_type
@@ -38,12 +39,6 @@ typedef struct renderer_shader_schema
 	void *buffer;
 } renderer_shader_schema_t;
 
-// Component to render in a scene.
-typedef struct renderer_model
-{
-	void *buffer;
-} renderer_model_t;
-
 // Single compiled shader.
 typedef struct renderer_shader
 {
@@ -61,6 +56,18 @@ typedef struct renderer_uniform
 {
 	void *buffer;
 } renderer_uniform_t;
+
+// TWo dimensional texture.
+typedef struct renderer_texture
+{
+	void *buffer;
+} renderer_texture_t;
+
+// Component to render in a scene.
+typedef struct renderer_model
+{
+	void *buffer;
+} renderer_model_t;
 
 // Renderer self-initialization function.
 typedef int (*renderer_initialize_fn)(void);
@@ -138,6 +145,24 @@ typedef void (*renderer_set_uniform_matrix4x4_fn)(
 	renderer_uniform_t uniform,
 	const matrix4x4_t *matrix);
 
+// Set up integer uniform variable.
+typedef void (*renderer_set_uniform_integer_fn)(
+	renderer_uniform_t uniform,
+	int value);
+
+// Create a texture from an image.
+typedef int (*renderer_create_texture2d_fn)(
+	const image_t *image,
+	renderer_texture_t *out);
+
+// Bind a texture to be rendered.
+typedef void (*renderer_bind_texture2d_fn)(
+	renderer_texture_t texture,
+	renderer_uniform_t shader_texture);
+
+// Unbind the texture.
+typedef void (*renderer_unbind_texture2d_fn)(void);
+
 // Creating an unindexed renderable model.
 typedef int (*renderer_create_model_fn)(
 	const void *vertex_data,
@@ -193,6 +218,12 @@ typedef struct renderer
 	renderer_set_uniform_vector4d_fn set_uniform_vector4d;
 	renderer_set_uniform_matrix3x3_fn set_uniform_matrix3x3;
 	renderer_set_uniform_matrix4x4_fn set_uniform_matrix4x4;
+	renderer_set_uniform_integer_fn set_uniform_integer;
+
+	// Texture functions.
+	renderer_create_texture2d_fn create_texture2d;
+	renderer_bind_texture2d_fn bind_texture2d;
+	renderer_unbind_texture2d_fn unbind_texture2d;
 
 	// Model functions.
 	renderer_create_model_fn create_model;

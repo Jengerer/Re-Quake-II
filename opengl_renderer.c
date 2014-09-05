@@ -42,6 +42,12 @@ void opengl_null_uniform(opengl_uniform_t *uniform)
 	uniform->location = -1;
 }
 
+/* Null OpenGL texture. */
+void opengl_null_texture(opengl_texture_t *texture)
+{
+	texture->handle = 0;
+}
+
 /* Null OpenGL model. */
 void opengl_null_model(opengl_model_t *model)
 {
@@ -104,6 +110,11 @@ void initialize_opengl_interface(renderer_t *renderer)
 	renderer->set_uniform_vector4d = &opengl_set_uniform_vector4d;
 	renderer->set_uniform_matrix3x3 = &opengl_set_uniform_matrix3x3;
 	renderer->set_uniform_matrix4x4 = &opengl_set_uniform_matrix4x4;
+
+	// Texture functions.
+	renderer->create_texture2d = &opengl_create_texture2d;
+	renderer->bind_texture2d = &opengl_bind_texture2d;
+	renderer->unbind_texture2d = &opengl_unbind_texture2d;
 
 	// Model functions.
 	renderer->create_model = &opengl_create_model;
@@ -528,6 +539,73 @@ void opengl_set_uniform_matrix4x4(
 	opengl_uniform = (opengl_uniform_t*)uniform.buffer;
 	location = opengl_uniform->location;
 	glUniformMatrix4fv(location, 1, GL_TRUE, (const GLfloat*)matrix->array);
+}
+
+/* Set the value of an integer uniform variable. */
+void opengl_set_uniform_integer(
+	renderer_uniform_t uniform,
+	int value)
+{
+	opengl_uniform_t *opengl_uniform;
+	GLint location;
+
+	// Set the value.
+	opengl_uniform = (opengl_uniform_t*)uniform.buffer;
+	location = opengl_uniform->location;
+	glUniform1i(location, value);
+}
+
+/* Create 2D texture from image. */
+int opengl_create_texture2d(
+	const image_t *image,
+	renderer_texture_t *out)
+{
+	opengl_texture_t *opengl_texture;
+	GLuint texture_handle;
+
+	// Allocate space for the structure.
+	opengl_texture = (opengl_texture_t*)memory_allocate(sizeof(opengl_model_t));
+	if (opengl_texture == NULL) {
+		return 0;
+	}
+	opengl_null_texture(opengl_texture);
+	out->buffer = opengl_texture;
+
+	// Get a texture handle.
+	glGenTextures(1, &texture_handle);
+	opengl_texture->handle = texture_handle;
+
+	// Bind the texture and load the image data.
+	glBindTexture(GL_TEXTURE_2D, texture_handle);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->buffer);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Unbind the texture.
+	glBindTexture(GL_TEXTURE_2D, 0);
+	return 1;
+}
+
+/* Bind a 2D texture to render. */
+void opengl_bind_texture2d(renderer_texture_t texture, renderer_uniform_t shader_texture)
+{
+	// Bind the texture.
+	opengl_texture_t *opengl_texture = (opengl_texture_t*)texture.buffer;
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, opengl_texture->handle);
+
+	// Set the uniform value to match this texture slot.
+	// TODO: Clean this up to properly use texture indices.
+	opengl_set_uniform_integer(shader_texture, 0);
+}
+
+/* Unbind the 2D texture. */
+void opengl_unbind_texture2d(void)
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 /*
