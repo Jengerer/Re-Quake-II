@@ -1,4 +1,5 @@
 #include "licht_game.h"
+#include "image.h"
 #include "player_move.h"
 #include "math_common.h"
 #include "object_collision_2d.h"

@@ -2,16 +2,23 @@
 #include "memory_manager.h"
 #include <stdio.h>
 
+/* Clears a file for safe destruction. */
+void file_null(file_t *out)
+{
+	out->buffer = NULL;
+	out->size = 0;
+}
+
 /*
  * Read an entire file into memory.
- * Returns size of file on success and fills the address to allocated buffer.
- * Caller is responsible for cleaning the returned buffer.
+ * Returns 1 on success, 0 otherwise.
+ * Caller is responsible for cleaning the returned structure.
  */
-int read_file(const char *filename, char **out)
+int file_load(const char *filename, file_t *out)
 {
 	FILE *file;
 	int length;
-	char *buffer;
+	void *buffer;
 
 	// Open the file.
 	file = fopen(filename, "rb");
@@ -31,21 +38,37 @@ int read_file(const char *filename, char **out)
 	}
 
 	// Allocate space for the file.
-	buffer = (char*)memory_allocate(length + 1);
+	buffer = memory_allocate(length);
 	if (buffer == NULL) {
 		fclose(file);
 		return 0;
-	}	
+	}
 
-	// Read the file and fill out the pointer.
+	// Update the file structure for safe clean-up.
+	out->buffer = buffer;
+	out->size = length;
+
+	// Read the file and fill out the buffer.
 	if (fread(buffer, length, 1, file) != 1) {
 		memory_free(buffer);
 		fclose(file);
 		return 0;
 	}
 	fclose(file);
-	buffer[length] = '\0';
-	*out = buffer;
-	return length;
+
+	// Fill output.
+	return 1;
 }
 
+/* Clean up a file structure. */
+void file_destroy(file_t *file)
+{
+	void *buffer;
+
+	// Free buffer if it has one.
+	buffer = file->buffer;
+	if (buffer != NULL) {
+		memory_free(buffer);
+	}
+	file_null(file);
+}

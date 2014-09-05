@@ -39,10 +39,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SDK_LIB_DIR)\glew\include;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SDK_LIB_DIR)\libpng;$(SDK_LIB_DIR)\glew\include;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(SDK_LIB_DIR)\glew\lib\Release\Win32;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SDK_LIB_DIR)\libpng\projects\vstudio\Debug;$(SDK_LIB_DIR)\glew\lib\Release\Win32;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SDK_LIB_DIR)\glew\include;$(SDK_LIB_DIR)\sdl2\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -59,7 +59,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2main.lib;SDL2.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libpng16.lib;opengl32.lib;glew32.lib;SDL2main.lib;SDL2.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -80,10 +80,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bsp_map.c" />
+    <ClCompile Include="bsp_map_parser.c" />
     <ClCompile Include="camera.c" />
     <ClCompile Include="engine.c" />
+    <ClCompile Include="error_stack.c" />
     <ClCompile Include="file.c" />
     <ClCompile Include="game.c" />
+    <ClCompile Include="image.c" />
     <ClCompile Include="indexed_mesh.c" />
     <ClCompile Include="keyboard_manager.c" />
     <ClCompile Include="main.c" />
@@ -111,11 +115,15 @@
   <ItemGroup>
     <ClInclude Include="aabb.h" />
     <ClInclude Include="aabb_entity.h" />
+    <ClInclude Include="bsp_map.h" />
+    <ClInclude Include="bsp_map_parser.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="error_stack.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="image.h" />
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="keyboard_manager.h" />
     <ClInclude Include="map.h" />

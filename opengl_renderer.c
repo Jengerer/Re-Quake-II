@@ -154,8 +154,10 @@ int opengl_create_shader(const char *filename,
 	renderer_shader_t *out)
 {
 	opengl_shader_t *shader;
+	file_t shader_file;
 	GLuint shader_handle;
 	GLchar *source;
+	GLint shader_length;
 	int compile_status;
 	GLsizei log_length;
 	GLchar *log;
@@ -168,24 +170,28 @@ int opengl_create_shader(const char *filename,
 	}
 	opengl_null_shader(shader);
 	out->buffer = shader;
-	
-	// Load shader source.
-	if (read_file(filename, &source) == 0) {
-		printf("Failed to open shader file '%s'.\n", filename);
-		return 0;
-	}
 
-	// Create and compile shader.
+	// Create shader handle.
 	shader_type = get_opengl_shader_type(type);
 	shader_handle = glCreateShader(shader_type);
 	if (shader_handle == 0) {
 		printf("Failed to create GL shader for '%s'.\n", filename);
 		return 0;
 	}
-	glShaderSource(shader_handle, 1, (const GLchar**)&source, 0);
-	glCompileShader(shader_handle);
-	memory_free(source);
 	shader->handle = shader_handle;
+	
+	// Load shader source and compile.
+	file_null(&shader_file);
+	if (file_load(filename, &shader_file) == 0) {
+		printf("Failed to open shader file '%s'.\n", filename);
+		file_destroy(&shader_file);
+		return 0;
+	}
+	source = (GLchar*)shader_file.buffer;
+	shader_length = (GLint)shader_file.size;
+	glShaderSource(shader_handle, 1, (const GLchar**)&source, &shader_length);
+	glCompileShader(shader_handle);
+	file_destroy(&shader_file);
 
 	// Print error/warning.
 	glGetShaderiv(shader_handle, GL_INFO_LOG_LENGTH, &log_length);

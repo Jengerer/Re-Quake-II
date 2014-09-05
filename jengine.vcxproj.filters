@@ -99,6 +99,18 @@
     <ClCompile Include="renderable_object.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="error_stack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp_map.c">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp_map_parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="image.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -189,6 +201,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="renderable_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="error_stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp_map_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
