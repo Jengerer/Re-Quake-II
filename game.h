@@ -11,7 +11,7 @@ typedef void (*game_destroy_fn)(void);
 typedef int (*game_load_resources_fn)(const renderer_t *renderer);
 typedef void (*game_free_resources_fn)(const renderer_t *renderer);
 typedef int (*game_render_fn)(const renderer_t *renderer);
-typedef int (*game_frame_begin_fn)(void);
+typedef int (*game_frame_begin_fn)(float time);
 typedef int (*game_frame_end_fn)(void);
 typedef void (*game_handle_keyboard_fn)(const keyboard_manager_t *keyboard);
 

@@ -1,5 +1,12 @@
 #include "object_collision_2d.h"
 
+/* Initialize a trace result to full time movement. */
+void trace_result_initialize(trace_result_t *trace, float time, const vector3d_t *velocity)
+{
+	trace->collision_time = time;
+	vector3d_scale(velocity, time, &trace->movement);
+}
+
 /*
  * Run a collision trace for two objects along the XY plane. 
  * Returns 1 if a collision took place, 0 otherwise.
@@ -16,7 +23,7 @@ int object_trace_collision_2d(
 
 	// Set up result and time sentinel.
 	inner_trace.collision_time = time;
-	vector3d_copy(velocity, &inner_trace.movement);
+	vector3d_scale(velocity, time, &inner_trace.movement);
 
 	// Trace against axes of object A and then B.
 	collided = 1;
@@ -88,7 +95,7 @@ int object_trace_against_axes_2d(
 		else if (a_min >= b_max) {
 			// No collision yet, but check for future.
 			if (velocity_dot < 0.0f) {
-				float hit_time = (b_max - a_min) / (velocity_dot);
+				float hit_time = time * (b_max - a_min) / (velocity_dot);
 				if (hit_time < time) {
 					// We can hit, but is this the furthest collision?
 					if (hit_time > result->collision_time) {
@@ -99,6 +106,11 @@ int object_trace_against_axes_2d(
 				}
 			}
 			return 0;
+		}
+		else if (inner_trace.collision_time < 0.0f) {
+			// Already colliding.
+			inner_trace.collision_time = 0.0f;
+			vector3d_clear(&inner_trace.movement);
 		}
 	}
 
