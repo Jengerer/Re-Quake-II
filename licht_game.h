@@ -2,7 +2,7 @@
 #define _LICHT_GAME_H_
 
 #include "camera.h"
-#include "game.h"
+#include "game_interface.h"
 #include "map.h"
 #include "player.h"
 #include "renderable_object.h"
@@ -34,15 +34,13 @@ typedef struct licht_context
 void licht_context_null(licht_context_t *context);
 
 // Fill out game interface.
-void licht_initialize_interface(game_t *game);
+void licht_initialize_interface(game_interface_t *game);
 
 // Game interface functions.
 const char* licht_get_name(void);
 int licht_initialize(void);
 void licht_destroy(void);
-int licht_load_resources(const renderer_t *renderer);
-void licht_free_resources(const renderer_t *renderer);
-int licht_render(const renderer_t *renderer);
+int licht_render(void);
 int licht_frame_begin(float time);
 int licht_frame_end(void);
 void licht_handle_keyboard(const keyboard_manager_t *keyboard);

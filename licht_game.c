@@ -30,9 +30,6 @@ const renderer_shader_attribute_t mesh_attributes[NUM_PERSPECTIVE_SHADER_ATTRIBU
 
 // Private functions.
 int initialize_shaders(const renderer_t *renderer);
-int add_renderable_object(const object_t *object);
-int load_renderable_object_resources(const renderer_t *renderer, renderer_shader_schema_t schema);
-void free_renderable_object_resources(const renderer_t *renderer);
 
 /*
  * Null licht context for safe destruction.
@@ -150,7 +147,6 @@ void licht_destroy(void)
 int licht_load_resources(const renderer_t *renderer)
 {
 	matrix4x4_t perspective_matrix;
-	image_t image;
 
 	// Initialize shaders.
 	if (!initialize_shaders(renderer)) {
@@ -171,13 +167,6 @@ int licht_load_resources(const renderer_t *renderer)
 		return 0;
 	}
 
-	// Load the texture and bind it.
-	if (!image_load_png("swag.png", &image)) {
-		return 0;
-	}
-	if (!renderer->create_texture2d(&image, &licht.swag)) {
-		return 0;
-	}
 	if (!renderer->get_uniform(licht.program, "texture2d", &licht.texture2d)) {
 		return 0;
 	}
@@ -219,12 +208,26 @@ void licht_free_resources(const renderer_t *renderer)
 int licht_render(const renderer_t *renderer)
 {
 	renderable_object_t *renderable;
+	const char* pic;
+	image_t image;
+	static int i = 1;
 
 	// Clear the scene.
 	renderer->clear_scene();
 
 	// Set up the program.
 	renderer->set_program(licht.program);
+
+	// Load the texture and bind it.
+	i = (i + 1) % 2;
+	pic = (i ? "swag.png" : "yolo.png");
+	if (!image_load_png(pic, &image)) {
+		return 0;
+	}
+	if (!renderer->create_texture2d(&image, &licht.swag)) {
+		return 0;
+	}
+	image_destroy(&image);
 
 	// Bind the texture.
 	renderer->bind_texture2d(licht.swag, licht.texture2d);
@@ -290,67 +293,10 @@ void licht_handle_keyboard(const keyboard_manager_t *keyboard)
 	}
 }
 
-/* Add an object to the rendering list. */
-int add_renderable_object(const object_t *object)
-{
-	renderable_object_t *renderable;
-
-	// Create renderable object.
-	renderable = memory_allocate(sizeof(renderable_object_t));
-	if (renderable == NULL) {
-		return 0;
-	}
-	renderable_object_null(renderable);
-
-	// Add to list to be destroyed in case of failure.
-	if (licht.renderable_head != NULL) {
-		licht.renderable_head->prev = renderable;
-	}
-	renderable->next = licht.renderable_head;
-	licht.renderable_head = renderable;
-
-	// Initialize renderable.
-	if (!renderable_object_initialize(renderable, object)) {
-		return 0;
-	}
-
-	return 1;
-}
-
-/* Load all models for the renderables. */
-int load_renderable_object_resources(const renderer_t *renderer, renderer_shader_schema_t schema)
-{
-	renderable_object_t *renderable;
-
-	// Go through each renderable. 
-	renderable = licht.renderable_head;
-	while (renderable != NULL) {
-		if (!renderable_object_load_resources(renderable, renderer, schema)) {
-			return 0;
-		}
-		renderable = renderable->next;
-	}
-
-	return 1;
-}
-
-/* Destroy all models for the renderables. */
-void free_renderable_object_resources(const renderer_t *renderer)
-{
-	renderable_object_t *renderable;
-
-	// Go through each renderable.
-	renderable = licht.renderable_head;
-	while (renderable != NULL) {
-		renderable_object_free_resources(renderable, renderer);
-		renderable = renderable->next;
-	}
-}
-
 /*
  * Initialize the game's shaders for rendering.
  */
-int initialize_shaders(const renderer_t *renderer)
+int initialize_shaders(void)
 {
 	renderer_shader_t vertex_shader, *licht_vertex_shader;
 	renderer_shader_t fragment_shader, *licht_fragment_shader;

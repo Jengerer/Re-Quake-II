@@ -12,6 +12,8 @@ typedef struct window
     SDL_Window *sdl_window;
 	SDL_GLContext sdl_gl;
 	keyboard_manager_t keyboard;
+
+	// Window size parameters.
 } window_t;
 
 // Window initialization.

@@ -16,6 +16,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{c5a16e9e-7fc3-4fe5-8b5f-010a277d2024}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\interfaces">
+      <UniqueIdentifier>{e8ca7fb2-f917-48c5-92bb-6214c337a6bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -51,9 +54,6 @@
     <ClCompile Include="engine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vector2d.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -64,9 +64,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="player.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="memory_manager.c">
@@ -102,13 +99,28 @@
     <ClCompile Include="error_stack.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bsp_map.c">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="bsp_map_parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="image.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer_common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer_interface.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_interface.c">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_interface.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_common.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,9 +161,6 @@
     <ClInclude Include="engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vector2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -165,9 +174,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="aabb_entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="memory_manager.h">
@@ -213,6 +219,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_interface.h">
+      <Filter>Header Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="game_interface.h">
+      <Filter>Header Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_interface.h">
+      <Filter>Header Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

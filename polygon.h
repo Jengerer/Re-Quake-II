@@ -1,15 +1,13 @@
 #ifndef _POLYGON_H_
 #define _POLYGON_H_
 
-#include "renderer.h"
+#include "renderer_interface.h"
 #include "indexed_mesh.h"
 #include "plane.h"
 
-/*
- * Representing a polygon in which all vertices are coplanar.
- * Assumes the polygon has at least 3 vertices.
- * Assumes vertices are specified in clock-wise order.
- */
+// Representing a polygon in which all vertices are coplanar.
+// Assumes the polygon has at least 3 vertices.
+// Assumes vertices are specified in clock-wise order.
 typedef struct polygon
 {
 	// Mesh representing this polygon's shape.

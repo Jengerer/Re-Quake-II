@@ -1,85 +1,93 @@
 #include "engine.h"
+#include "engine_interface.h"
+#include "game_interface.h"
 #include "memory_manager.h"
+#include "window.h"
 #include <stdio.h>
 
-/*
- * Null engine for safe destruction.
- */
-void engine_null(engine_t *engine)
+// Private engine structures.
+// Structure for storing engine configuration.
+typedef struct engine_configuration
 {
-	window_null(&engine->window);
-	renderer_null_interface(&engine->renderer);
-	game_null(&engine->game);
+	int width;
+	int height;
+} engine_configuration_t;
+
+// Engine state struct.
+typedef struct engine
+{
+	engine_configuration_t config;
+	window_t window;
+	renderer_interface_t renderer;
+	game_interface_t game;
+} engine_t;
+
+// Engine instance.
+static engine_t engine;
+void engine_null(void);
+
+// Interface functions.
+void engine_update_window(int width, int height, int flags);
+void engine_initialize_interface(void);
+
+// Null engine for safe destruction.
+void engine_null(void)
+{
+	// Null interface and then fill implemented functions.
+	engine_interface_null();
+	engine_initialize_interface();
+	window_null(&engine.window);
+	renderer_null_interface(&engine.renderer);
+	game_null(&engine.game);
 }
 
-/*
- * Initialize engine and game.
- * Engine's configuration struct and renderer interface should be filled out before called.
- */
-int engine_initialize(engine_t *engine)
+// Start the engine and initialize all of the components.
+// This is guaranteed to at least initialize memory manager and engine functions interface.
+int engine_initialize(void)
 {
 	engine_configuration_t *config;
 	window_t *window;
-	renderer_t *renderer;
-	game_t *game;
+	renderer_interface_t *renderer;
 	const char* title;
-	config = &engine->config;
-	window = &engine->window;
-	renderer = &engine->renderer;
-	game = &engine->game;
+	config = &engine.config;
 
 	// Initialize memory manager.
 	memory_manager_initialize();
 
+	// Initialize interface.
+	engine_initialize_interface();
+
 	// Create SDL window.
-	title = game->get_name();
+	title = engine.game.get_name();
 	if (!window_initialize(config->width, config->height, title, window)) {
 		return 0;
 	}
 
 	// Create renderer.
-	if (!renderer->initialize()) {
-		// Clean up if partially initialized.
+	if (!engine.renderer.initialize()) {
 		return 0;
 	}
 
 	// Create game.
-	if (!game->initialize()) {
-		return 0;
-	}
-
-	// Load game resources.
-	if (!game->load_resources(renderer)) {
+	if (!engine.game.initialize()) {
 		return 0;
 	}
 	return 1;
 }
 
-/*
- * Destroy engine and game.
- */
-void engine_destroy(engine_t *engine)
+// Destroy engine and game.
+void engine_destroy(void)
 {
-	window_t *window;
-	renderer_t *renderer;
-	game_t *game;
-
 	// Deallocate game resources.
-	renderer = &engine->renderer;
-	game = &engine->game;
-	game->free_resources(renderer);
-
-	// Destroy game.
-	game->destroy();
+	engine.game.destroy();
 
 	// Destroy renderer.
-	renderer->destroy();
+	engine.renderer.destroy();
 
 	// Destroy window.
-	window = &engine->window;
-	window_destroy(window);
+	window_destroy(&engine.window);
 
-	// Dump memory allocation.
+	// Dump memory allocation/leaks.
 	memory_manager_destroy();
 }
 
@@ -87,15 +95,15 @@ void engine_destroy(engine_t *engine)
  * Run engine main loop.
  * Returns 1 if no errors occured, 0 otherwise.
  */
-int engine_run(engine_t *engine)
+int engine_run(void)
 {
-	game_t *game;
+	game_interface_t *game;
 	window_t *window;
 	keyboard_manager_t *keyboard;
 	int done;
 	
-	game = &engine->game;
-	window = &engine->window;
+	game = &engine.game;
+	window = &engine.window;
 	keyboard = &window->keyboard;
 	done = 0;
 	while (!done) {
@@ -113,11 +121,23 @@ int engine_run(engine_t *engine)
 			}
 
 			// Render a new scene.
-			game->render(&engine->renderer);
+			game->render();
 
 			// Swap the buffer.
-			window_swap_buffer(&engine->window);
+			window_swap_buffer(window);
 		}
 	}
 	return 1;
+}
+
+// Initialize interface with implemented functions.
+void engine_initialize_interface(void)
+{
+	engine_functions.update_window = &engine_update_window;
+}
+
+
+// Engine interface function for updating window.
+void engine_update_window(int width, int height, int flags)
+{
 }

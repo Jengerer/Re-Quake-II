@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "engine_interface.h"
 #include "error_stack.h"
 #include "opengl_renderer.h"
 #include "licht_game.h"
@@ -15,8 +16,8 @@ int main(int argc, char *argv[])
 	(void)argv;
 
 	// Engine state.
-	engine_t engine;
-	engine_null(&engine);
+	engine_interface_null();
+	engine_null();
 
 	// Create configuration for engine.
 	engine_configuration_t *config = &engine.config;
