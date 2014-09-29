@@ -236,6 +236,15 @@
     <ClInclude Include="engine_common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_manager_interface.h">
+      <Filter>Header Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="input_manager_interface.h">
+      <Filter>Header Files\interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine.frag">

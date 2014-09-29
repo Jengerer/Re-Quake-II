@@ -128,8 +128,11 @@
     <ClInclude Include="error_stack.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="game_interface.h" />
+    <ClInclude Include="game_manager_interface.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="indexed_mesh.h" />
+    <ClInclude Include="input_manager_interface.h" />
+    <ClInclude Include="keyboard_common.h" />
     <ClInclude Include="keyboard_manager.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="math_common.h" />
