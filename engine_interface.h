@@ -24,9 +24,6 @@ typedef struct engine_interface
 	engine_get_graphics_resources get_graphics_resources;
 } engine_interface_t;
 
-// Engine interface initialization.
-void engine_interface_null();
-
 // Reference to singleton engine interface.
 extern engine_interface_t engine_functions;
 

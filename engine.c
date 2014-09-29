@@ -1,6 +1,6 @@
 #include "engine.h"
 #include "engine_interface.h"
-#include "game_interface.h"
+#include "game_manager_interface.h"
 #include "memory_manager.h"
 #include "window.h"
 #include <stdio.h>
@@ -19,7 +19,7 @@ typedef struct engine
 	engine_configuration_t config;
 	window_t window;
 	renderer_interface_t renderer;
-	game_interface_t game;
+	game_manager_interface_t game_manager;
 } engine_t;
 
 // Engine instance.
@@ -34,7 +34,6 @@ void engine_initialize_interface(void);
 void engine_null(void)
 {
 	// Null interface and then fill implemented functions.
-	engine_interface_null();
 	engine_initialize_interface();
 	window_null(&engine.window);
 	renderer_null_interface(&engine.renderer);
@@ -135,7 +134,6 @@ void engine_initialize_interface(void)
 {
 	engine_functions.update_window = &engine_update_window;
 }
-
 
 // Engine interface function for updating window.
 void engine_update_window(int width, int height, int flags)
