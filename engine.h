@@ -30,5 +30,8 @@ int engine_create_window(
 	int height,
 	int flags);
 int engine_update_window(int width, int height, int flags);
+void engine_swap_buffers(void);
+const renderer_t *engine_get_renderer(void);
+const renderer_shader_utilities_t *engine_get_shader_utilities(void);
 
 #endif // _ENGINE_H_

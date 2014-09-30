@@ -57,3 +57,27 @@ int game_manager_tick(float delta_time)
 	game_manager.client.on_tick_end();
 	return 1;
 }
+
+// Get current game time.
+float game_manager_get_time(void)
+{
+	return 0.0f;
+}
+
+// Get a reference to the renderer interface.
+const renderer_t *game_manager_get_renderer(void)
+{
+	return game_manager.engine.get_renderer();
+}
+
+// Get a reference to the renderer shader utilities.
+const renderer_shader_utilities_t *game_manager_get_shader_utilities(void)
+{
+	return game_manager.engine.get_shader_utilities();
+}
+
+// Frame end callback for module to call when it's finished drawing.
+void game_manager_present_frame(void)
+{
+	game_manager.engine.swap_buffers();
+}

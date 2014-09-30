@@ -105,7 +105,7 @@ window_event_result_t sdl_window_handle_events(sdl_window_t *window)
 /*
  * Trigger buffer swap for the window.
  */
-void sdl_window_swap_buffer(sdl_window_t *window)
+void sdl_window_swap_buffers(sdl_window_t *window)
 {
 	SDL_GL_SwapWindow(window->sdl_window);
 }

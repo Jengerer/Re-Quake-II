@@ -24,6 +24,6 @@ void sdl_window_destroy(sdl_window_t *window);
 
 // Window running functions.
 window_event_result_t sdl_window_handle_events(sdl_window_t *window);
-void sdl_window_swap_buffer(sdl_window_t *window);
+void sdl_window_swap_buffers(sdl_window_t *window);
 
 #endif // _WINDOW_H_

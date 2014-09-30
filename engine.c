@@ -79,9 +79,6 @@ int engine_run(void)
 		if (!listener->on_tick(1.0f / 60.0f)) {
 			return 0;
 		}
-
-		// Swap the buffer.
-		sdl_window_swap_buffer(window);
 	}
 	return 1;
 }
@@ -107,4 +104,22 @@ int engine_update_window(int width, int height, int flags)
 	(void)height;
 	(void)flags;
 	return 1;
+}
+
+// Swap buffers in window.
+void engine_swap_buffers(void)
+{
+	sdl_window_swap_buffers(&engine.window);
+}
+
+// Get reference to renderer interface.
+const renderer_t *engine_get_renderer(void)
+{
+	return &engine.renderer;
+}
+
+// Get reference to renderer shader utilities
+const renderer_shader_utilities_t *engine_get_shader_utilities(void)
+{
+	return &engine.shaders;
 }

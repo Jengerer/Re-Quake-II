@@ -45,7 +45,7 @@ void client_initialize(void)
 }
 
 // Destroy the licht context.
-void client_destroy(void)
+void client_shutdown(void)
 {
 	client_free_resources();
 }

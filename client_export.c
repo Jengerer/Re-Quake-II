@@ -2,7 +2,7 @@
 #include "game_client.h"
 
 // Fill out game manager listener functions with client implementation.
-void populate_client_game_manager_listener(game_manager_listener_t *listener)
+void client_populate_game_manager_listener(game_manager_listener_t *listener)
 {
 	listener->on_null = &client_null;
 	listener->on_initialize = &client_initialize;
@@ -13,7 +13,7 @@ void populate_client_game_manager_listener(game_manager_listener_t *listener)
 }
 
 // Get structure for game manager to fill with utilities.
-game_manager_utilities_t *get_client_game_manager_utilities(void)
+game_manager_utilities_t *client_get_game_manager_utilities_destination(void)
 {
 	return &client.game_manager;
 }
