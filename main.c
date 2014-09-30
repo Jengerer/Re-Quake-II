@@ -1,8 +1,7 @@
-#include "engine.h"
-#include "engine_interface.h"
+#include "engine_export.h"
 #include "error_stack.h"
 #include "opengl_renderer.h"
-#include "licht_game.h"
+#include "client_export.h"
 #include <stdio.h>
 
 // Application constants.
@@ -12,17 +11,11 @@
 int main(int argc, char *argv[])
 {
 	int success;
+	engine_interface_t *engine;
 	(void)argc;
 	(void)argv;
 
-	// Engine state.
-	engine_interface_null();
-	engine_null();
-
-	// Create configuration for engine.
-	engine_configuration_t *config = &engine.config;
-	config->width = APPLICATION_WIDTH;
-	config->height = APPLICATION_HEIGHT;
+	// Get 
 
 	// Initialize error stack for error logging..
 	error_stack_initialize();

@@ -1,4 +1,5 @@
-#include "window.h"
+#include "sdl_window.h"
+#include "error_stack.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,30 +7,31 @@
 #define WINDOW_BUFFER_DEPTH 24
 
 // Private functions.
-static void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event);
-static key_code_t sdl_key_to_engine(SDL_Keycode sdl_code);
+static window_event_result_t handle_keyboard_event(const sdl_window_t *window, const SDL_KeyboardEvent *event);
+static key_code_t translate_sdl_key(SDL_Keycode sdl_code);
 
 /*
  * Base window initialization for easier cleanup.
  */
-void window_null(window_t *window)
+void sdl_window_null(sdl_window_t *window)
 {
+	window_null(&window->base);
 	window->sdl_window = NULL;
-	window->sdl_gl = NULL;
+	window->gl_context = NULL;
 }
 
 /*
  * Initialize SDL window with OpenGL context.
  * Returns 1 on success and fills output struct.
  */
-int window_initialize(int width, int height, const char *title, window_t *out)
+int sdl_window_initialize(int width, int height, const char *title, sdl_window_t *out)
 {
     SDL_Window *result;
     SDL_GLContext context;
 
     // Initialize SDL.
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        fprintf(stderr, "Failed to initialize SDL: %s.\n", SDL_GetError());
+		error_stack_log("Failed to initialize SDL: %s.\n", SDL_GetError());
         return 0;
     }
 
@@ -45,7 +47,7 @@ int window_initialize(int width, int height, const char *title, window_t *out)
     // Create SDL window.
     result = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
     if (result == NULL) {
-        fprintf(stderr, "Failed to create OpenGL window.\n");
+        error_stack_log("Failed to create OpenGL window.\n");
         return 0;
     }
 	out->sdl_window = result;
@@ -53,16 +55,13 @@ int window_initialize(int width, int height, const char *title, window_t *out)
     // Create OpenGL context.
     context = SDL_GL_CreateContext(result);
     if (context == NULL) {
-        fprintf(stderr, "Failed to create OpenGL context: %s.\n", SDL_GetError());
+        error_stack_log("Failed to create OpenGL context: %s.\n", SDL_GetError());
         return 0;
     }
-	out->sdl_gl = context;
+	out->gl_context = context;
 
 	// Enable vertical sync.
 	SDL_GL_SetSwapInterval(1);
-
-	// Initialize keyboard manager.
-	initialize_keyboard_manager(&out->keyboard);
 
 	// Finished!
     return 1;
@@ -71,11 +70,11 @@ int window_initialize(int width, int height, const char *title, window_t *out)
 /*
  * Clean up window and GL context.
  */
-void window_destroy(window_t *window)
+void sdl_window_destroy(sdl_window_t *window)
 {
     // Destroy context/window.
-	if (window->sdl_gl != NULL) {
-		SDL_GL_DeleteContext(window->sdl_gl);
+	if (window->gl_context != NULL) {
+		SDL_GL_DeleteContext(window->gl_context);
 	}
 	if (window->sdl_window != NULL) {
 		SDL_DestroyWindow(window->sdl_window);
@@ -84,17 +83,15 @@ void window_destroy(window_t *window)
 
 /*
  * Handle events for the window.
- * Returns 0 only if window close event was triggered, 1 otherwise.
  */
-int window_handle_events(window_t *window)
+window_event_result_t sdl_window_handle_events(sdl_window_t *window)
 {
-	(void)window;
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) {
 		// Trigger close if event is to close window.
 		switch (event.type) {
 		case SDL_QUIT:
-			return 0;
+			return WINDOW_EVENT_QUIT;
 
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
@@ -108,7 +105,7 @@ int window_handle_events(window_t *window)
 /*
  * Trigger buffer swap for the window.
  */
-void window_swap_buffer(window_t *window)
+void sdl_window_swap_buffer(sdl_window_t *window)
 {
 	SDL_GL_SwapWindow(window->sdl_window);
 }
@@ -116,42 +113,42 @@ void window_swap_buffer(window_t *window)
 /*
  * Handle keyboard event by updating state.
  */
-void handle_keyboard_event(window_t *window, SDL_KeyboardEvent *event)
+window_event_result_t handle_keyboard_event(const sdl_window_t *window, const SDL_KeyboardEvent *event)
 {
 	SDL_Keycode sdl_code;
 	key_code_t key_code;
-	key_state_t old_state;
-	key_state_t new_state;
+	const window_t *base;
+	window_event_result_t result;
 
 	// Convert code to engine code.
 	sdl_code = event->keysym.sym;
-	key_code = sdl_key_to_engine(sdl_code);
+	key_code = translate_sdl_key(sdl_code);
 	if (key_code == ENGINE_KEY_INVALID) {
-		return;
+		return WINDOW_EVENT_OK;
 	}
 
-	// Update state in keyboard manager.
-	old_state = get_key_state(&window->keyboard, key_code);
-	if (event->state == SDL_PRESSED) {
-		new_state = FLAG_KEY_DOWN;
+	// Send event.
+	base = &window->base;
+	switch (event->state) {
+	case SDL_PRESSED:
+		result = window_handle_key_press(base, key_code);
+		break;
+	case SDL_RELEASED:
+		result = window_handle_key_release(base, key_code);
+		break;
+	default:
+		result = WINDOW_EVENT_OK;
+		break;
 	}
-	else {
-		new_state = 0;
-	}
-
-	// Update if state changed.
-	if ((old_state & new_state) == 0) {
-		new_state |= FLAG_KEY_CHANGED;
-	}
-	update_key_state(&window->keyboard, key_code, new_state);
-	
+	return result;
 }
 
 /*
  * Convert SDL key code to engine key code.
  */
-static key_code_t sdl_key_to_engine(SDL_Keycode sdl_code)
+static key_code_t translate_sdl_key(SDL_Keycode sdl_code)
 {
+	// Alphabet translation.
 	if ((sdl_code >= SDLK_a) && (sdl_code <= SDLK_z)) {
 		return (key_code_t)(ENGINE_KEY_A + (sdl_code - SDLK_a));
 	}

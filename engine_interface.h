@@ -1,30 +1,17 @@
 #ifndef _ENGINE_INTERFACE_H_
 #define _ENGINE_INTERFACE_H_
 
-#include "renderer_interface.h"
+// Engine functions.
+typedef int (*engine_initialize_t)(void);
+typedef void (*engine_destroy_t)(void);
+typedef int (*engine_run_t)(void);
 
-// Engine window update flags.
-#define ENGINE_WINDOW_FULLSCREEN (1 << 0)
-#define ENGINE_WINDOW_BORDERLESS (1 << 1)
-
-// Create/update window size and appearance.
-typedef void (*engine_update_window_t)(int width, int height, int flags);
-
-// Engine resource functions.
-// TODO: eventually the resource loader should be its own interface.
-typedef const renderer_interface_t *(*engine_get_graphics_resources)(void);
-
-// Engine functions/callbacks to be called by game/renderer.
+// Interface for the application to initialize, run, and shut down the engine.
 typedef struct engine_interface
 {
-	// Engine display functions.
-	engine_update_window_t update_window;
-
-	// Engine resource functions.
-	engine_get_graphics_resources get_graphics_resources;
+	engine_initialize_t initialize;
+	engine_shutdown_t shutdown;
+	engine_run_t run;
 } engine_interface_t;
-
-// Reference to singleton engine interface.
-extern engine_interface_t engine_functions;
 
 #endif // _ENGINE_INTERFACE_H_

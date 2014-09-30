@@ -1,7 +1,6 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
-#include "entity.h"
 #include "matrix4x4.h"
 
 // Structure for representing a point of view.

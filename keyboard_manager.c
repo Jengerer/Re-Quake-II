@@ -4,15 +4,7 @@
 static keyboard_manager_t keyboard;
 
 // Private functions.
-void null_keyboard_key_state(keyboard_key_t *key);
-
-/*
- * Clear keyboard key state object.
- */
-void null_keyboard_key_state(keyboard_key_t *key)
-{
-	key->state = 0;
-}
+void null_keyboard_key_state(key_state_t *key);
 
 /*
  * Initialize keyboard manager object.
@@ -21,7 +13,7 @@ void initialize_keyboard_manager(void)
 {
 	int i;
 	for (i = 0; i < ENGINE_KEY_MAX; ++i) {
-		null_keyboard_key_state(&keyboard.keys[i]);
+		null_keyboard_key_state(&keyboard.states[i]);
 	}
 }
 
@@ -31,10 +23,10 @@ void initialize_keyboard_manager(void)
 void refresh_keyboard_state(void)
 {
 	int i;
-	keyboard_key_t *key;
+	key_state_t *state;
 	for (i = 0; i < ENGINE_KEY_MAX; ++i) {
-		key = &keyboard.keys[i];
-		key->state &= ~(FLAG_KEY_DOWN);
+		state = &keyboard.states[i];
+		state->flags.changed = 0;
 	}
 }
 
@@ -43,17 +35,16 @@ void refresh_keyboard_state(void)
  */
 key_state_t get_key_state(key_code_t key_code)
 {
-	const keyboard_key_t *key = &keyboard.keys[key_code];
-	return key->state;
+	return keyboard.states[key_code];
 }
 
 /*
  * Update keyboard state in the manner.
  */
-void update_key_state(keyboard_manager_t *manager, key_code_t key_code, key_state_t new_state)
+void update_key_state(key_code_t key_code, key_state_t new_state)
 {
-	keyboard_key_t *key = &keyboard.keys[key_code];
-	key->state = new_state;
+	key_state_t *state = &keyboard.states[key_code];
+	*state = new_state;
 }
 
 // Retrieve singleton keyboard manager instance.
@@ -61,4 +52,10 @@ void update_key_state(keyboard_manager_t *manager, key_code_t key_code, key_stat
 const keyboard_manager_t *get_keyboard(void)
 {
 	return &keyboard;
+}
+
+// Clear keyboard key state object.
+void null_keyboard_key_state(key_state_t *state)
+{
+	state->as_char = 0;
 }

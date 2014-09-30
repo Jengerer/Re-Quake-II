@@ -1,257 +1,296 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
+    <Filter Include="engine">
+      <UniqueIdentifier>{818a289e-5b95-4b6a-9673-c3b173113824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game_manager">
+      <UniqueIdentifier>{081cf71d-18a5-4f77-be95-1278b74dcbd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game_manager\include">
+      <UniqueIdentifier>{aa17187b-a2a2-4cc8-8bc5-2b788d16448b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\include">
+      <UniqueIdentifier>{04cfec0d-6c44-4dff-b22a-626f004df688}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\include\interfaces">
+      <UniqueIdentifier>{2d1182b2-4a3c-4211-be96-4f3e12a5ccf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{dacc5fb6-90c1-4396-9bf0-2b23d4a03c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\include">
+      <UniqueIdentifier>{1a31ab83-097f-45c6-ac38-9c629f599d7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\src">
+      <UniqueIdentifier>{d5a7ee15-3838-456f-a298-e8396dba566e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\src">
+      <UniqueIdentifier>{5c0d7467-a3af-4f9d-9b78-1e823653d9b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opengl_renderer">
+      <UniqueIdentifier>{d31f41e5-e7d6-4047-bc18-eae08c683d04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opengl_renderer\include">
+      <UniqueIdentifier>{0d7b6beb-30a2-43fb-b72f-c9f24de7b889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opengl_renderer\src">
+      <UniqueIdentifier>{4f5bf486-e9b2-447d-b45a-3ed1f5135f5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game_manager\include\interfaces">
+      <UniqueIdentifier>{e8ca7fb2-f917-48c5-92bb-6214c337a6bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{8336659f-2e1b-4498-affd-284e222234f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\common">
+      <UniqueIdentifier>{c7d27341-2389-4eb5-9f78-e083de5ad27e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\common\include">
+      <UniqueIdentifier>{e1543dd9-4962-472d-800a-8d2caa4853e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\client">
+      <UniqueIdentifier>{9f35ee5c-bb60-4439-9d19-91d955254485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\client\include">
+      <UniqueIdentifier>{e7f7710a-f9c9-4a5e-ae83-51023361d14b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\client\src">
+      <UniqueIdentifier>{bd560bf5-1d7b-4cf0-8415-6e21240fe441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\common\src">
+      <UniqueIdentifier>{4661b457-d763-436a-8899-2fba3be2ce09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{c5a16e9e-7fc3-4fe5-8b5f-010a277d2024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
+    <Filter Include="resources">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{c5a16e9e-7fc3-4fe5-8b5f-010a277d2024}</UniqueIdentifier>
+    <Filter Include="game_manager\src">
+      <UniqueIdentifier>{fde04068-fd9d-4521-b6e9-71f7d58f65ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\interfaces">
-      <UniqueIdentifier>{e8ca7fb2-f917-48c5-92bb-6214c337a6bb}</UniqueIdentifier>
+    <Filter Include="game_manager\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="window.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vector3d.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="map.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="file.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_renderer.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="polygon.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="world.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="indexed_mesh.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="engine.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vector2d.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="keyboard_manager.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player_move.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_manager.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vector4d.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix3x3.c">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="matrix4x4.c">
-      <Filter>Source Files</Filter>
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix3x3.c">
+      <Filter>common\src</Filter>
     </ClCompile>
     <ClCompile Include="math_common.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="licht_game.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="object.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="object_collision_2d.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="renderable_object.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="error_stack.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bsp_map_parser.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="image.c">
-      <Filter>Source Files</Filter>
+      <Filter>common\src</Filter>
     </ClCompile>
     <ClCompile Include="renderer_common.c">
-      <Filter>Source Files</Filter>
+      <Filter>common\src</Filter>
     </ClCompile>
-    <ClCompile Include="renderer_interface.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="vector2d.c">
+      <Filter>common\src</Filter>
     </ClCompile>
-    <ClCompile Include="engine_interface.c">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="vector3d.c">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vector4d.c">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="engine.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="image.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="file.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="error_stack.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_manager.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_renderer.c">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_export.c">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_export.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="game_client.c">
+      <Filter>game\client\src</Filter>
     </ClCompile>
     <ClCompile Include="bsp_map.c">
-      <Filter>Source Files</Filter>
+      <Filter>game\common\src</Filter>
     </ClCompile>
-    <ClCompile Include="game_interface.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="bsp_map_parser.c">
+      <Filter>game\common\src</Filter>
     </ClCompile>
-    <ClCompile Include="engine_common.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="map.c">
+      <Filter>game\common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_manager.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="window_common.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl_window.c">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.c">
+      <Filter>game\client\src</Filter>
+    </ClCompile>
+    <ClCompile Include="player.c">
+      <Filter>game\common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="world.c">
+      <Filter>game\common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="client_export.c">
+      <Filter>game\client\src</Filter>
+    </ClCompile>
+    <ClCompile Include="indexed_mesh.c">
+      <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.c">
+      <Filter>game_manager\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="window.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="engine_utilities.h">
+      <Filter>engine\include\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="aabb.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="engine_listener.h">
+      <Filter>engine\include\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="map.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="input_listener.h">
+      <Filter>engine\include\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="plane.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="renderer.h">
+      <Filter>engine\include\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="vector3d.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="game_manager_listener.h">
+      <Filter>game_manager\include\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="file.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="polygon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="indexed_mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vector2d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="keyboard_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player_move.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="aabb_entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="memory_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vector4d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="matrix3x3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="matrix4x4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="math_common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="licht_game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="object_collision_2d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderable_object.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="game_manager_utilities.h">
+      <Filter>game_manager\include\interfaces</Filter>
     </ClInclude>
     <ClInclude Include="error_stack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bsp_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bsp_map_parser.h">
-      <Filter>Header Files</Filter>
+      <Filter>engine\include</Filter>
     </ClInclude>
     <ClInclude Include="image.h">
-      <Filter>Header Files</Filter>
+      <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="renderer_interface.h">
-      <Filter>Header Files\interfaces</Filter>
+    <ClInclude Include="memory_manager.h">
+      <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="game_interface.h">
-      <Filter>Header Files\interfaces</Filter>
+    <ClInclude Include="sdl_window.h">
+      <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="renderer_common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="engine_interface.h">
-      <Filter>Header Files\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="engine_common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game_manager_interface.h">
-      <Filter>Header Files\interfaces</Filter>
+    <ClInclude Include="window_common.h">
+      <Filter>engine\include</Filter>
     </ClInclude>
     <ClInclude Include="keyboard_common.h">
-      <Filter>Header Files</Filter>
+      <Filter>common\include</Filter>
     </ClInclude>
-    <ClInclude Include="input_manager_interface.h">
-      <Filter>Header Files\interfaces</Filter>
+    <ClInclude Include="matrix3x3.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix4x4.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_common.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_renderer.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_export.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_export.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_interface.h">
+      <Filter>engine\include\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_defines.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="game_manager_export.h">
+      <Filter>game_manager\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_manager.h">
+      <Filter>game_manager\include</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp_map.h">
+      <Filter>game\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp_map_parser.h">
+      <Filter>game\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="file.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>game\client\include</Filter>
+    </ClInclude>
+    <ClInclude Include="client_export.h">
+      <Filter>game\client\include</Filter>
+    </ClInclude>
+    <ClInclude Include="game_client.h">
+      <Filter>game\client\include</Filter>
+    </ClInclude>
+    <ClInclude Include="indexed_mesh.h">
+      <Filter>game_manager\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>game_manager\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>game_manager\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math_common.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>game\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="plane.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vector2d.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vector3d.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vector4d.h">
+      <Filter>common\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine.frag">
-      <Filter>Shaders</Filter>
+      <Filter>shaders</Filter>
     </None>
     <None Include="engine.vert">
-      <Filter>Shaders</Filter>
+      <Filter>shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

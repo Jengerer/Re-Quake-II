@@ -130,7 +130,7 @@ typedef void (*renderer_draw_model_t)(
 typedef void (*renderer_clear_scene_t)(void);
 
 // Generic renderer interface struct.
-typedef struct renderer_interface
+typedef struct renderer
 {
 	// Initialization and clean-up functions.
 	renderer_initialize_t initialize;
@@ -172,9 +172,6 @@ typedef struct renderer_interface
 
 	// Rendering functions.
 	renderer_clear_scene_t clear_scene;
-} renderer_interface_t;
-
-// Null renderer state for cleanup.
-void renderer_interface_null(renderer_interface_t *renderer);
+} renderer_t;
 
 #endif // _RENDERER_H_ 

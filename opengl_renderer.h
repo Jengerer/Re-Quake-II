@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include "polygon.h"
-#include "renderer_interface.h"
+#include "renderer.h"
 
 // Structure representing global OpenGL state.
 typedef struct opengl_context
@@ -71,9 +71,6 @@ void opengl_null_model(opengl_model_t *model);
 
 // Renderer/OpenGL conversions.
 GLenum get_opengl_shader_type(renderer_shader_type_t type);
-
-// Filling out renderer interface.
-void initialize_opengl_interface(renderer_interface_t *renderer);
 
 // Renderer initialization and clean-up.
 int opengl_initialize(void);

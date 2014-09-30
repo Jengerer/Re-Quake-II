@@ -1,89 +1,52 @@
 #include "engine.h"
-#include "engine_interface.h"
-#include "game_manager_interface.h"
 #include "memory_manager.h"
-#include "window.h"
+#include "sdl_window.h"
 #include <stdio.h>
-
-// Private engine structures.
-// Structure for storing engine configuration.
-typedef struct engine_configuration
-{
-	int width;
-	int height;
-} engine_configuration_t;
-
-// Engine state struct.
-typedef struct engine
-{
-	engine_configuration_t config;
-	window_t window;
-	renderer_interface_t renderer;
-	game_manager_interface_t game_manager;
-} engine_t;
 
 // Engine instance.
 static engine_t engine;
+
+// Private functions.
 void engine_null(void);
 
-// Interface functions.
+// Engine utility functions.
 void engine_update_window(int width, int height, int flags);
-void engine_initialize_interface(void);
 
 // Null engine for safe destruction.
 void engine_null(void)
 {
 	// Null interface and then fill implemented functions.
-	engine_initialize_interface();
-	window_null(&engine.window);
-	renderer_null_interface(&engine.renderer);
-	game_null(&engine.game);
+	sdl_window_null(&engine.window);
 }
 
 // Start the engine and initialize all of the components.
-// This is guaranteed to at least initialize memory manager and engine functions interface.
+// This is guaranteed to be called, and will at least initialize memory manager.
 int engine_initialize(void)
 {
-	engine_configuration_t *config;
 	window_t *window;
-	renderer_interface_t *renderer;
-	const char* title;
-	config = &engine.config;
+	renderer_t *renderer;
+
+	// Null the engine and propagate it.
+	engine_null(engine);
 
 	// Initialize memory manager.
 	memory_manager_initialize();
 
-	// Initialize interface.
-	engine_initialize_interface();
-
-	// Create SDL window.
-	title = engine.game.get_name();
-	if (!window_initialize(config->width, config->height, title, window)) {
-		return 0;
-	}
-
-	// Create renderer.
-	if (!engine.renderer.initialize()) {
-		return 0;
-	}
-
-	// Create game.
-	if (!engine.game.initialize()) {
+	// We're done for now, pass initialization to listener.
+	if (!engine.listener.on_initialize()) {
 		return 0;
 	}
 	return 1;
 }
 
-// Destroy engine and game.
-void engine_destroy(void)
+// Destroy engine.
+void engine_shutdown(void)
 {
-	// Deallocate game resources.
-	engine.game.destroy();
+	// Tell listener to shut down first.
+	engine.listener.on_shutdown();
 
-	// Destroy renderer.
+	// Destroy renderer and window.
 	engine.renderer.destroy();
-
-	// Destroy window.
 	window_destroy(&engine.window);
 
 	// Dump memory allocation/leaks.
@@ -96,43 +59,48 @@ void engine_destroy(void)
  */
 int engine_run(void)
 {
-	game_interface_t *game;
+	engine_listener_t *listener;
 	window_t *window;
 	keyboard_manager_t *keyboard;
+	window_event_result_t result;
 	int done;
 	
-	game = &engine.game;
+	listener = &engine.listener;
 	window = &engine.window;
-	keyboard = &window->keyboard;
 	done = 0;
 	while (!done) {
 		// Handle window events and break if closed.
-		if (!window_handle_events(window)) {
-			done = 1;
+		result = sdl_window_handle_events(&window);
+		switch (result) {
+		case WINDOW_EVENT_OK:
+			break;
+		case WINDOW_EVENT_ERROR:
+			return 0;
+		case WINDOW_EVENT_QUIT:
+			return 1;
+		default:
+			break;
 		}
-		else {
-			// Handle game input.
-			game->handle_keyboard(keyboard);
-
-			// Run game pre-frame event.
-			if (!game->frame_begin(1.0f / 60.0f)) {
-				return 0;
-			}
-
-			// Render a new scene.
-			game->render();
-
-			// Swap the buffer.
-			window_swap_buffer(window);
+		
+		// Run game pre-frame event.
+		if (!listener->on_tick(1.0f / 60.0f)) {
+			return 0;
 		}
+
+		// Swap the buffer.
+		sdl_window_swap_buffer(window);
 	}
 	return 1;
 }
 
-// Initialize interface with implemented functions.
-void engine_initialize_interface(void)
+// Engine create window.
+int engine_create_window(
+	const char *title,
+	int width,
+	int height,
+	int flags)
 {
-	engine_functions.update_window = &engine_update_window;
+	return 1;
 }
 
 // Engine interface function for updating window.
