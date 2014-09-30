@@ -12,6 +12,9 @@ typedef const renderer_t *(*game_manager_get_renderer_t)(void);
 typedef const renderer_shader_utilities_t *(*game_manager_get_shader_utilities_t)(void);
 typedef void (*game_manager_present_frame_t)(void);
 
+// Game error handling.
+typedef void (*game_manager_error_t)(game_manager_error_t error, const char *format, ...);
+
 // Interface for a game to request resources and perform tasks from the game manager.
 typedef struct game_manager_utilities
 {
@@ -21,6 +24,9 @@ typedef struct game_manager_utilities
 	game_manager_get_renderer_t get_renderer;
 	game_manager_get_shader_utilities_t get_shader_utilities;
 	game_manager_present_frame_t present_frame;
+
+	// Game error handling.
+	game_manager_error_t error;
 } game_manager_utilities_t;
 
 #endif // _GAME_MANAGER_UTILITIES_H_
