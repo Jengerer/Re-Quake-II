@@ -19,6 +19,9 @@ int game_manager_initialize(void);
 void game_manager_shutdown(void);
 int game_manager_tick(float delta_time);
 
+// Game manager utility functions.
+float game_manager_get_time(void);
+
 // Singleton instance of game manager.
 extern game_manager_t game_manager;
 

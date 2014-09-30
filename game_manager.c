@@ -34,3 +34,26 @@ int game_manager_initialize(void)
 	game_manager.client.on_initialize();
 	return 1;
 }
+
+// Shut down the game manager.
+void game_manager_shutdown(void)
+{
+	// Shut down modules.
+	game_manager.client.on_shutdown();
+}
+
+// Run game manager for this tick.
+int game_manager_tick(float delta_time)
+{
+	(void)delta_time;
+
+	// Let modules prepare for tick.
+	game_manager.client.on_tick_begin();
+	
+	// Run this tick.
+	game_manager.client.on_tick();
+
+	// Let modules clean up for next frame.
+	game_manager.client.on_tick_end();
+	return 1;
+}

@@ -10,7 +10,6 @@ void window_null(window_t *window)
 	window->width = 0;
 	window->height = 0;
 	window->flags = 0;
-	input_listener_null(&window->input_listener);
 }
 
 // Propagate a keyboard press event to the listener.
@@ -31,7 +30,7 @@ window_event_result_t window_handle_key_release(
 {
 	input_event_result_t result;
 	const input_listener_t *listener = &window->input_listener;
-	result = listener->on_key_releas(key);
+	result = listener->on_key_release(key);
 	return translate_input_result(result);	
 }
 

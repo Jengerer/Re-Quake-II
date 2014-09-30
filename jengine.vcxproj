@@ -88,11 +88,12 @@
     <ClCompile Include="engine_export.c" />
     <ClCompile Include="error_stack.c" />
     <ClCompile Include="file.c" />
+    <ClCompile Include="game_manager.c" />
+    <ClCompile Include="game_manager_export.c" />
     <ClCompile Include="image.c" />
     <ClCompile Include="indexed_mesh.c" />
     <ClCompile Include="keyboard_manager.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="map.c" />
     <ClCompile Include="math_common.c" />
     <ClCompile Include="matrix3x3.c" />
     <ClCompile Include="matrix4x4.c" />
@@ -101,14 +102,13 @@
     <ClCompile Include="opengl_export.c" />
     <ClCompile Include="opengl_renderer.c" />
     <ClCompile Include="game_client.c" />
-    <ClCompile Include="player.c" />
-    <ClCompile Include="renderer_common.c" />
+    <ClCompile Include="opengl_shader_utilities.c" />
+    <ClCompile Include="renderer_shared.c" />
     <ClCompile Include="vector2d.c" />
     <ClCompile Include="vector3d.c" />
     <ClCompile Include="vector4d.c" />
     <ClCompile Include="sdl_window.c" />
     <ClCompile Include="window_common.c" />
-    <ClCompile Include="world.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bsp_map.h" />
@@ -118,9 +118,14 @@
     <ClInclude Include="engine.h" />
     <ClInclude Include="engine_export.h" />
     <ClInclude Include="engine_interface.h" />
+    <ClInclude Include="game_manager.h" />
     <ClInclude Include="game_manager_export.h" />
+    <ClInclude Include="game_manager_shared.h" />
     <ClInclude Include="game_manager_utilities.h" />
+    <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />
+    <ClInclude Include="opengl_shader_utilities.h" />
+    <ClInclude Include="renderer_shader_utilities.h" />
     <ClInclude Include="shared_defines.h" />
     <ClInclude Include="engine_utilities.h" />
     <ClInclude Include="error_stack.h" />
@@ -132,7 +137,6 @@
     <ClInclude Include="input_listener.h" />
     <ClInclude Include="keyboard_common.h" />
     <ClInclude Include="keyboard_manager.h" />
-    <ClInclude Include="map.h" />
     <ClInclude Include="math_common.h" />
     <ClInclude Include="matrix3x3.h" />
     <ClInclude Include="matrix4x4.h" />
@@ -141,7 +145,7 @@
     <ClInclude Include="opengl_renderer.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="game_client.h" />
-    <ClInclude Include="renderer_common.h" />
+    <ClInclude Include="renderer_shared.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="vector3d.h" />

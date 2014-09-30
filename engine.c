@@ -4,13 +4,10 @@
 #include <stdio.h>
 
 // Engine instance.
-static engine_t engine;
+engine_t engine;
 
 // Private functions.
 void engine_null(void);
-
-// Engine utility functions.
-void engine_update_window(int width, int height, int flags);
 
 // Null engine for safe destruction.
 void engine_null(void)
@@ -20,14 +17,11 @@ void engine_null(void)
 }
 
 // Start the engine and initialize all of the components.
-// This is guaranteed to be called, and will at least initialize memory manager.
+// This is guaranteed to be called, and will at least null and initialize memory manager.
 int engine_initialize(void)
 {
-	window_t *window;
-	renderer_t *renderer;
-
 	// Null the engine and propagate it.
-	engine_null(engine);
+	engine_null();
 
 	// Initialize memory manager.
 	memory_manager_initialize();
@@ -47,7 +41,7 @@ void engine_shutdown(void)
 
 	// Destroy renderer and window.
 	engine.renderer.destroy();
-	window_destroy(&engine.window);
+	sdl_window_destroy(&engine.window);
 
 	// Dump memory allocation/leaks.
 	memory_manager_destroy();
@@ -60,8 +54,7 @@ void engine_shutdown(void)
 int engine_run(void)
 {
 	engine_listener_t *listener;
-	window_t *window;
-	keyboard_manager_t *keyboard;
+	sdl_window_t *window;
 	window_event_result_t result;
 	int done;
 	
@@ -70,7 +63,7 @@ int engine_run(void)
 	done = 0;
 	while (!done) {
 		// Handle window events and break if closed.
-		result = sdl_window_handle_events(&window);
+		result = sdl_window_handle_events(window);
 		switch (result) {
 		case WINDOW_EVENT_OK:
 			break;
@@ -100,10 +93,18 @@ int engine_create_window(
 	int height,
 	int flags)
 {
+	(void)title;
+	(void)width;
+	(void)height;
+	(void)flags;
 	return 1;
 }
 
 // Engine interface function for updating window.
-void engine_update_window(int width, int height, int flags)
+int engine_update_window(int width, int height, int flags)
 {
+	(void)width;
+	(void)height;
+	(void)flags;
+	return 1;
 }

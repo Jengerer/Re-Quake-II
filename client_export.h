@@ -8,9 +8,9 @@
 // TODO: Combine server and client export once they're actually separate modules.
 
 // Request the game module to fill out the game manager listener structure.
-void DLL_EXPORT populate_client_game_manager_listener(game_manager_listener_t *listener);
+void DLL_EXPORT client_populate_game_manager_listener(game_manager_listener_t *listener);
 
 // Get the structure for the game module to fill out for utilities.
-game_manager_utilities_t *DLL_EXPORT get_client_game_manager_utilities(void);
+game_manager_utilities_t *DLL_EXPORT client_get_game_manager_utilities_destination(void);
 
 #endif // _CLIENT_EXPORT_H_

@@ -1,5 +1,5 @@
-#ifndef _RENDERER_COMMON_H_
-#define _RENDERER_COMMON_H_
+#ifndef _RENDERER_SHARED_H_
+#define _RENDERER_SHARED_H_
 
 // Generic shader types.
 typedef enum renderer_shader_type
@@ -70,4 +70,4 @@ void renderer_null_shader_schema(renderer_shader_schema_t *schema);
 void renderer_null_uniform(renderer_uniform_t *uniform);
 void renderer_null_model(renderer_model_t *schema);
 
-#endif // _RENDERER_COMMON_H_
+#endif // _RENDERER_SHARED_H_

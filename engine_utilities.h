@@ -16,6 +16,9 @@ typedef int (*engine_update_window_t)(
 	int height,
 	int flags);
 
+// Window buffer swap.
+typedef void (*engine_swap_buffers_t)(void);
+
 // Get the engine renderer interface.
 typedef const renderer_t *(*engine_get_renderer_t)(void);
 
@@ -25,6 +28,7 @@ typedef struct engine_utilities
 	// Engine display functions.
 	engine_create_window_t create_window;
 	engine_update_window_t update_window;
+	engine_swap_buffers_t swap_buffers;
 
 	// Rendering related functions.
 	engine_get_renderer_t get_renderer;

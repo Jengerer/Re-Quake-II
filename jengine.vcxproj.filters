@@ -13,9 +13,6 @@
     <Filter Include="engine\include">
       <UniqueIdentifier>{04cfec0d-6c44-4dff-b22a-626f004df688}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine\include\interfaces">
-      <UniqueIdentifier>{2d1182b2-4a3c-4211-be96-4f3e12a5ccf2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="common">
       <UniqueIdentifier>{dacc5fb6-90c1-4396-9bf0-2b23d4a03c38}</UniqueIdentifier>
     </Filter>
@@ -75,9 +72,8 @@
     <Filter Include="game_manager\src">
       <UniqueIdentifier>{fde04068-fd9d-4521-b6e9-71f7d58f65ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="game_manager\Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="engine\include\shared">
+      <UniqueIdentifier>{2d1182b2-4a3c-4211-be96-4f3e12a5ccf2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,9 +87,6 @@
       <Filter>common\src</Filter>
     </ClCompile>
     <ClCompile Include="math_common.c">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer_common.c">
       <Filter>common\src</Filter>
     </ClCompile>
     <ClCompile Include="vector2d.c">
@@ -138,9 +131,6 @@
     <ClCompile Include="bsp_map_parser.c">
       <Filter>game\common\src</Filter>
     </ClCompile>
-    <ClCompile Include="map.c">
-      <Filter>game\common\src</Filter>
-    </ClCompile>
     <ClCompile Include="memory_manager.c">
       <Filter>engine\src</Filter>
     </ClCompile>
@@ -153,12 +143,6 @@
     <ClCompile Include="camera.c">
       <Filter>game\client\src</Filter>
     </ClCompile>
-    <ClCompile Include="player.c">
-      <Filter>game\common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="world.c">
-      <Filter>game\common\src</Filter>
-    </ClCompile>
     <ClCompile Include="client_export.c">
       <Filter>game\client\src</Filter>
     </ClCompile>
@@ -168,19 +152,25 @@
     <ClCompile Include="mesh.c">
       <Filter>game_manager\src</Filter>
     </ClCompile>
+    <ClCompile Include="game_manager.c">
+      <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer_shared.c">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_shader_utilities.c">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="game_manager_export.c">
+      <Filter>game_manager\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine_utilities.h">
-      <Filter>engine\include\interfaces</Filter>
+      <Filter>engine\include\shared</Filter>
     </ClInclude>
     <ClInclude Include="engine_listener.h">
-      <Filter>engine\include\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="input_listener.h">
-      <Filter>engine\include\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>engine\include\interfaces</Filter>
+      <Filter>engine\include\shared</Filter>
     </ClInclude>
     <ClInclude Include="game_manager_listener.h">
       <Filter>game_manager\include\interfaces</Filter>
@@ -212,9 +202,6 @@
     <ClInclude Include="matrix4x4.h">
       <Filter>common\include</Filter>
     </ClInclude>
-    <ClInclude Include="renderer_common.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
     <ClInclude Include="opengl_renderer.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
@@ -225,7 +212,7 @@
       <Filter>engine\include</Filter>
     </ClInclude>
     <ClInclude Include="engine_interface.h">
-      <Filter>engine\include\interfaces</Filter>
+      <Filter>engine\include\shared</Filter>
     </ClInclude>
     <ClInclude Include="shared_defines.h">
       <Filter>common\include</Filter>
@@ -257,20 +244,8 @@
     <ClInclude Include="game_client.h">
       <Filter>game\client\include</Filter>
     </ClInclude>
-    <ClInclude Include="indexed_mesh.h">
-      <Filter>game_manager\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>game_manager\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>game_manager\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="math_common.h">
       <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="map.h">
-      <Filter>game\common\include</Filter>
     </ClInclude>
     <ClInclude Include="plane.h">
       <Filter>common\include</Filter>
@@ -283,6 +258,39 @@
     </ClInclude>
     <ClInclude Include="vector4d.h">
       <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="game_manager.h">
+      <Filter>game_manager\include</Filter>
+    </ClInclude>
+    <ClInclude Include="indexed_mesh.h">
+      <Filter>game_manager\include</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>game_manager\include</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>game_manager\include</Filter>
+    </ClInclude>
+    <ClInclude Include="game_manager_shared.h">
+      <Filter>game_manager\include\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_shared.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_shader_utilities.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_common.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="input_listener.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_shader_utilities.h">
+      <Filter>opengl_renderer\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

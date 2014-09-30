@@ -3,7 +3,7 @@
 
 // Engine functions.
 typedef int (*engine_initialize_t)(void);
-typedef void (*engine_destroy_t)(void);
+typedef void (*engine_shutdown_t)(void);
 typedef int (*engine_run_t)(void);
 
 // Interface for the application to initialize, run, and shut down the engine.

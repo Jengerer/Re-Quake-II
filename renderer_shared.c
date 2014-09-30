@@ -1,5 +1,5 @@
-#include "renderer_common.h"
-#include "memory_manager.h"
+#include "renderer_shared.h"
+#include "shared_defines.h"
 
 /* Null pointer to renderer shader. */
 void renderer_null_shader(renderer_shader_t *shader)
