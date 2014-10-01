@@ -152,9 +152,6 @@
     <ClCompile Include="matrix4x4.cpp">
       <Filter>common\src</Filter>
     </ClCompile>
-    <ClCompile Include="renderer_shared.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
     <ClCompile Include="vector2.cpp">
       <Filter>common\src</Filter>
     </ClCompile>
@@ -163,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="vector4.cpp">
       <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="plane.cpp">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="image_loader.cpp">
+      <Filter>engine\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -265,12 +268,6 @@
     <ClInclude Include="renderer_shared.h">
       <Filter>common\include</Filter>
     </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer_shader_utilities.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
     <ClInclude Include="opengl_common.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
@@ -291,6 +288,15 @@
     </ClInclude>
     <ClInclude Include="vector4.h">
       <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_resources.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="image_loader.h">
+      <Filter>engine\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

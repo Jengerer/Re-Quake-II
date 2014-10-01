@@ -3,6 +3,7 @@
 // Common math functions.
 class MathCommon
 {
+
 public:
 
 	// Angle functions.

@@ -1,12 +1,26 @@
-#ifndef _RENDERER_H_
-#define _RENDERER_H_
+#pragma once
 
-#include "vector3d.h"
-#include "vector4d.h"
+#include "vector3.h"
+#include "vector4.h"
 #include "matrix3x3.h"
 #include "matrix4x4.h"
 #include "image.h"
 #include "renderer_shared.h"
+
+// Renderer drawing interface.
+class Renderer
+{
+
+public:
+
+// Initialization and clean up.
+
+	// Initialize renderer.
+	virtual bool Initialize() = 0;
+	// Shut down renderer.
+	virtual void Shutdown() = 0;
+
+};
 
 // Renderer initialization and clean-up.
 typedef void (*renderer_null_t)(void);

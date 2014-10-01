@@ -7,6 +7,7 @@
 // Any operations for which this class cannot be an operand are explicitly stated.
 class Matrix4x4
 {
+
 public:
 
 // Unary matrix operations.

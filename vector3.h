@@ -4,6 +4,7 @@
 // components are rotations about the corresponding axis (in the order X, Y, Z).
 class Vector3
 {
+
 public:
 
 	Vector3();

@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -91,6 +91,7 @@
     <ClCompile Include="game_manager.c" />
     <ClCompile Include="game_manager_export.c" />
     <ClCompile Include="image.c" />
+    <ClCompile Include="image_loader.cpp" />
     <ClCompile Include="indexed_mesh.c" />
     <ClCompile Include="keyboard_manager.c" />
     <ClCompile Include="main.c" />
@@ -103,7 +104,7 @@
     <ClCompile Include="opengl_renderer.c" />
     <ClCompile Include="game_client.c" />
     <ClCompile Include="opengl_shader_utilities.c" />
-    <ClCompile Include="renderer_shared.cpp" />
+    <ClCompile Include="plane.cpp" />
     <ClCompile Include="vector2.cpp" />
     <ClCompile Include="vector3.cpp" />
     <ClCompile Include="vector4.cpp" />
@@ -122,10 +123,11 @@
     <ClInclude Include="game_manager_export.h" />
     <ClInclude Include="game_manager_shared.h" />
     <ClInclude Include="game_manager_utilities.h" />
+    <ClInclude Include="image_loader.h" />
     <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />
     <ClInclude Include="opengl_shader_utilities.h" />
-    <ClInclude Include="renderer_shader_utilities.h" />
+    <ClInclude Include="renderer_resources.h" />
     <ClInclude Include="shared_defines.h" />
     <ClInclude Include="engine_utilities.h" />
     <ClInclude Include="error_stack.h" />

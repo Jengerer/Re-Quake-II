@@ -2,8 +2,30 @@
 #define _ENGINE_UTILITIES_H_
 
 #include "renderer.h"
-#include "renderer_shader_utilities.h"
+#include "renderer_shading_resources.h"
 
+// Interface by which an engine module can request resources from the engine.
+class EngineUtilities
+{
+
+public:
+
+// Window and display functions.
+
+	// Create a window with a given set of parameters.
+	virtual bool CreateWindow(const char *title, int width, int height, int flags) = 0;
+	// Update the window's parameters.
+	virtual bool UpdateWindow(int width, int height, int flags) = 0;
+	// Swap the window frame buffer.
+	virtual void SwapBuffers() = 0;
+
+// Rendering utility functions.
+
+	// Get the renderer interface.
+	virtual Renderer 
+
+
+};
 // Create the window.
 typedef int (*engine_create_window_t)(
 	const char *title,

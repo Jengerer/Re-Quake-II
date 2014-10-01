@@ -3,6 +3,7 @@
 // Class for representing a 3x3 matrix.
 class Matrix3x3
 {
+
 public:
 
 	// Unary matrix operations.

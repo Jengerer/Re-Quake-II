@@ -6,6 +6,7 @@
 // Represented by the normal and distance along it from the origin.
 class Plane
 {
+
 public:
 
 	// Default constructor that sets no elements.

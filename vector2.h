@@ -3,6 +3,7 @@
 // Two dimensional vector class.
 class Vector2
 {
+
 public:
 
 	Vector2();
