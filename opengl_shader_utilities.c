@@ -10,6 +10,7 @@ static void opengl_null_shader(opengl_shader_t *shader);
 static void opengl_null_program(opengl_program_t *program);
 static void opengl_null_shader_schema(opengl_shader_schema_t *schema);
 static void opengl_null_uniform(opengl_uniform_t *uniform);
+static void opengl_unlink_shader(opengl_shader_t shader, opengl_program_t *program);
 static GLenum get_opengl_shader_type(renderer_shader_type_t type);
 static int get_num_variable_floats(const renderer_variable_type_t variable_type);
 
@@ -82,7 +83,7 @@ int opengl_create_shader(const char *filename,
 
 // Destroy OpenGL shader.
 // Takes in the program that it's attached to.
-void opengl_destroy_shader(renderer_shader_t *shader, renderer_program_t program)
+void opengl_destroy_shader(renderer_shader_t *shader)
 {
 	opengl_shader_t *opengl_shader;
 	opengl_program_t *opengl_program;
@@ -93,10 +94,6 @@ void opengl_destroy_shader(renderer_shader_t *shader, renderer_program_t program
 	if (opengl_shader != NULL) {
 		// Detach if linked.
 		shader_handle = opengl_shader->handle;
-		if (opengl_shader->is_linked) {
-			opengl_program = (opengl_program_t*)program.buffer;
-			glDetachShader(opengl_program->handle, shader_handle);
-		}
 		glDeleteShader(shader_handle);
 
 		// Destroy structure.
@@ -406,7 +403,6 @@ void opengl_set_uniform_integer(
 void opengl_null_shader(opengl_shader_t *shader)
 {
 	shader->handle = 0;
-	shader->is_linked = 0;
 }
 
 // Null OpenGL program.
@@ -426,6 +422,12 @@ void opengl_null_shader_schema(opengl_shader_schema_t *schema)
 void opengl_null_uniform(opengl_uniform_t *uniform)
 {
 	uniform->location = -1;
+}
+
+// Unlink an OpenGL shader from its program.
+void opengl_unlink_shader(opengl_shader_t shader, opengl_program_t *program)
+{
+
 }
 
 // Convert renderer shader type to OpenGL type.

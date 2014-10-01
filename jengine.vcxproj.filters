@@ -80,24 +80,6 @@
     <ClCompile Include="main.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="matrix4x4.c">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix3x3.c">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="math_common.c">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="vector2d.c">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="vector3d.c">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="vector4d.c">
-      <Filter>common\src</Filter>
-    </ClCompile>
     <ClCompile Include="engine.c">
       <Filter>engine\src</Filter>
     </ClCompile>
@@ -155,14 +137,32 @@
     <ClCompile Include="game_manager.c">
       <Filter>game_manager\src</Filter>
     </ClCompile>
-    <ClCompile Include="renderer_shared.c">
-      <Filter>common\src</Filter>
-    </ClCompile>
     <ClCompile Include="opengl_shader_utilities.c">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
     <ClCompile Include="game_manager_export.c">
       <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="math_common.cpp">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix3x3.cpp">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix4x4.cpp">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer_shared.cpp">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vector2.cpp">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vector3.cpp">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="vector4.cpp">
+      <Filter>common\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -192,9 +192,6 @@
     </ClInclude>
     <ClInclude Include="window_common.h">
       <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="keyboard_common.h">
-      <Filter>common\include</Filter>
     </ClInclude>
     <ClInclude Include="matrix3x3.h">
       <Filter>common\include</Filter>
@@ -250,15 +247,6 @@
     <ClInclude Include="plane.h">
       <Filter>common\include</Filter>
     </ClInclude>
-    <ClInclude Include="vector2d.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="vector3d.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="vector4d.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
     <ClInclude Include="game_manager.h">
       <Filter>game_manager\include</Filter>
     </ClInclude>
@@ -291,6 +279,18 @@
     </ClInclude>
     <ClInclude Include="opengl_shader_utilities.h">
       <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_shared.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vector2.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vector3.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vector4.h">
+      <Filter>common\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

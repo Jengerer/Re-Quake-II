@@ -52,7 +52,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <CompileAs>CompileAsC</CompileAs>
+      <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>false</ExceptionHandling>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -94,19 +94,19 @@
     <ClCompile Include="indexed_mesh.c" />
     <ClCompile Include="keyboard_manager.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="math_common.c" />
-    <ClCompile Include="matrix3x3.c" />
-    <ClCompile Include="matrix4x4.c" />
+    <ClCompile Include="math_common.cpp" />
+    <ClCompile Include="matrix3x3.cpp" />
+    <ClCompile Include="matrix4x4.cpp" />
     <ClCompile Include="memory_manager.c" />
     <ClCompile Include="mesh.c" />
     <ClCompile Include="opengl_export.c" />
     <ClCompile Include="opengl_renderer.c" />
     <ClCompile Include="game_client.c" />
     <ClCompile Include="opengl_shader_utilities.c" />
-    <ClCompile Include="renderer_shared.c" />
-    <ClCompile Include="vector2d.c" />
-    <ClCompile Include="vector3d.c" />
-    <ClCompile Include="vector4d.c" />
+    <ClCompile Include="renderer_shared.cpp" />
+    <ClCompile Include="vector2.cpp" />
+    <ClCompile Include="vector3.cpp" />
+    <ClCompile Include="vector4.cpp" />
     <ClCompile Include="sdl_window.c" />
     <ClCompile Include="window_common.c" />
   </ItemGroup>
@@ -135,7 +135,7 @@
     <ClInclude Include="image.h" />
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="input_listener.h" />
-    <ClInclude Include="keyboard_common.h" />
+    <ClInclude Include="keyboard_shared.h" />
     <ClInclude Include="keyboard_manager.h" />
     <ClInclude Include="math_common.h" />
     <ClInclude Include="matrix3x3.h" />
@@ -147,9 +147,9 @@
     <ClInclude Include="game_client.h" />
     <ClInclude Include="renderer_shared.h" />
     <ClInclude Include="renderer.h" />
-    <ClInclude Include="vector2d.h" />
-    <ClInclude Include="vector3d.h" />
-    <ClInclude Include="vector4d.h" />
+    <ClInclude Include="vector2.h" />
+    <ClInclude Include="vector3.h" />
+    <ClInclude Include="vector4.h" />
     <ClInclude Include="sdl_window.h" />
     <ClInclude Include="window_common.h" />
     <ClInclude Include="world.h" />

@@ -1,17 +1,46 @@
-#ifndef _MATH_COMMON_H_
-#define _MATH_COMMON_H_
+#pragma once
 
-#include <math.h>
+// Common math functions.
+class MathCommon
+{
+public:
 
-#define PI 3.14159265f
+	// Angle functions.
 
-// Convert angle value from degrees to radians.
-float degrees_to_radians(float angle);
+	// Convert angle from degrees to radians.
+	static float DegreesToRadians(float angle);
+	// Convert angle from radians to degrees.
+	static float RadiansToDegrees(float angle);
+	// Clamp angle to the range [-180.0, 180.0f].
+	static float ClampAngle(float angle);
 
-// Convert angle from radians to degrees.
-float radians_to_degrees(float angle);
+	// Generic math functions.
 
-// Clamp an angle value within the range -180.0 to 180.0.
-void clamp_angle(float *out);
+	// Calculate square root of value.
+	static float SquareRoot(float value);
 
-#endif // _MATH_COMMON_H_
+	// Number rounding.
+
+	// Round to nearest whole number.
+	static float Round(float value);
+	// Round to whole value at least as large as this one.
+	static float RoundUp(float value);
+	// Round to whole value at most as large as this one.
+	static float RoundDown(float value);
+
+	// Trigonometric functions (in degrees).
+
+	// Sine function.
+	static float Sine(float angle);
+	// Cosine function.
+	static float Cosine(float angle);
+	// Arctangent with both X and Y parameters.
+	static float ArcTangent(float y, float x);
+
+public:
+
+	// Math constants.
+
+	static const float Pi;
+
+};

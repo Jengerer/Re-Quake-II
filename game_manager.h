@@ -20,10 +20,13 @@ void game_manager_shutdown(void);
 int game_manager_tick(float delta_time);
 
 // Game manager utility functions.
+// General utilities.
 float game_manager_get_time(void);
-const renderer_t *game_manager_get_renderer(void);
-const renderer_shader_utilities_t *game_manager_get_shader_utilities(void);
+// Renderer utilities.
+void game_manager_clear_frame(void);
 void game_manager_present_frame(void);
+void game_manager_create_shader(const )
+
 
 // Singleton instance of game manager.
 extern game_manager_t game_manager;

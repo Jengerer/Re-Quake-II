@@ -11,7 +11,6 @@
 typedef struct opengl_shader
 {
 	GLuint handle;
-	char is_linked;
 } opengl_shader_t;
 
 // Structure for representing an OpenGL shader program.
@@ -50,8 +49,8 @@ void opengl_destroy_shader(renderer_shader_t *shader, renderer_program_t program
 
 // Renderer shader program functions.
 int opengl_create_program(renderer_program_t *out);
-void opengl_destroy_program(renderer_program_t *out);
-void opengl_link_shader(renderer_shader_t shader, renderer_program_t program);
+void opengl_destroy_program(renderer_program_t *program);
+void opengl_link_shader(renderer_shader_t shader, renderer_program_t *program);
 int opengl_compile_program(renderer_program_t program);
 void opengl_set_program(renderer_program_t program);
 void opengl_unset_program(void);
@@ -69,7 +68,7 @@ int opengl_get_uniform(
 	renderer_program_t program,
 	const char *name,
 	renderer_uniform_t *out);
-void opengl_destroy_uniform(renderer_uniform_t *out);
+void opengl_destroy_uniform(renderer_uniform_t *uniform);
 void opengl_set_uniform_vector3d(
 	renderer_uniform_t uniform,
 	const vector3d_t *vector);

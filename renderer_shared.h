@@ -1,37 +1,36 @@
-#ifndef _RENDERER_SHARED_H_
-#define _RENDERER_SHARED_H_
+#pragma once
 
 // Generic shader types.
-typedef enum renderer_shader_type
+enum RendererShaderType
 {
-	VERTEX_SHADER,
-	FRAGMENT_SHADER
-} renderer_shader_type_t;
+	VertexShader,
+	FragmentShader
+};
 
 // Generic renderer variable types.
-typedef enum renderer_variable_type
+enum RendererVariableType
 {
-	VARIABLE_FLOAT,
-	VARIABLE_VERTEX_2D,
-	VARIABLE_VERTEX_3D,
-	VARIABLE_VERTEX_4D,
-	VARIABLE_MATRIX_2X2,
-	VARIABLE_MATRIX_3X3,
-	VARIABLE_MATRIX_4X4
-} renderer_variable_type_t;
+	FloatType,
+	Vector2Type,
+	Vector3Type,
+	Vector4Type,
+	Matrix2x2Type,
+	Matrix3x3Type,
+	Matrix4x4Type
+};
 
 // Shader attribute definition.
-typedef struct renderer_shader_attribute
+struct RendererShaderAttribute
 {
 	const char *name;
-	renderer_variable_type_t type;
-} renderer_shader_attribute_t;
+	RendererVariableType type;
+};
 
 // Schema for a shader program.
-typedef struct renderer_shader_schema
+struct RendererShaderSchema
 {
 	void *buffer;
-} renderer_shader_schema_t;
+};
 
 // Single compiled shader.
 typedef struct renderer_shader

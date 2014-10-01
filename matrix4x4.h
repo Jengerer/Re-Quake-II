@@ -1,5 +1,4 @@
-#ifndef _MATRIX_4X4_H_
-#define _MATRIX_4X4_H_
+#pragma once
 
 #include "vector3d.h"
 #include "vector4d.h"

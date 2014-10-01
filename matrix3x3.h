@@ -1,16 +1,24 @@
-#ifndef _MATRIX_3X3_H_
-#define _MATRIX_3X3_H_
+#pragma once
 
-// Structure for a 3x3 matrix.
-typedef struct matrix3x3
+// Class for representing a 3x3 matrix.
+class Matrix3x3
 {
-	float array[3][3];
-} matrix3x3_t;
+public:
 
-// Unary matrix operations.
-void matrix3x3_identity(matrix3x3_t *out);
+	// Unary matrix operations.
+	void LoadIdentity();
 
-// Binary matrix operations.
-void matrix3x3_multiply(const matrix3x3_t *a, const matrix3x3_t *b, matrix3x3_t *out);
+	// Assign this matrix the result of a matrix multiplication.
+	// This matrix cannot be one of the operands.
+	void MatrixProduct(const Matrix3x3 *a, const Matrix3x3 *b);
 
-#endif // _MATRIX_3X3_H_
+private:
+
+	// Helper constant for duplicating code.
+	const int MatrixSize = 3;
+
+private:
+
+	float matrix[3][3];
+
+};
