@@ -25,6 +25,7 @@ enum RendererVariableType
 // Shader attribute definition.
 class RendererShaderAttribute
 {
+
 public:
 
 	RendererShaderAttribute(const char *name, RendererVariableType type);
@@ -37,6 +38,7 @@ private:
 
 	const char *name;
 	RendererVariableType type;
+
 };
 
 // Schema for a shader program.
@@ -57,6 +59,7 @@ class RendererProgram
 // Shader uniform variable.
 class RendererUniform
 {
+
 public:
 
 	// Value setting functions.

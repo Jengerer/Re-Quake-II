@@ -1,7 +1,19 @@
-#ifndef _ENGINE_LISTENER_H_
-#define _ENGINE_LISTENER_H_
+#pragma once
 
-#include "keyboard_manager.h"
+// Interface to which the engine sends its events.
+class EngineListener
+{
+
+public:
+
+	// Triggered when the engine is fully initialized.
+	virtual bool OnInitialize() = 0;
+	virtual void OnShutdown() = 0;
+
+	// Called on every frame.
+	virtual int OnTick() = 0;
+
+};
 
 // Initialization and clean-up events.
 typedef void (*engine_null_t)(void);
