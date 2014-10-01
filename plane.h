@@ -1,15 +1,21 @@
-#ifndef _PLANE_H_
-#define _PLANE_H_
+#pragma once
 
-#include "vector3d.h"
+#include "vector3.h"
 
-/*
- * Representing a plane by normal and distance from origin along that normal.
- */
-typedef struct plane
+// Class representing a plane in 3-D.
+// Represented by the normal and distance along it from the origin.
+class Plane
 {
-	vector3d_t normal;
-	float distance;
-} plane_t;
+public:
 
-#endif // _PLANE_H_
+	// Default constructor that sets no elements.
+	Plane();
+	// Constructor by copied normal and distance.
+	Plane(const Vector3 *normal, float distance);
+
+public:
+
+	Vector3 normal;
+	float distance;
+
+};

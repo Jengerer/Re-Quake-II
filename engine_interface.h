@@ -1,17 +1,16 @@
-#ifndef _ENGINE_INTERFACE_H_
-#define _ENGINE_INTERFACE_H_
+#pragma once
 
-// Engine functions.
-typedef int (*engine_initialize_t)(void);
-typedef void (*engine_shutdown_t)(void);
-typedef int (*engine_run_t)(void);
-
-// Interface for the application to initialize, run, and shut down the engine.
-typedef struct engine_interface
+// Interface for an application to interact with the engine.
+class EngineInterface
 {
-	engine_initialize_t initialize;
-	engine_shutdown_t shutdown;
-	engine_run_t run;
-} engine_interface_t;
+public:
 
-#endif // _ENGINE_INTERFACE_H_
+	// Engine initialization.
+	virtual bool Initialize() = 0;
+	// Engine destruction.
+	virtual void Shutdown() = 0;
+
+	// Engine main loop.
+	virtual int Run() = 0;
+
+};
