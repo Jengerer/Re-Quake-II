@@ -47,3 +47,32 @@ float MathCommon::RoundDown(float value)
 {
 	return floorf(value);
 }
+
+// Sine of an angle in degrees.
+float MathCommon::Sine(float angle)
+{
+	angle = DegreesToRadians(angle);
+	return sinf(angle);
+}
+
+// Cosine of an angle in degrees.
+float MathCommon::Cosine(float angle)
+{
+	angle = DegreesToRadians(angle);
+	return cosf(angle);
+}
+
+// Tangent of an angle in degrees.
+float MathCommon::Tangent(float angle)
+{
+	angle = DegreesToRadians(angle);
+	return cosf(angle);
+}
+
+// Arc tangent function.
+// Returns result in degrees between -90 and 90.
+float MathCommon::ArcTangent(float y, float x)
+{
+	float angle = atan2f(x, y);
+	return RadiansToDegrees(angle);
+}

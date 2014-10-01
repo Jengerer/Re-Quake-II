@@ -11,7 +11,7 @@ public:
 	Vector4();
 	Vector4(float x, float y, float z, float w);
 
-	// Parameter setting functions.
+// Parameter setting functions.
 
 	// Set all components to zero.
 	void Clear();
@@ -20,7 +20,7 @@ public:
 	// Set all components of this vector.
 	void Set(float x, float y, float z, float w);
 
-	// Vector conversion functions.
+// Vector conversion functions.
 
 	// Set the XYZ components of this vector from a 3-dimensional vector.
 	void FromVector3(const Vector3 *vector);

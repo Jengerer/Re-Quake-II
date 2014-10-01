@@ -1,271 +1,235 @@
 #include "matrix4x4.h"
 #include "math_common.h"
 
-// Constant so we can duplicate code easily for other matrix sizes.
-#define MATRIX_SIZE 4
-
-/* Fill the matrix with identity values. */
-void matrix4x4_identity(matrix4x4_t *out)
+// Fill the matrix with identity values.
+void Matrix4x4::Identity()
 {
-	int i;
-	int j;
-
-	// Go through each element.
-	for (i = 0; i < MATRIX_SIZE; ++i) {
-		for (j = 0; j < MATRIX_SIZE; ++j) {
-			// Set diagonals to 1, 0 otherwise.
-			if (i == j) {
-				out->array[i][j] = 1.0f;
-			}
-			else {
-				out->array[i][j] = 0.0f;
-			}
+	for (int i = 0; i < Size; ++i) {
+		for (int j = 0; j < Size; ++j) {
+			matrixArray[i][j] = (i == j ? 1.0f : 0.0f);
 		}
 	}
 }
 
-/* Generate a translation matrix. */
-void matrix4x4_translation(const vector3d_t *translation, matrix4x4_t *out)
+// Get the transpose of a matrix.
+void Matrix4x4::Transpose(const Matrix4x4 *matrix)
 {
-	out->array[0][0] = 1.0f;
-	out->array[0][1] = 0.0f;
-	out->array[0][2] = 0.0f;
-	out->array[0][3] = translation->x;
-	out->array[1][0] = 0.0f;
-	out->array[1][1] = 1.0f;
-	out->array[1][2] = 0.0f;
-	out->array[1][3] = translation->y;
-	out->array[2][0] = 0.0f;
-	out->array[2][1] = 0.0f;
-	out->array[2][2] = 1.0f;
-	out->array[2][3] = translation->z;
-	out->array[3][0] = 0.0f;
-	out->array[3][1] = 0.0f;
-	out->array[3][2] = 0.0f;
-	out->array[3][3] = 1.0f;
+	// Copy diagonal.
+	for (int i = 0; i < Size; ++i) {
+		matrixArray[i][i] = matrix->matrixArray[i][i];
+	}
+
+	// Swap elements on opposide sides of the diagonal.
+	for (int i = 0; i < Size; ++i) {
+		for (int j = i + 1; j < Size; ++j) {
+			// Keep temporary in case this is the operand.
+			float copy = matrix->matrixArray[i][j];
+			matrixArray[i][j] = matrixArray[j][i];
+			matrixArray[j][i] = copy;
+		}
+	}
 }
 
-/* Generate a rotation matrix around the X axis. */
-void matrix4x4_rotation_x(float angle, matrix4x4_t *out)
+// Store result of product of two matrices into this matrix.
+// This matrix cannot be one of the operands.
+void Matrix4x4::Product(const Matrix4x4 *a, const Matrix4x4 *b)
 {
-	float angle_radians;
-	float cos_angle;
-	float sin_angle;
+	int i, j, k;
+
+	// For each of our elements...
+	for (int i = 0; i < Size; ++i) {
+		for (int j = 0; j < Size; ++j) {
+			// Element I, J is the dot product of row I of A and column J of B.
+			float product = 0.0f;
+			for (int k = 0; k < Size; ++k) {
+				product += a->matrixArray[i][k] * b->matrixArray[k][j];
+			}
+			matrixArray[i][j] = product;
+		}
+	}
+}
+
+// Generate a matrix representation a translation transformation.
+void Matrix4x4::Translation(const Vector3 *translation)
+{
+	matrixArray[0][0] = 1.0f;
+	matrixArray[0][1] = 0.0f;
+	matrixArray[0][2] = 0.0f;
+	matrixArray[0][3] = translation->x;
+	matrixArray[1][0] = 0.0f;
+	matrixArray[1][1] = 1.0f;
+	matrixArray[1][2] = 0.0f;
+	matrixArray[1][3] = translation->y;
+	matrixArray[2][0] = 0.0f;
+	matrixArray[2][1] = 0.0f;
+	matrixArray[2][2] = 1.0f;
+	matrixArray[2][3] = translation->z;
+	matrixArray[3][0] = 0.0f;
+	matrixArray[3][1] = 0.0f;
+	matrixArray[3][2] = 0.0f;
+	matrixArray[3][3] = 1.0f;
+}
+
+// Generate a rotation matrix around the X axis.
+void Matrix4x4::RotationX(float angle)
+{
+	float cosAngle;
+	float sinAngle;
 
 	// Calculate common values.
-	angle_radians = degrees_to_radians(angle);
-	cos_angle = cosf(angle_radians);
-	sin_angle = sinf(angle_radians);
+	cosAngle = MathCommon::Cosine(angle);
+	sinAngle = MathCommon::Sine(angle);
 
 	// Fill in matrix.
-	out->array[0][0] = 1.0f;
-	out->array[0][1] = 0.0f;
-	out->array[0][2] = 0.0f;
-	out->array[0][3] = 0.0f;
-	out->array[1][0] = 0.0f;
-	out->array[1][1] = cos_angle;
-	out->array[1][2] = -sin_angle;
-	out->array[1][3] = 0.0f;
-	out->array[2][0] = 0.0f;
-	out->array[2][1] = sin_angle;
-	out->array[2][2] = cos_angle;
-	out->array[2][3] = 0.0f;
-	out->array[3][0] = 0.0f;
-	out->array[3][1] = 0.0f;
-	out->array[3][2] = 0.0f;
-	out->array[3][3] = 1.0f;
+	matrixArray[0][0] = 1.0f;
+	matrixArray[0][1] = 0.0f;
+	matrixArray[0][2] = 0.0f;
+	matrixArray[0][3] = 0.0f;
+	matrixArray[1][0] = 0.0f;
+	matrixArray[1][1] = cosAngle;
+	matrixArray[1][2] = -sinAngle;
+	matrixArray[1][3] = 0.0f;
+	matrixArray[2][0] = 0.0f;
+	matrixArray[2][1] = sinAngle;
+	matrixArray[2][2] = cosAngle;
+	matrixArray[2][3] = 0.0f;
+	matrixArray[3][0] = 0.0f;
+	matrixArray[3][1] = 0.0f;
+	matrixArray[3][2] = 0.0f;
+	matrixArray[3][3] = 1.0f;
 }
 
-/* Generate a rotation matrix around the Y axis. */
-void matrix4x4_rotation_y(float angle, matrix4x4_t *out)
+// Generate a rotation matrix around the Y axis.
+void Matrix4x4::RotationY(float angle)
 {
-	float angle_radians;
-	float cos_angle;
-	float sin_angle;
+	float cosAngle;
+	float sinAngle;
 
 	// Calculate common values.
-	angle_radians = degrees_to_radians(angle);
-	cos_angle = cosf(angle_radians);
-	sin_angle = sinf(angle_radians);
+	cosAngle = MathCommon::Cosine(angle);
+	sinAngle = MathCommon::Sine(angle);
 
 	// Fill in matrix.
-	out->array[0][0] = cos_angle;
-	out->array[0][1] = 0.0f;
-	out->array[0][2] = sin_angle;
-	out->array[0][3] = 0.0f;
-	out->array[1][0] = 0.0f;
-	out->array[1][1] = 1.0f;
-	out->array[1][2] = 0.0f;
-	out->array[1][3] = 0.0f;
-	out->array[2][0] = -sin_angle;
-	out->array[2][1] = 0.0f;
-	out->array[2][2] = cos_angle;
-	out->array[2][3] = 0.0f;
-	out->array[3][0] = 0.0f;
-	out->array[3][1] = 0.0f;
-	out->array[3][2] = 0.0f;
-	out->array[3][3] = 1.0f;
+	matrixArray[0][0] = cosAngle;
+	matrixArray[0][1] = 0.0f;
+	matrixArray[0][2] = sinAngle;
+	matrixArray[0][3] = 0.0f;
+	matrixArray[1][0] = 0.0f;
+	matrixArray[1][1] = 1.0f;
+	matrixArray[1][2] = 0.0f;
+	matrixArray[1][3] = 0.0f;
+	matrixArray[2][0] = -sinAngle;
+	matrixArray[2][1] = 0.0f;
+	matrixArray[2][2] = cosAngle;
+	matrixArray[2][3] = 0.0f;
+	matrixArray[3][0] = 0.0f;
+	matrixArray[3][1] = 0.0f;
+	matrixArray[3][2] = 0.0f;
+	matrixArray[3][3] = 1.0f;
 }
 
-/* Generate a rotation matrix around the Z axis. */
-void matrix4x4_rotation_z(float angle, matrix4x4_t *out)
+// Generate a rotation matrix around the Z axis.
+void Matrix4x4::RotationZ(float angle)
 {
-	float angle_radians;
-	float cos_angle;
-	float sin_angle;
+	float cosAngle;
+	float sinAngle;
 
 	// Calculate common values.
-	angle_radians = degrees_to_radians(angle);
-	cos_angle = cosf(angle_radians);
-	sin_angle = sinf(angle_radians);
+	cosAngle = MathCommon::Cosine(angle);
+	sinAngle = MathCommon::Sine(angle);
 
 	// Fill in matrix.
-	out->array[0][0] = cos_angle;
-	out->array[0][1] = -sin_angle;
-	out->array[0][2] = 0.0f;
-	out->array[0][3] = 0.0f;
-	out->array[1][0] = sin_angle;
-	out->array[1][1] = cos_angle;
-	out->array[1][2] = 0.0f;
-	out->array[1][3] = 0.0f;
-	out->array[2][0] = 0.0f;
-	out->array[2][1] = 0.0f;
-	out->array[2][2] = 1.0f;
-	out->array[2][3] = 0.0f;
-	out->array[3][0] = 0.0f;
-	out->array[3][1] = 0.0f;
-	out->array[3][2] = 0.0f;
-	out->array[3][3] = 1.0f;
+	matrixArray[0][0] = cosAngle;
+	matrixArray[0][1] = -sinAngle;
+	matrixArray[0][2] = 0.0f;
+	matrixArray[0][3] = 0.0f;
+	matrixArray[1][0] = sinAngle;
+	matrixArray[1][1] = cosAngle;
+	matrixArray[1][2] = 0.0f;
+	matrixArray[1][3] = 0.0f;
+	matrixArray[2][0] = 0.0f;
+	matrixArray[2][1] = 0.0f;
+	matrixArray[2][2] = 1.0f;
+	matrixArray[2][3] = 0.0f;
+	matrixArray[3][0] = 0.0f;
+	matrixArray[3][1] = 0.0f;
+	matrixArray[3][2] = 0.0f;
+	matrixArray[3][3] = 1.0f;
 }
 
-/* 
- * Get the transformation matrix for a set of rotation angles.
- * Angles are applied in the order (in object space): Y, X, Z. 
- */
- void matrix4x4_rotation_euler(const vector3d_t *angles, matrix4x4_t *out)
+// Get full Euler angle rotation transformation in order YXZ (object space).
+ void Matrix4x4::RotationEuler(const Vector3 *angles)
  {
-	 matrix4x4_t rotation_x, rotation_y, rotation_z;
-	 matrix4x4_t rotation_zx;
+	 Matrix4x4 rotationX, rotationY, rotationZ;
+	 Matrix4x4 rotationZX;
 
 	 // Need to apply matrices in reverse order.
-	 matrix4x4_rotation_z(angles->z, &rotation_z);
-	 matrix4x4_rotation_x(angles->x, &rotation_x);
-	 matrix4x4_rotation_y(angles->y, &rotation_y);
-	 matrix4x4_multiply(&rotation_x, &rotation_z, &rotation_zx);
-	 matrix4x4_multiply(&rotation_y, &rotation_zx, out);
+	 rotationZ.RotationZ(angles->z);
+	 rotationX.RotationX(angles->x);
+	 rotationY.RotationY(angles->y);
+	 rotationZX.Product(&rotationZ, &rotationX);
+	 Product(&rotationY, &rotationZX);
  }
 
- /* Generate a perspective projection matrix by frustrum parameters. */
- void matrix4x4_frustrum(
+ // Generate a perspective projection matrix by frustrum parameters.
+ void Matrix4x4::PerspectiveProjectionFrustum(
 	 float left,
 	 float right,
 	 float top,
 	 float bottom,
-	 float z_near,
-	 float z_far,
-	 matrix4x4_t *out)
+	 float zNear,
+	 float zFar)
  {
-	float double_z_near;
-	float inverse_right_left_diff, inverse_top_bottom_diff, inverse_far_near_diff;
+	float doubleZNear;
+	float inverseRightLeftDiff, inverseTopBottomDiff, inverseFarNearDiff;
 
 	// Get common values.
-	double_z_near = 2.0f * z_near;
-	inverse_right_left_diff = 1.0f / (right - left);
-	inverse_top_bottom_diff = 1.0f / (top - bottom);
-	inverse_far_near_diff = 1.0f / (z_far - z_near);
+	doubleZNear = 2.0f * zNear;
+	inverseRightLeftDiff = 1.0f / (right - left);
+	inverseTopBottomDiff = 1.0f / (top - bottom);
+	inverseFarNearDiff = 1.0f / (zFar - zNear);
 
 	// Fill in the matrix.
-	out->array[0][0] = double_z_near * inverse_right_left_diff;
-	out->array[0][1] = 0.0f;
-	out->array[0][2] = (right + left) * inverse_right_left_diff;
-	out->array[0][3] = 0.0f;
-	out->array[1][0] = 0.0f;
-	out->array[1][1] = double_z_near * inverse_top_bottom_diff;
-	out->array[1][2] = (top + bottom) * inverse_top_bottom_diff;
-	out->array[1][3] = 0.0f;
-	out->array[2][0] = 0.0f;
-	out->array[2][1] = 0.0f;
-	out->array[2][2] = (z_far + z_near) * inverse_far_near_diff;
-	out->array[2][3] = -(double_z_near * z_far) * inverse_far_near_diff;
-	out->array[3][0] = 0.0f;
-	out->array[3][1] = 0.0f;
-	out->array[3][2] = 1.0f;
-	out->array[3][3] = 0.0f;
+	matrixArray[0][0] = doubleZNear * inverseRightLeftDiff;
+	matrixArray[0][1] = 0.0f;
+	matrixArray[0][2] = (right + left) * inverseRightLeftDiff;
+	matrixArray[0][3] = 0.0f;
+	matrixArray[1][0] = 0.0f;
+	matrixArray[1][1] = doubleZNear * inverseTopBottomDiff;
+	matrixArray[1][2] = (top + bottom) * inverseTopBottomDiff;
+	matrixArray[1][3] = 0.0f;
+	matrixArray[2][0] = 0.0f;
+	matrixArray[2][1] = 0.0f;
+	matrixArray[2][2] = (zFar + zNear) * inverseFarNearDiff;
+	matrixArray[2][3] = -(doubleZNear * zFar) * inverseFarNearDiff;
+	matrixArray[3][0] = 0.0f;
+	matrixArray[3][1] = 0.0f;
+	matrixArray[3][2] = 1.0f;
+	matrixArray[3][3] = 0.0f;
  }
 
-/* Generate a perspective projection matrix. */
-void matrix4x4_perspective(
-	float aspect_ratio,
-	float field_of_view,
-	float z_near,
-	float z_far,
-	matrix4x4_t *out)
+// Generate a perspective projection matrix.
+void Matrix4x4::PerspectiveProjection(
+	float aspectRatio,
+	float fieldOfView,
+	float zNear,
+	float zFar)
 {
-	float fov_radians;
-	float x_max, y_max;
+	float xMax, yMax;
 
 	// Calculate common values.
-	fov_radians = degrees_to_radians(field_of_view * 0.5f);
-	y_max = z_near * tanf(fov_radians);
-	x_max = y_max * aspect_ratio;
+	yMax = zNear * MathCommon::Tangent(fieldOfView);
+	xMax = yMax * aspectRatio;
 
 	// Fill out matrix.
-	matrix4x4_frustrum(-x_max, x_max, y_max, -y_max, z_near, z_far, out);
+	PerspectiveProjectionFrustum(-xMax, xMax, yMax, -yMax, zNear, zFar);
 }
 
-/*
- * Get the transpose of a 4x4 matrix.
- */
-void matrix4x4_transpose(const matrix4x4_t *mat, matrix4x4_t *out)
+// Multiply a matrix by a vector.
+void Matrix4x4::Transform(const Vector4 *vector, Vector4 *out)
 {
-	int i, j;
-	float temp;
-
-	// Copy diagonal.
-	for (i = 0; i < MATRIX_SIZE; ++i) {
-		out->array[i][i] = mat->array[i][i];
-	}
-
-	// Swap elements on opposide sides of the diagonal.
-	for (i = 0; i < MATRIX_SIZE; ++i) {
-		for (j = i + 1; j < MATRIX_SIZE; ++j) {
-			// Keep temporary in case out is the operand.
-			temp = mat->array[i][j];
-			out->array[i][j] = mat->array[j][i];
-			out->array[j][i] = temp;
-		}
-	}
-}
-
-/*
- * Multiply two matrices together. 
- * The output matrix cannot be one of the operands.
- */
-void matrix4x4_multiply(const matrix4x4_t *a, const matrix4x4_t *b, matrix4x4_t *out)
-{
-	int i;
-	int j;
-	int k;
-	float product;
-
-	// For each element of the output...
-	for (i = 0; i < MATRIX_SIZE; ++i) {
-		for (j = 0; j < MATRIX_SIZE; ++j) {
-			// Element I, J is the dot product of row I of A and column J of B.
-			product = 0.0f;
-			for (k = 0; k < MATRIX_SIZE; ++k) {
-				product += a->array[i][k] * b->array[k][j];
-			}
-			out->array[i][j] = product;
-		}
-	}
-}
-
-/* Multiply a matrix by a vector. */
-void matrix4x4_transform(const matrix4x4_t *mat, const vector4d_t *vec, vector4d_t *out)
-{
-	out->x = (vec->x * mat->array[0][0]) + (vec->y * mat->array[0][1]) + (vec->z * mat->array[0][2]) + (vec->w * mat->array[0][3]);
-	out->y = (vec->x * mat->array[1][0]) + (vec->y * mat->array[1][1]) + (vec->z * mat->array[1][2]) + (vec->w * mat->array[1][3]);
-	out->z = (vec->x * mat->array[2][0]) + (vec->y * mat->array[2][1]) + (vec->z * mat->array[2][2]) + (vec->w * mat->array[2][3]);
-	out->w = (vec->x * mat->array[3][0]) + (vec->y * mat->array[3][1]) + (vec->z * mat->array[3][2]) + (vec->w * mat->array[3][3]);
+	out->x = (vector->x * matrixArray[0][0]) + (vector->y * matrixArray[0][1]) + (vector->z * matrixArray[0][2]) + (vector->w * matrixArray[0][3]);
+	out->y = (vector->x * matrixArray[1][0]) + (vector->y * matrixArray[1][1]) + (vector->z * matrixArray[1][2]) + (vector->w * matrixArray[1][3]);
+	out->z = (vector->x * matrixArray[2][0]) + (vector->y * matrixArray[2][1]) + (vector->z * matrixArray[2][2]) + (vector->w * matrixArray[2][3]);
+	out->w = (vector->x * matrixArray[3][0]) + (vector->y * matrixArray[3][1]) + (vector->z * matrixArray[3][2]) + (vector->w * matrixArray[3][3]);
 }

@@ -1,42 +1,42 @@
-#ifndef _RENDERER_SHADER_UTILITIES_H_
-#define _RENDERER_SHADER_UTILITIES_H_
+#pragma once
 
 #include "renderer_shared.h"
-#include "vector3d.h"
-#include "vector4d.h"
+#include "vector3.h"
+#include "vector4.h"
 #include "matrix3x3.h"
 #include "matrix4x4.h"
 
-// Loading and compiling a single shader.
-typedef int (*renderer_create_shader_t)(
-	const char *filename,
-	renderer_shader_type_t type,
-	renderer_shader_t *out);
+// Interface for preparing shaders and uniform variables.
+class RendererShadingResources
+{
+public:
 
-// Unlinking and cleaning up a shader.
-typedef void (*renderer_destroy_shader_t)(
-	renderer_shader_t *shader,
-	renderer_program_t program);
+	// Shader functions.
 
-// Creating a full shader program.
-typedef int (*renderer_create_program_t)(renderer_program_t *out);
+	// Loading and compiling a single shader.
+	virtual RendererShader *CreateShader(const char *filename, RendererShaderType type) = 0;
+	// Destroy/delete a shader.
+	virtual void DestroyShader(RendererShader *shader) = 0;
+	// Build a shader program.
+	virtual RendererProgram *CreateProgram(const RendererShader *vertexShader, const RendererShader *fragmentShader) = 0;
+	// Destroy a shader program.
+	virtual void DestroyProgram(RendererProgram *program) = 0;
+	// Prepare a shader schema for vertex attributes.
+	virtual RendererShaderSchema *CreateShaderSchema(
+		const RendererProgram *program,
+		const RendererShaderAttribute *attributes,
+		int numAttributes) = 0;
+	// Destroy a shader schema.
+	virtual void DestroyShaderSchema(RendererShaderSchema *schema) = 0;
 
-// Destroying a full shader program.
-typedef void (*renderer_destroy_program_t)(renderer_program_t *program);
+	// Uniform variable functions.
 
-// Link a shader to the program.
-typedef void (*renderer_link_shader_t)(
-	renderer_shader_t shader,
-	renderer_program_t program);
+	// Get uniform variable from a program.
+	virtual RendererUniform *GetUniform(const RendererProgram *program, const char *name) = 0;
+	// Destroy uniform variable.
+	virtual void DestroyUniform(RendererUniform *uniform) = 0;
 
-// Compile a shader program after shaders have been linked.
-typedef int (*renderer_compile_program_t)(renderer_program_t program);
-
-// Set the active shader program used in rendering.
-typedef void (*renderer_set_program_t)(renderer_program_t program);
-
-// Unset the active shader program.
-typedef void (*renderer_unset_program_t)(void);
+};
 
 // Generating a renderer-specific shader schema reference.
 typedef int (*renderer_create_shader_schema_t)(

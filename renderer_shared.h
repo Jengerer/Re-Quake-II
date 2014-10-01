@@ -1,5 +1,8 @@
 #pragma once
 
+#include "matrix3x3.h"
+#include "matrix4x4.h"
+
 // Generic shader types.
 enum RendererShaderType
 {
@@ -20,53 +23,60 @@ enum RendererVariableType
 };
 
 // Shader attribute definition.
-struct RendererShaderAttribute
+class RendererShaderAttribute
 {
+public:
+
+	RendererShaderAttribute(const char *name, RendererVariableType type);
+
+	// Parameter retrieval.
+	const char *GetName() const { return name; }
+	RendererVariableType GetType() const { return type; }
+
+private:
+
 	const char *name;
 	RendererVariableType type;
 };
 
 // Schema for a shader program.
-struct RendererShaderSchema
+class RendererShaderSchema
 {
-	void *buffer;
 };
 
 // Single compiled shader.
-typedef struct renderer_shader
+class RendererShader
 {
-	void *buffer;
-} renderer_shader_t;
+};
 
 // Full shader program.
-typedef struct renderer_program
+class RendererProgram
 {
-	void *buffer;
-} renderer_program_t;
+};
 
 // Shader uniform variable.
-typedef struct renderer_uniform
+class RendererUniform
 {
-	void *buffer;
-} renderer_uniform_t;
+public:
+
+	// Value setting functions.
+	// Set value as 3-D vector.
+	virtual void SetVector3(const Vector3 *vector) = 0;
+	// Set value as 4-D vector.
+	virtual void SetVector4(const Vector4 *vector) = 0;
+	// Set value as 3x3 matrix.
+	virtual void SetMatrix3x3(const Matrix3x3 *matrix) = 0;
+	// Set value as 4x4 matrix.
+	virtual void SetMatrix4x4(const Matrix4x4 *matrix) = 0;
+
+};
 
 // TWo dimensional texture.
-typedef struct renderer_texture
+class RendererTexture
 {
-	void *buffer;
-} renderer_texture_t;
+};
 
 // Component to render in a scene.
-typedef struct renderer_model
+class RendererModel
 {
-	void *buffer;
-} renderer_model_t;
-
-// Renderer common object initialization.
-void renderer_null_shader(renderer_shader_t *shader);
-void renderer_null_program(renderer_program_t *program);
-void renderer_null_shader_schema(renderer_shader_schema_t *schema);
-void renderer_null_uniform(renderer_uniform_t *uniform);
-void renderer_null_model(renderer_model_t *schema);
-
-#endif // _RENDERER_SHARED_H_
+};

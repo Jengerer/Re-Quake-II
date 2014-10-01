@@ -34,6 +34,8 @@ public:
 	static float Sine(float angle);
 	// Cosine function.
 	static float Cosine(float angle);
+	// Tangent function.
+	static float Tangent(float angle);
 	// Arctangent with both X and Y parameters.
 	static float ArcTangent(float y, float x);
 

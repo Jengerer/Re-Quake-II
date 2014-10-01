@@ -1,48 +1,31 @@
 #include "matrix3x3.h"
 
-// Constant so we can duplicate code easily for other matrix sizes.
-#define MATRIX_SIZE 3
-
-/* Fill the matrix with identity values. */
-void matrix3x3_identity(matrix3x3_t *out)
+// Fill the matrix with identity values.
+void Matrix3x3::Identity()
 {
-	int i;
-	int j;
-
-	// Go through each element.
-	for (i = 0; i < MATRIX_SIZE; ++i) {
-		for (j = 0; j < MATRIX_SIZE; ++j) {
-			// Set diagonals to 1, 0 otherwise.
-			if (i == j) {
-				out->array[i][j] = 1.0f;
-			}
-			else {
-				out->array[i][j] = 0.0f;
-			}
+	int i, j;
+	for (i = 0; i < Size; ++i) {
+		for (j = 0; j < Size; ++j) {
+			matrixArray[i][j] = (i == j ? 1.0f : 0.0f);
 		}
 	}
 }
 
-/*
- * Multiply two matrices together. 
- * The output matrix cannot be one of the operands.
- */
-void matrix3x3_multiply(const matrix3x3_t *a, const matrix3x3_t *b, matrix3x3_t *out)
+// Store result of product of two matrices into this matrix.
+// This matrix cannot be one of the operands.
+void Matrix3x3::Product(const Matrix3x3 *a, const Matrix3x3 *b)
 {
-	int i;
-	int j;
-	int k;
-	float product;
+	int i, j, k;
 
-	// For each element of the output...
-	for (i = 0; i < MATRIX_SIZE; ++i) {
-		for (j = 0; j < MATRIX_SIZE; ++j) {
+	// For each of our elements...
+	for (int i = 0; i < Size; ++i) {
+		for (int j = 0; j < Size; ++j) {
 			// Element I, J is the dot product of row I of A and column J of B.
-			product = 0.0f;
-			for (k = 0; k < MATRIX_SIZE; ++k) {
-				product += a->array[i][k] * b->array[k][j];
+			float product = 0.0f;
+			for (int k = 0; k < Size; ++k) {
+				product += a->matrixArray[i][k] * b->matrixArray[k][j];
 			}
-			out->array[i][j] = product;
+			matrixArray[i][j] = product;
 		}
 	}
 }

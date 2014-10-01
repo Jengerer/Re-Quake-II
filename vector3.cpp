@@ -118,14 +118,12 @@ void Vector3::AnglesFromVector(const Vector3 *direction)
 	float yzArcTangent;
 
 	// Calculate yaw (rotation about Y axis).
-	xzArcTangent = MathCommon::ArcTangent(direction->x, direction->z);
-	y = MathCommon::RadiansToDegrees(xzArcTangent);
+	y = MathCommon::ArcTangent(direction->x, direction->z);
 
 	// Calculate pitch (rotation about X axis).
 	float squarexzDistance = (direction->x * direction->x) + (direction->z * direction->z);
 	xzDistance = MathCommon::SquareRoot(squarexzDistance);
-	yzArcTangent = MathCommon::ArcTangent(direction->y, xzDistance);
-	x = MathCommon::RadiansToDegrees(yzArcTangent);
+	x = MathCommon::ArcTangent(direction->y, xzDistance);
 
 	// Any roll will satisfy, so no roll.
 	z = 0.0f;

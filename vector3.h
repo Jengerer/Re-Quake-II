@@ -9,7 +9,7 @@ public:
 	Vector3();
 	Vector3(float x, float y, float z);
 
-	// Parameter setting functions.
+// Parameter setting functions.
 
 	// Set all components to zero.
 	void Clear();
@@ -18,14 +18,14 @@ public:
 	// Set all components of this vector.
 	void Set(float x, float y, float z);
 
-	// Vector length related functions.
+// Vector length related functions.
 
 	// Retrieve square of vector magnitude.
 	float GetSquareMagnitude() const;
 	// Retrieve vector length/magnitude.
 	float GetMagnitude() const;
 
-	// Unary vector length/scale operations.
+// Unary vector length/scale operations.
 
 	// Store normalized vector in this vector.
 	void Normalized(const Vector3 *vector);
@@ -34,7 +34,7 @@ public:
 	// Store negation of a vector in this vector.
 	void Negation(const Vector3 *vector);
 
-	// Binary vector operations.
+// Binary vector operations.
 
 	// Store the sum of two vectors in this vector.
 	void Sum(const Vector3 *a, const Vector3 *b);
@@ -47,7 +47,7 @@ public:
 	// Compound binary operations.
 	void SumMultiple(const Vector3 *base, const Vector3 *scaled, float factor);
 
-	// Functions for handling angles as a vector.
+// Functions for handling angles as a vector.
 
 	// Assign the angles to this vector corresponding to the given direction vector.
 	void AnglesFromVector(const Vector3 *direction);
