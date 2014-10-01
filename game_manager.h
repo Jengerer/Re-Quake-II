@@ -3,6 +3,7 @@
 
 #include "engine_utilities.h"
 #include "game_manager_listener.h"
+#include <setjmp.h>
 
 // The game manager is layered between the engine and the game modules.
 // It transmits messages between the client and server, manages resources,
@@ -11,6 +12,9 @@ typedef struct game_manager
 {
 	engine_utilities_t engine;
 	game_manager_listener_t client;
+
+	// Error handling locations.
+	jmp_buf	
 } game_manager_t;
 
 // Engine listener functions.
