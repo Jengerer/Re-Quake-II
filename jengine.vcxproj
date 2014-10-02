@@ -86,7 +86,7 @@
     <ClCompile Include="client_export.c" />
     <ClCompile Include="engine.c" />
     <ClCompile Include="engine_export.c" />
-    <ClCompile Include="error_stack.c" />
+    <ClCompile Include="error_stack.cpp" />
     <ClCompile Include="file.c" />
     <ClCompile Include="game_manager.c" />
     <ClCompile Include="game_manager_export.c" />
@@ -98,7 +98,7 @@
     <ClCompile Include="math_common.cpp" />
     <ClCompile Include="matrix3x3.cpp" />
     <ClCompile Include="matrix4x4.cpp" />
-    <ClCompile Include="memory_manager.c" />
+    <ClCompile Include="memory_manager.cpp" />
     <ClCompile Include="mesh.c" />
     <ClCompile Include="opengl_export.c" />
     <ClCompile Include="opengl_renderer.c" />
@@ -109,7 +109,7 @@
     <ClCompile Include="vector3.cpp" />
     <ClCompile Include="vector4.cpp" />
     <ClCompile Include="sdl_window.c" />
-    <ClCompile Include="window_common.c" />
+    <ClCompile Include="window_common.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bsp_map.h" />

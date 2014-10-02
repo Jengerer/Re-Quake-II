@@ -1,42 +1,65 @@
-#ifndef _WINDOW_COMMON_H_
-#define _WINDOW_COMMON_H_
+#pragma once
 
 #include "input_listener.h"
-#include "keyboard_common.h"
 
-// Engine window update flags.
-#define WINDOW_FULLSCREEN (1 << 0)
-#define WINDOW_BORDERLESS (1 << 1)
+// Engine window flag structure.
+union WindowFlags
+{
+	struct {
+		char fullscreen : 1;
+		char borderless : 1;
+		char padding : 6;
+	};
+	char asCharacter;
+};
 
 // Enumeration for handling window events.
-typedef enum window_event_result
+enum WindowEventResult
 {
-	WINDOW_EVENT_OK,
-	WINDOW_EVENT_QUIT,
-	WINDOW_EVENT_ERROR
-} window_event_result_t;
+	WindowEventSuccess,
+	WindowEventQuit,
+	WindowEventError
+};
 
-// Structure for representing a generic window.
-typedef struct window
+// Base window structure.
+class Window
 {
-	// Window parameters.
-	int width;
-	int height;
-	int flags;
 
-	// Input event handler to pass messages two.
-	input_listener_t input_listener;
-} window_t;
+public:
 
-// Window structure initialization.
-void window_null(window_t *window);
+	Window(int width, int height, WindowFlags flags, InputListener *listener);
+	virtual ~Window();
 
-// Window event propagation.
-window_event_result_t window_handle_key_press(
-	const window_t *window,
-	key_code_t key);
-window_event_result_t window_handle_key_release(
-	const window_t *window,
-	key_code_t key);
+// Window parameter retrieval.
 
-#endif // _WINDOW_COMMON_H_
+	inline int GetWidth() const;
+	inline int GetHeight() const;
+	inline WindowFlags GetFlags() const;
+
+// Window event handling.
+
+	bool HandleKeyPress(KeyCode key);
+	bool HandleKeyRelease(KeyCode key);
+
+protected:
+
+	int width, height;
+	WindowFlags flags;
+	InputListener *listener;
+
+};
+
+int Window::GetWidth() const
+{
+	return width;
+}
+
+int Window::GetHeight() const
+{
+	return height;
+}
+
+WindowFlags Window::GetFlags() const
+{
+	return flags;
+}

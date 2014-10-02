@@ -1,24 +1,23 @@
-#ifndef _INPUT_LISTENER_H_
-#define _INPUT_LISTENER_H_
+#pragma once
 
-#include "keyboard_common.h"
+#include "keyboard_shared.h"
 
 // Input event return values.
-typedef enum input_event_result
+enum InputEventResult
 {
-	INPUT_EVENT_OK,
-	INPUT_EVENT_QUIT,
-	INPUT_EVENT_ERROR
-} input_event_result_t;
+	InputEventSuccess,
+	InputEventQuit,
+	InputEventError
+};
 
-// Keyboard event handler.
-typedef input_event_result_t (*keyboard_event_t)(key_code_t key);
-
-// Interface for an input event handler.
-typedef struct input_listener
+// Input event interface.
+class InputListener
 {
-	keyboard_event_t on_key_press;
-	keyboard_event_t on_key_release;
-} input_listener_t;
 
-#endif // _INPUT_LISTENER_H_
+public:
+
+	// Keyboard event handlers.
+	virtual InputEventResult OnKeyPress(KeyCode key) = 0;
+	virtual InputEventResult OnKeyRelease(KeyCode key) = 0;
+
+};

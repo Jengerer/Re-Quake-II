@@ -1,32 +1,41 @@
-#ifndef _ERROR_STACK_H
-#define _ERROR_STACK_H_
+#pragma once
 
-// Node for an error with intrusive list nodes.
-typedef struct error_stack_node
+// Error stack node.
+class ErrorStackNode
 {
-	char *error;
-	
-	// Intrusive list node.
-	struct error_stack_node *next;
-} error_stack_node_t;
 
-// Structure for keeping track of a stack of errors.
-typedef struct error_stack
+public:
+
+	ErrorStackNode(char *message);
+	~ErrorStackNode();
+
+	// Get error stack message.
+	const char *GetMessage() const;
+
+private:
+
+	char *message;
+
+	// Next node in the list.
+	ErrorStackNode *next;
+
+};
+
+// Static class for reporting errors.
+class ErrorStack
 {
-	error_stack_node_t *head;
-} error_stack_t;
 
-// Error stack node initialization and destruction.
-void error_stack_node_null(error_stack_node_t *node);
-void error_stack_node_destroy(error_stack_node_t *node);
+public:
 
 // Error stack initialization and destruction.
-void error_stack_null(error_stack_t *stack);
-void error_stack_initialize(void);
-void error_stack_destroy(error_stack_t *stack);
 
-// Error stack logging and dumping.
-void error_stack_log(const char *format, ...);
-void error_stack_dump(void);
+	static void Initialize();
+	static void Shutdown();
 
-#endif // _ERROR_STACK_H_
+// Error logging and reporting.
+
+	static void Log(const char *format, ...);
+	static void Dump();
+	static void Clear();
+
+};

@@ -89,9 +89,6 @@
     <ClCompile Include="file.c">
       <Filter>engine\src</Filter>
     </ClCompile>
-    <ClCompile Include="error_stack.c">
-      <Filter>engine\src</Filter>
-    </ClCompile>
     <ClCompile Include="keyboard_manager.c">
       <Filter>engine\src</Filter>
     </ClCompile>
@@ -112,12 +109,6 @@
     </ClCompile>
     <ClCompile Include="bsp_map_parser.c">
       <Filter>game\common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_manager.c">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="window_common.c">
-      <Filter>engine\src</Filter>
     </ClCompile>
     <ClCompile Include="sdl_window.c">
       <Filter>engine\src</Filter>
@@ -167,6 +158,15 @@
     <ClCompile Include="image_loader.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
+    <ClCompile Include="window_common.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="error_stack.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_manager.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine_utilities.h">
@@ -180,9 +180,6 @@
     </ClInclude>
     <ClInclude Include="game_manager_utilities.h">
       <Filter>game_manager\include\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="error_stack.h">
-      <Filter>engine\include</Filter>
     </ClInclude>
     <ClInclude Include="image.h">
       <Filter>engine\include</Filter>
@@ -296,6 +293,9 @@
       <Filter>common\include</Filter>
     </ClInclude>
     <ClInclude Include="image_loader.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="error_stack.h">
       <Filter>engine\include</Filter>
     </ClInclude>
   </ItemGroup>

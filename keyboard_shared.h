@@ -8,14 +8,14 @@ union KeyState
 		char pressed : 1;
 		char changed : 1;
 		char padding : 6;
-	} flags;
-	unsigned char as_char;
+	};
+	unsigned char asCharacter;
 };
 
 // Keyboard key values.
 enum EngineKey
 {
-	Invalid = 0,
+	EngineKeyInvalid = 0,
 
 	// Alphanumeric characters map to lower case ASCII values.
 	EngineKeyA = 65,

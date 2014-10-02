@@ -1,21 +1,27 @@
-#ifndef _MEMORY_MANAGER_H_
-#define _MEMORY_MANAGER_H_
+#pragma once
 
-#include <stdlib.h>
-
-// Structure for memory management.
-typedef struct memory_manager
+// Static class for managing memory.
+class MemoryManager
 {
-	int active_allocations;
-} memory_manager_t;
 
-// Manager initialization and destruction.
-void memory_manager_initialize(void);
-void memory_manager_destroy(void);
+public:
 
-// Memory handling functions.
-void* memory_allocate(unsigned int size);
-void* memory_array_allocate(unsigned int element_size, unsigned int count);
-void memory_free(void* buffer);
+// Initialization and destruction.
 
-#endif // _MEMORY_MANAGER_H_
+	static void Initialize();
+	static void Destroy();
+
+// Allocation management.
+
+	// Allocate a buffer of a given size.
+	void *Allocate(unsigned int size);
+	// Allocate a buffer for an array.
+	void *AllocateArray(unsigned int elementSize, unsigned int count);
+	// Free a buffer.
+	void Free(void *buffer);
+
+private:
+
+	static int activeAllocations;
+
+};

@@ -3,7 +3,7 @@
 
 #include "sdl_window.h"
 #include "renderer.h"
-#include "renderer_shader_utilities.h"
+#include "renderer_resources.h"
 #include "engine_listener.h"
 
 // Engine structure.

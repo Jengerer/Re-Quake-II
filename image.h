@@ -11,26 +11,33 @@ public:
 // Image initialization and destruction.
 
 	// Initialie the buffer for a number of pixels and channels.
-	bool Initialize(int width, int height, int channels);
+	bool Initialize(int width, int height, int pixelSize);
 	void Destroy();
 
 // Image parameter retrieval.
 
 	// Get the buffer where image data is stored.
+	inline void *GetBuffer();
 	inline const void *GetBuffer() const;
 	inline int GetWidth() const;
 	inline int GetHeight() const;
-	inline int GetChannels() const;
+	inline int GetPixelSize() const;
 
 private:
 
 	void *buffer;
 	int width, height;
-	int channels;
+	int pixelSize;
 
 };
 
 // Get the image buffer.
+void *Image::GetBuffer()
+{
+	return buffer;
+}
+
+// Get the constant reference image buffer.
 const void *Image::GetBuffer() const
 {
 	return buffer;
@@ -49,11 +56,7 @@ int Image::GetHeight() const
 }
 
 // Get number of channels/bytes per pixel.
-int Image::GetChannels() const
+int Image::GetPixelSize() const
 {
-	return channels;
+	return pixelSize;
 }
-
-// Image loading from certain formats.
-
-int image_load_png(const char *filename, image_t *out);

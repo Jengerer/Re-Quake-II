@@ -8,7 +8,4 @@ class ImageLoader
 
 public:
 
-	// Load a PNG image from file.
-	static Image *LoadPNG(const char *filename);
-
 };
