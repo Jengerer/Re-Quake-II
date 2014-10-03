@@ -121,7 +121,7 @@ int opengl_create_model(const void *vertex_data,
 
 	// Fill out handles and size.
 	model->vertex_buffer = vertex_buffer;
-	model->array_size = num_vertices;
+	model->array_size = num_GLvertices;
 	return 1;
 }
 

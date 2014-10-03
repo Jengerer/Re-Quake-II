@@ -70,8 +70,13 @@ namespace Renderer
 	{
 	};
 
-	// Component to render in a scene.
+	// Renderable component made of sequential vertices.
 	class Model
+	{
+	};
+
+	// Renderable component made of vertices and sequential indices that index them.
+	class IndexedModel
 	{
 	};
 

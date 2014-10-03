@@ -7,6 +7,7 @@ public:
 
 	// Engine initialization.
 	virtual bool Initialize() = 0;
+
 	// Engine destruction.
 	virtual void Shutdown() = 0;
 

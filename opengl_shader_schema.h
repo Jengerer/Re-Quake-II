@@ -28,6 +28,9 @@ namespace OpenGL
 		// Disable this shader schema from rendering.
 		void Deactivate() const;
 
+		// Get vertex size.
+		inline GLsizei GetVertexSize() const;
+
 	private:
 
 		// Helper for determining number of floats in a given type.
@@ -40,5 +43,11 @@ namespace OpenGL
 		int attributeCount;
 
 	};
+
+	// Retrieve total size of vertex defined by all attributes in this schema.
+	GLsizei ShaderSchema::GetVertexSize() const
+	{
+		return vertexSize;
+	}
 
 }

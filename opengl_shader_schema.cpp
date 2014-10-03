@@ -78,6 +78,7 @@ namespace OpenGL
 	}
 
 	// Return how many floats fit perfectly into a given variable type.
+	// TODO: This can probably go in generic renderer code.
 	int ShaderSchema::GetVariableFloatCount(Renderer::VariableType type)
 	{
 		switch (type) {

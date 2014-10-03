@@ -128,9 +128,6 @@
     <ClCompile Include="game_manager.c">
       <Filter>game_manager\src</Filter>
     </ClCompile>
-    <ClCompile Include="opengl_shader_utilities.c">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
     <ClCompile Include="game_manager_export.c">
       <Filter>game_manager\src</Filter>
     </ClCompile>
@@ -166,6 +163,27 @@
     </ClCompile>
     <ClCompile Include="memory_manager.cpp">
       <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_shader.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_program.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_shader_schema.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer_shared.cpp">
+      <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_shader_attribute.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_resources.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_model.cpp">
+      <Filter>opengl_renderer\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,9 +289,6 @@
     <ClInclude Include="input_listener.h">
       <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="opengl_shader_utilities.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
     <ClInclude Include="keyboard_shared.h">
       <Filter>common\include</Filter>
     </ClInclude>
@@ -298,7 +313,25 @@
     <ClInclude Include="error_stack.h">
       <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="opengl_shading_types.h">
+    <ClInclude Include="opengl_shader.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_shader_attribute.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_shader_schema.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_uniform.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_program.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_resources.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_model.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
   </ItemGroup>

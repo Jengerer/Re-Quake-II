@@ -8,6 +8,8 @@ public:
 
 	// Triggered when the engine is fully initialized.
 	virtual bool OnInitialize() = 0;
+
+	// Triggered when engine wants to exit.
 	virtual void OnShutdown() = 0;
 
 	// Called on every frame.
