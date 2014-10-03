@@ -185,6 +185,9 @@
     <ClCompile Include="opengl_model.cpp">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
+    <ClCompile Include="opengl_indexed_model.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine_utilities.h">
@@ -332,6 +335,9 @@
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
     <ClInclude Include="opengl_model.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_indexed_model.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -23,6 +23,9 @@ namespace OpenGL
 		// Unset this program from rendering.
 		void Deactivate();
 
+		// Get location of a uniform within this program.
+		GLint GetUniformLocation(const char *name) const;
+
 		// Get handle.
 		inline GLuint GetHandle() const;
 

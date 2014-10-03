@@ -15,7 +15,7 @@ namespace OpenGL
 		~Model();
 
 		// Create the model from a set of vertex data.
-		bool Initialize(const void *vertexData, int numVertices, const Renderer::ShaderSchema *schema);
+		bool Initialize(const void *vertexData, int vertexCount, const Renderer::ShaderSchema *schema);
 
 		// Bind the model for rendering.
 		void Bind();
@@ -29,7 +29,7 @@ namespace OpenGL
 	private:
 
 		GLuint vertexBuffer;
-		GLuint vertexCount;
+		GLsizei vertexCount;
 
 	};
 

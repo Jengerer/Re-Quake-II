@@ -26,6 +26,19 @@ void *MemoryManager::Allocate(unsigned int size)
 	return result;
 }
 
+// Allocate space for a certain object type.
+template <class Type>
+static bool Allocate(Type **out)
+{
+	// Allocate space for type.
+	Type *object = Allocate(sizeof(Type));
+	if (object != nullptr) {
+		*out = object;
+		return true;
+	}
+	return false;
+}
+
 // Allocate array memory chunk.
 void *MemoryManager::AllocateArray(unsigned int elementSize, unsigned int count)
 {
@@ -37,4 +50,13 @@ void MemoryManager::Free(void* buffer)
 {
 	--activeAllocations;
 	free(buffer);
+}
+
+// Destroy and deallocate an object buffer.
+template <class Type>
+static void Destroy(Type *object)
+{
+	// Call destructor and free memory.
+	object->~Type();
+	Free(object);
 }

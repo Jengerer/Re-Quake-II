@@ -6,7 +6,7 @@ namespace OpenGL
 {
 
 	// Object representing a uniform variable in an OpenGL shader.
-	class Uniform
+	class Uniform : public Renderer::Uniform
 	{
 
 	public:

@@ -19,19 +19,22 @@ namespace OpenGL
 		// Create a model from a set of vertices.
 		virtual Renderer::Model *CreateModel(
 			const void *vertexData,
-			int numVertices,
+			int vertexCount,
 			const Renderer::ShaderSchema *schema);
 
 		// Create a model from a set of vertices and the indices referencing them.
-		virtual Renderer::Model *CreateIndexedModel(
+		virtual Renderer::IndexedModel *CreateIndexedModel(
 			const void *vertexData,
-			int numVertices,
+			int vertexCount,
 			const unsigned int *indexData,
-			int numIndices,
+			int indexCount,
 			const Renderer::ShaderSchema *schema);
 
 		// Destroy a model.
 		virtual void DestroyModel(Renderer::Model *model);
+
+		// Destroy an indexed model.
+		virtual void DestroyIndexedModel(Renderer::IndexedModel *model);
 
 		// Loading and compiling a single shader.
 		virtual Renderer::Shader *CreateShader(const char *filename, Renderer::ShaderType type);
@@ -49,7 +52,7 @@ namespace OpenGL
 		virtual Renderer::ShaderSchema *CreateShaderSchema(
 			const Renderer::Program *program,
 			const Renderer::Attribute *attributes,
-			int numAttributes);
+			int attributeCount);
 
 		// Destroy a shader schema.
 		virtual void DestroyShaderSchema(Renderer::ShaderSchema *schema);

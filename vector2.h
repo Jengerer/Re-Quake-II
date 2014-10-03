@@ -44,12 +44,6 @@ private:
 
 public:
 
-	// Union for combinign parameter and array representation.
-	union {
-		struct {
-			float x, y;
-		};
-		float asArray[Dimension];
-	};
+	float x, y;
 
 };

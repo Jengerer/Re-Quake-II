@@ -18,19 +18,22 @@ namespace Renderer
 		// Create a model from a set of vertices.
 		virtual Model *CreateModel(
 			const void *vertexData,
-			int numVertices,
+			int vertexCount,
 			const ShaderSchema *schema) = 0;
 
 		// Create a model from a set of vertices and the indices referencing them.
-		virtual Model *CreateIndexedModel(
+		virtual IndexedModel *CreateIndexedModel(
 			const void *vertexData,
-			int numVertices,
+			int vertexCount,
 			const unsigned int *indexData,
-			int numIndices,
+			int indexCount,
 			const ShaderSchema *schema) = 0;
 
 		// Destroy a model.
 		virtual void DestroyModel(Model *model) = 0;
+
+		// Destroy an indexed model.
+		virtual void DestroyIndexedModel(IndexedModel *model) = 0;
 
 		// Loading and compiling a single shader.
 		virtual Shader *CreateShader(const char *filename, ShaderType type) = 0;
@@ -48,7 +51,7 @@ namespace Renderer
 		virtual ShaderSchema *CreateShaderSchema(
 			const Program *program,
 			const Attribute *attributes,
-			int numAttributes) = 0;
+			int attributeCount) = 0;
 
 		// Destroy a shader schema.
 		virtual void DestroyShaderSchema(ShaderSchema *schema) = 0;

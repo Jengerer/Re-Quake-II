@@ -29,13 +29,7 @@ private:
 	static const int Dimension = 4;
 
 public:
-
-	// Union for combinign parameter and array representation.
-	union {
-		struct {
-			float x, y, z, w;
-		};
-		float asArray[Dimension];
-	};
+		
+	float x, y, z, w;
 
 };

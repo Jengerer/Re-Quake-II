@@ -70,4 +70,10 @@ namespace OpenGL
 		glUseProgram(0);
 	}
 
+	// Get location of a uniform variable within this program.
+	GLint Program::GetUniformLocation(const char *name) const
+	{
+		return glGetUniformLocation(handle, name);
+	}
+
 }

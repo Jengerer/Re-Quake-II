@@ -101,6 +101,7 @@
     <ClCompile Include="memory_manager.cpp" />
     <ClCompile Include="mesh.c" />
     <ClCompile Include="opengl_export.c" />
+    <ClCompile Include="opengl_indexed_model.cpp" />
     <ClCompile Include="opengl_model.cpp" />
     <ClCompile Include="opengl_program.cpp" />
     <ClCompile Include="opengl_renderer.c" />
@@ -132,6 +133,7 @@
     <ClInclude Include="image_loader.h" />
     <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />
+    <ClInclude Include="opengl_indexed_model.h" />
     <ClInclude Include="opengl_model.h" />
     <ClInclude Include="opengl_program.h" />
     <ClInclude Include="opengl_shader_schema.h" />
