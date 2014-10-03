@@ -127,6 +127,7 @@
     <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />
     <ClInclude Include="opengl_shader_utilities.h" />
+    <ClInclude Include="opengl_shading_types.h" />
     <ClInclude Include="renderer_resources.h" />
     <ClInclude Include="shared_defines.h" />
     <ClInclude Include="engine_utilities.h" />

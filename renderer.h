@@ -7,20 +7,39 @@
 #include "image.h"
 #include "renderer_shared.h"
 
-// Renderer drawing interface.
-class Renderer
+namespace Renderer
 {
 
-public:
+	// Renderer drawing interface.
+	class Interface
+	{
 
-// Initialization and clean up.
+	public:
 
-	// Initialize renderer.
-	virtual bool Initialize() = 0;
-	// Shut down renderer.
-	virtual void Shutdown() = 0;
+		// Initialize renderer.
+		virtual bool Initialize() = 0;
 
-};
+		// Shut down renderer.
+		virtual void Shutdown() = 0;
+
+		// Set uniform variable value as float.
+		virtual void SetUniformValue(const Uniform *uniform, float value) = 0;
+
+		// Set uniform variable value as 3-D vector.
+		virtual void SetUniformValue(const Uniform *uniform, const Vector3 *vector) = 0;
+
+		// Set uniform variable value as 4-D vector.
+		virtual void SetUniformValue(const Uniform *uniform, const Vector4 *vector) = 0;
+
+		// Set uniform variable value as 3x3 matrix.
+		virtual void SetUniformValue(const Uniform *uniform, const Matrix3x3 *matrix) = 0;
+
+		// Set uniform variable value as 4x4 matrix.
+		virtual void SetUniformValue(const Uniform *uniform, const Matrix4x4 *matrix) = 0;
+
+	};
+
+}
 
 // Renderer initialization and clean-up.
 typedef void (*renderer_null_t)(void);

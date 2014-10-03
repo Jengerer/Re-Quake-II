@@ -1,16 +1,37 @@
-#ifndef _FILE_H_
-#define _FILE_H_
+#pragma once
 
-// Struct representing a file's contents.
-typedef struct file
+// Class for handling file and loading it to a buffer.
+class File
 {
+
+public:
+
+	File();
+	~File();
+
+	// Read a file to buffer.
+	bool Read(const char *filename);
+
+	// Retrieve buffer and size of read file.
+
+	inline const void *GetBuffer() const;
+	inline int GetSize() const;
+	
+private:
+
 	void *buffer;
-	int size;
-} file_t;
+	int fileSize;
 
-// File read operations.
-void file_null(file_t *out);
-int file_load(const char *filename, file_t *out);
-void file_destroy(file_t *file);
+};
 
-#endif // _FILE_H_
+// Get the file buffer.
+const void *File::GetBuffer() const
+{
+	return buffer;
+}
+
+// Get the loaded file size.
+int File::GetSize() const
+{
+	return fileSize;
+}

@@ -111,6 +111,7 @@ void Vector3::SumMultiple(const Vector3 *base, const Vector3 *scaled, float fact
 
 // Sets components to a set of degree angles matching a given direction.
 // Assumes input vector is not the zero vector.
+// This vector cannot be the operand.
 void Vector3::AnglesFromVector(const Vector3 *direction)
 {
 	float xzDistance;

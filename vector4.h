@@ -12,24 +12,30 @@ public:
 	Vector4();
 	Vector4(float x, float y, float z, float w);
 
-// Parameter setting functions.
-
 	// Set all components to zero.
 	void Clear();
-	// Copy components from another vector.
 	void Copy(const Vector4 *vector);
-	// Set all components of this vector.
 	void Set(float x, float y, float z, float w);
-
-// Vector conversion functions.
 
 	// Set the XYZ components of this vector from a 3-dimensional vector.
 	void FromVector3(const Vector3 *vector);
+
 	// Convert from homogeneous coordinates to 3-dimensional vector.
 	void ToVector3(Vector3 *out) const;
 
+private:
+
+	// Constant representing dimension.
+	static const int Dimension = 4;
+
 public:
 
-	float x, y, z, w;
+	// Union for combinign parameter and array representation.
+	union {
+		struct {
+			float x, y, z, w;
+		};
+		float asArray[Dimension];
+	};
 
 };

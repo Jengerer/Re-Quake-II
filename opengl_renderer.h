@@ -4,7 +4,20 @@
 #include "renderer.h"
 #include "opengl_common.h"
 
-// Structure for representing an OpenGL texture.
+// Object for representing an OpenGL texture.
+class OpenGLTexture : public RendererTexture
+{
+
+public:
+
+	OpenGLTexture(GLuint handle);
+
+public:
+
+	GLuint handle;
+
+};
+
 typedef struct opengl_texture
 {
 	GLuint handle;

@@ -14,11 +14,11 @@ public:
 // Allocation management.
 
 	// Allocate a buffer of a given size.
-	void *Allocate(unsigned int size);
+	static void *Allocate(unsigned int size);
 	// Allocate a buffer for an array.
-	void *AllocateArray(unsigned int elementSize, unsigned int count);
+	static void *AllocateArray(unsigned int elementSize, unsigned int count);
 	// Free a buffer.
-	void Free(void *buffer);
+	static void Free(void *buffer);
 
 private:
 

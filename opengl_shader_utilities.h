@@ -1,45 +1,11 @@
-#ifndef _OPENGL_SHADER_UTILITIES_H_
-#define _OPENGL_SHADER_UTILITIES_H_
+#pragma once
 
 #include "opengl_common.h"
-#include "vector3d.h"
-#include "vector4d.h"
+#include "vector3.h"
+#include "vector4.h"
 #include "matrix3x3.h"
 #include "matrix4x4.h"
 
-// Structure for representing an OpenGL shader.
-typedef struct opengl_shader
-{
-	GLuint handle;
-} opengl_shader_t;
-
-// Structure for representing an OpenGL shader program.
-typedef struct opengl_program
-{
-	GLuint handle;
-} opengl_program_t;
-
-// Structure for representing an OpenGL shader attribute.
-typedef struct opengl_shader_attribute
-{
-	GLint location;
-	GLint num_floats;
-	GLchar* offset;
-} opengl_shader_attribute_t;
-
-// Structure for representing an OpenGL shader schema.
-typedef struct opengl_shader_schema
-{
-	GLsizei vertex_size;
-	opengl_shader_attribute_t *attributes;
-	int num_attributes;
-} opengl_shader_schema_t;
-
-// Structure for representing a uniform variable.
-typedef struct opengl_uniform
-{
-	GLint location;
-} opengl_uniform_t;
 
 // Renderer shader functions.
 int opengl_create_shader(const char *filename,
