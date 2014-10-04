@@ -9,7 +9,7 @@ union WindowFlags
 		char fullscreen : 1;
 		char borderless : 1;
 		char verticalSync : 1;
-	} flags;
+	} bits;
 	char asCharacter;
 };
 

@@ -17,7 +17,9 @@ public:
 	bool Initialize();
 
 	// Create/update window size/flags.
-	bool Update(int width, int height, WindowFlags flags);
+	bool Create(const char *title, int width, int height, WindowFlags flags);
+	bool ResizeWindow(int width, int height);
+	bool UpdateFlags(WindowFlags flags);
 
 	// Handle events pending for this window.
 	WindowEventResult HandleEvents();
@@ -36,6 +38,9 @@ private:
 	// Translate key from SDL code to engine code.
 	static KeyCode TranslateSDLKey(SDL_Keycode sdlCode);
 
+	// Translate flags from window flags to SDL flags.
+	static Uint32 TranslateWindowFlags(WindowFlags flags);
+
 private:
 
 	// Constant for window buffer depth.
@@ -44,6 +49,6 @@ private:
 private:
 
 	SDL_Window *sdlWindow;
-	SDL_GLContext *glContext;
+	SDL_GLContext glContext;
 
 };

@@ -59,33 +59,35 @@ WindowEventResult SDLWindow::HandleEvents()
 	return WindowEventSuccess;
 }
 
-// Update/create window for specific size and flags.
-bool SDLWindow::Update(int width, int height, WindowFlags flags)
+// Create window for specific size and flags.
+bool SDLWindow::Create(const char *title, int width, int height, WindowFlags flags)
 {
 	// Create window if there doesn't exist one.
-	SDL_Window *sdlWindow = this->sdlWindow;
+	Uint32 sdlFlags = TranslateWindowFlags(flags);
+	SDL_Window *sdlWindow = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, sdlFlags | SDL_WINDOW_OPENGL);
 	if (sdlWindow == nullptr) {
-		sdlWindow = SDL_CreateWindow()
-	}
-	// Create SDL window.
-    result = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
-    if (result == NULL) {
-        error_stack_log("Failed to create OpenGL window.\n");
-        return 0;
+        ErrorStack::Log("Failed to create SDL window.\n");
+        return false;
     }
-	out->sdl_window = result;
+	this->sdlWindow = sdlWindow;
 
     // Create OpenGL context.
-    context = SDL_GL_CreateContext(result);
-    if (context == NULL) {
-        error_stack_log("Failed to create OpenGL context: %s.\n", SDL_GetError());
-        return 0;
+    SDL_GLContext glContext = SDL_GL_CreateContext(sdlWindow);
+    if (glContext == nullptr) {
+        ErrorStack::Log("Failed to create OpenGL context: %s.\n", SDL_GetError());
+        return false;
     }
-	out->gl_context = context;
+	this->glContext = glContext;
 
-	// Enable vertical sync.
-	SDL_GL_SetSwapInterval(1);
+	// Enable non-SDL flags.
+	if (flags.bits.verticalSync) {
+		SDL_GL_SetSwapInterval(1);
+	}
+	return true;
 }
+
+// Change window size.
+
 
 /*
  * Trigger buffer swap for the window.
