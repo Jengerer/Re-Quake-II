@@ -87,7 +87,7 @@
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="engine_export.c" />
     <ClCompile Include="error_stack.cpp" />
-    <ClCompile Include="file.c" />
+    <ClCompile Include="file.cpp" />
     <ClCompile Include="game_manager.c" />
     <ClCompile Include="game_manager_export.c" />
     <ClCompile Include="image.cpp" />

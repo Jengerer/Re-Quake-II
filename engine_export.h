@@ -3,13 +3,9 @@
 
 #include "shared_defines.h"
 #include "engine_interface.h"
-#include "engine_listener.h"
-#include "engine_utilities.h"
-#include "renderer.h"
-#include "renderer_shader_utilities.h"
 
 // Request engine to populate structure for engine application interface.
-void DLL_EXPORT engine_populate_interface(engine_interface_t *engine_interface);
+Engine::Interface *DLL_EXPORT engine_populate_interface(engine_interface_t *engine_interface);
 
 // Request engine to populate structure with engine utility functions.
 void DLL_EXPORT engine_populate_utilities(engine_utilities_t *utilities);

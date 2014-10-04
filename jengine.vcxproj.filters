@@ -80,12 +80,6 @@
     <ClCompile Include="main.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="file.c">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="keyboard_manager.c">
-      <Filter>engine\src</Filter>
-    </ClCompile>
     <ClCompile Include="opengl_renderer.c">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
@@ -187,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="engine.cpp">
       <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="file.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_manager.c">
+      <Filter>game_manager\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
