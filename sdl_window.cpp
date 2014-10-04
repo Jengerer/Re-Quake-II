@@ -40,25 +40,6 @@ bool SDLWindow::Initialize()
     return true;
 }
 
-// Handle window events.
-WindowEventResult SDLWindow::HandleEvents()
-{
-	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
-		switch (event.type) {
-		case SDL_QUIT:
-			return WindowEventQuit;
-		case SDL_KEYDOWN:
-			return HandleKeyPress(&event.key);
-		case SDL_KEYUP:
-			return HandleKeyRelease(&event.key);
-		default:
-			break;
-		}
-	}
-	return WindowEventSuccess;
-}
-
 // Create window for specific size and flags.
 bool SDLWindow::Create(const char *title, int width, int height, WindowFlags flags)
 {
@@ -79,7 +60,7 @@ bool SDLWindow::Create(const char *title, int width, int height, WindowFlags fla
     }
 	this->glContext = glContext;
 
-	// Enable non-SDL flags.
+	// Enable vertical sync if it's flagged.
 	if (flags.bits.verticalSync) {
 		SDL_GL_SetSwapInterval(1);
 	}
@@ -87,58 +68,108 @@ bool SDLWindow::Create(const char *title, int width, int height, WindowFlags fla
 }
 
 // Change window size.
-
-
-/*
- * Trigger buffer swap for the window.
- */
-void sdl_window_swap_buffers(sdl_window_t *window)
+void SDLWindow::ResizeWindow(int width, int height)
 {
-	SDL_GL_SwapWindow(window->sdl_window);
+	// TODO: in full-screen does this work?
+	SDL_SetWindowSize(sdlWindow, width, height);
 }
 
-/*
- * Handle keyboard event by updating state.
- */
-window_event_result_t handle_keyboard_event(const sdl_window_t *window, const SDL_KeyboardEvent *event)
+// Update window flags.
+bool SDLWindow::UpdateFlags(WindowFlags newFlags)
 {
-	SDL_Keycode sdl_code;
-	key_code_t key_code;
-	const window_t *base;
-	window_event_result_t result;
-
-	// Convert code to engine code.
-	sdl_code = event->keysym.sym;
-	key_code = translate_sdl_key(sdl_code);
-	if (key_code == ENGINE_KEY_INVALID) {
-		return WINDOW_EVENT_OK;
+	// Update borderless.
+	if (flags.bits.borderless != newFlags.bits.borderless) {
+		SDL_bool sdlBorderless = (newFlags.bits.borderless ? SDL_TRUE : SDL_FALSE);
+		SDL_SetWindowBordered(sdlWindow, sdlBorderless);
 	}
-
-	// Send event.
-	base = &window->base;
-	switch (event->state) {
-	case SDL_PRESSED:
-		result = window_handle_key_press(base, key_code);
-		break;
-	case SDL_RELEASED:
-		result = window_handle_key_release(base, key_code);
-		break;
-	default:
-		result = WINDOW_EVENT_OK;
-		break;
+	// Update fullscreen.
+	if (flags.bits.fullscreen != newFlags.bits.fullscreen) {
+		Uint32 fullscreenFlags = (newFlags.bits.fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+		SDL_SetWindowFullscreen(sdlWindow, fullscreenFlags);
 	}
-	return result;
+	// Update vertical sync.
+	if (flags.bits.verticalSync != newFlags.bits.verticalSync) {
+		int swapValue = (newFlags.bits.verticalSync ? 1 : 0);
+		SDL_GL_SetSwapInterval(swapValue);
+	}
 }
 
-/*
- * Convert SDL key code to engine key code.
- */
-static key_code_t translate_sdl_key(SDL_Keycode sdl_code)
+// Handle window events.
+WindowEventResult SDLWindow::HandleEvents()
+{
+	SDL_Event event;
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_QUIT:
+			return WindowEventQuit;
+		case SDL_KEYDOWN:
+			return HandleKeyPress(&event.key);
+		case SDL_KEYUP:
+			return HandleKeyRelease(&event.key);
+		default:
+			break;
+		}
+	}
+	return WindowEventSuccess;
+}
+
+// Display the next frame in the window.
+void SDLWindow::SwapBuffers()
+{
+	SDL_GL_SwapWindow(sdlWindow);
+}
+
+// Get the window size.
+void SDLWindow::GetSize(int *width, int *height) const
+{
+	SDL_GetWindowSize(sdlWindow, width, height);
+}
+
+// Get the mouse cursor position.
+void SDLWindow::GetMousePosition(int *x, int *y) const
+{
+	SDL_GetMouseState(x, y);
+}
+
+// Set mouse cursor position.
+void SDLWindow::SetMousePosition(int x, int y)
+{
+	SDL_WarpMouseInWindow(sdlWindow, x, y);
+}
+
+// Handle key press event for window.
+WindowEventResult SDLWindow::HandleKeyPress(const SDL_KeyboardEvent *event)
+{
+	// Check if valid key.
+	KeyCode engineKey = TranslateSDLKey(event->keysym.sym);
+	if (engineKey == EngineKeyInvalid) {
+		return WindowEventSuccess;
+	}
+
+	// Pass to base handler.
+	return Window::HandleKeyPress(engineKey);
+}
+
+// Handle key press event for window.
+WindowEventResult SDLWindow::HandleKeyRelease(const SDL_KeyboardEvent *event)
+{
+	// Check if valid key.
+	KeyCode engineKey = TranslateSDLKey(event->keysym.sym);
+	if (engineKey == EngineKeyInvalid) {
+		return WindowEventSuccess;
+	}
+
+	// Pass to base handler.
+	return Window::HandleKeyRelease(engineKey);
+}
+
+// Convert from SDL code to engine.
+KeyCode SDLWindow::TranslateSDLKey(SDL_Keycode sdlCode)
 {
 	// Alphabet translation.
-	if ((sdl_code >= SDLK_a) && (sdl_code <= SDLK_z)) {
-		return (key_code_t)(ENGINE_KEY_A + (sdl_code - SDLK_a));
+	if ((sdlCode >= SDLK_a) && (sdlCode <= SDLK_z)) {
+		int engineValue = static_cast<int>(EngineKeyA) + (sdlCode - SDLK_a);
+		return static_cast<EngineKey>(engineValue);
 	}
-
-	return (key_code_t)ENGINE_KEY_INVALID;
+	return EngineKeyInvalid;
 }

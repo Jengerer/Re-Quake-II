@@ -18,14 +18,23 @@ public:
 
 	// Create/update window size/flags.
 	bool Create(const char *title, int width, int height, WindowFlags flags);
-	bool ResizeWindow(int width, int height);
-	bool UpdateFlags(WindowFlags flags);
+	void ResizeWindow(int width, int height);
+	bool UpdateFlags(WindowFlags newFlags);
 
 	// Handle events pending for this window.
 	WindowEventResult HandleEvents();
 
 	// Display the next frame.
 	void SwapBuffers();
+
+	// Get window dimensions.
+	void GetSize(int *width, int *height) const;
+
+	// Get cursor position.
+	void GetMousePosition(int *x, int *y) const;
+
+	// Set cursor position.
+	void SetMousePosition(int x, int y);	
 
 private:
 
