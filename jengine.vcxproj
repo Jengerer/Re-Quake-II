@@ -84,7 +84,7 @@
     <ClCompile Include="bsp_map_parser.c" />
     <ClCompile Include="camera.c" />
     <ClCompile Include="client_export.c" />
-    <ClCompile Include="engine.c" />
+    <ClCompile Include="engine.cpp" />
     <ClCompile Include="engine_export.c" />
     <ClCompile Include="error_stack.cpp" />
     <ClCompile Include="file.c" />
@@ -168,6 +168,7 @@
     <ClInclude Include="vector4.h" />
     <ClInclude Include="sdl_window.h" />
     <ClInclude Include="window.h" />
+    <ClInclude Include="window_shared.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
   <ItemGroup>

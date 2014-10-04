@@ -80,9 +80,6 @@
     <ClCompile Include="main.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="engine.c">
-      <Filter>engine\src</Filter>
-    </ClCompile>
     <ClCompile Include="file.c">
       <Filter>engine\src</Filter>
     </ClCompile>
@@ -186,6 +183,9 @@
       <Filter>engine\src</Filter>
     </ClCompile>
     <ClCompile Include="window.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="engine.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -338,6 +338,9 @@
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
     <ClInclude Include="window.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="window_shared.h">
       <Filter>engine\include</Filter>
     </ClInclude>
   </ItemGroup>

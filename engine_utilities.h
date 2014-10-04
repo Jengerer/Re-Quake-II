@@ -2,23 +2,35 @@
 
 #include "renderer.h"
 #include "renderer_resources.h"
+#include "window_shared.h"
 
-// Interface by which an engine module can request resources from the engine.
-class EngineUtilities
+namespace Engine
 {
 
-public:
+	// Interface by which an engine module can request resources from the engine.
+	class Utilities
+	{
 
-	// Create a window with a given set of parameters.
-	virtual bool CreateWindow(const char *title, int width, int height, int flags) = 0;
+	public:
 
-	// Update the window's parameters.
-	virtual bool UpdateWindow(int width, int height, int flags) = 0;
+		// Create a window with a given set of parameters.
+		virtual bool CreateWindow(const char *title, int width, int height, WindowFlags flags) = 0;
 
-	// Swap the window frame buffer.
-	virtual void SwapBuffers() = 0;
+		// Update the window's size.
+		virtual bool ResizeWindow(int width, int height) = 0;
 
-	// Get the renderer interface.
-	virtual Renderer::Interface *GetRenderer();
+		// Update window flags.
+		virtual bool UpdateWindowFlags(WindowFlags flags) = 0;
 
-};
+		// Swap the window frame buffer.
+		virtual void SwapBuffers() = 0;
+
+		// Get the renderer interface.
+		virtual Renderer::Interface *GetRenderer();
+
+		// Get the renderer resource interface.
+		virtual Renderer::Resources *GetRendererResources();
+
+	};
+
+}

@@ -10,7 +10,7 @@ class SDLWindow : public Window
 
 public:
 
-	SDLWindow(InputListener *listener);
+	SDLWindow();
 	~SDLWindow();
 
 	// Initialize modules needed to create/update window.

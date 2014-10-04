@@ -2,7 +2,7 @@
 #include "error_stack.h"
 #include <stdio.h>
 
-SDLWindow::SDLWindow(InputListener *listener) : Window(listener)
+SDLWindow::SDLWindow()
 {
 }
 
@@ -20,9 +20,6 @@ SDLWindow::~SDLWindow()
 // Initialize SDL window with OpenGL context.
 bool SDLWindow::Initialize()
 {
-    SDL_Window *result;
-    SDL_GLContext context;
-
     // Initialize SDL.
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		ErrorStack::Log("Failed to initialize SDL: %s.\n", SDL_GetError());
@@ -85,13 +82,20 @@ bool SDLWindow::UpdateFlags(WindowFlags newFlags)
 	// Update fullscreen.
 	if (flags.bits.fullscreen != newFlags.bits.fullscreen) {
 		Uint32 fullscreenFlags = (newFlags.bits.fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
-		SDL_SetWindowFullscreen(sdlWindow, fullscreenFlags);
+		if (SDL_SetWindowFullscreen(sdlWindow, fullscreenFlags) != 0) {
+			ErrorStack::Log("Failed to set window fullscreen.\n");
+			return false;
+		}
 	}
 	// Update vertical sync.
 	if (flags.bits.verticalSync != newFlags.bits.verticalSync) {
 		int swapValue = (newFlags.bits.verticalSync ? 1 : 0);
-		SDL_GL_SetSwapInterval(swapValue);
+		if (SDL_GL_SetSwapInterval(swapValue) != 0) {
+			ErrorStack::Log("Failed to enable vertical-sync.\n");
+			return false;
+		}
 	}
+	return true;
 }
 
 // Handle window events.
@@ -169,7 +173,7 @@ KeyCode SDLWindow::TranslateSDLKey(SDL_Keycode sdlCode)
 	// Alphabet translation.
 	if ((sdlCode >= SDLK_a) && (sdlCode <= SDLK_z)) {
 		int engineValue = static_cast<int>(EngineKeyA) + (sdlCode - SDLK_a);
-		return static_cast<EngineKey>(engineValue);
+		return static_cast<KeyCode>(engineValue);
 	}
-	return EngineKeyInvalid;
+	return static_cast<KeyCode>(EngineKeyInvalid);
 }

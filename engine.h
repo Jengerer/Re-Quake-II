@@ -1,37 +1,46 @@
-#ifndef _ENGINE_H_
-#define _ENGINE_H_
+#pragma once
 
 #include "sdl_window.h"
 #include "renderer.h"
 #include "renderer_resources.h"
+#include "engine_interface.h"
 #include "engine_listener.h"
+#include "engine_utilities.h"
 
-// Engine structure.
-typedef struct engine
+namespace Engine
 {
-	sdl_window_t window;
-	renderer_t renderer;
-	renderer_shader_utilities_t shaders;
-	engine_listener_t listener;
-} engine_t;
 
-// Singleton engine reference.
-extern engine_t engine;
+	// Engine implementation.
+	class Implementation : public Interface, public Utilities
+	{
 
-// Engine interface functions.
-int engine_initialize(void);
-void engine_shutdown(void);
-int engine_run(void);
+	public:
 
-// Engine utility functions.
-int engine_create_window(
-	const char *title,
-	int width,
-	int height,
-	int flags);
-int engine_update_window(int width, int height, int flags);
-void engine_swap_buffers(void);
-const renderer_t *engine_get_renderer(void);
-const renderer_shader_utilities_t *engine_get_shader_utilities(void);
+		Implementation();
+		~Implementation();
 
-#endif // _ENGINE_H_
+		// Engine interface implementation.
+		virtual void SetRendererInterfaces(Renderer::Interface *renderer, Renderer::Resources *resources);
+		virtual void SetListeners(Engine::Listener *engineListener, InputListener *inputListener);
+		virtual bool Initialize();
+		virtual void Shutdown();
+		virtual bool Run();
+
+		// Engine utilities implementation.
+		virtual bool MakeWindow(const char *title, int width, int height, WindowFlags flags);
+		virtual bool ResizeWindow(int width, int height);
+		virtual bool UpdateWindowFlags(WindowFlags flags);
+		virtual void SwapBuffers();
+		virtual Renderer::Interface *GetRenderer();
+		virtual Renderer::Resources *GetRendererResources();
+
+	private:
+
+		SDLWindow window;
+		Renderer::Interface *renderer;
+		Renderer::Resources *rendererResources;
+		Listener *listener;
+
+	};
+
+}

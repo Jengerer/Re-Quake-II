@@ -8,13 +8,11 @@ public:
 
 	Image();
 
-// Image initialization and destruction.
-
 	// Initialie the buffer for a number of pixels and channels.
 	bool Initialize(int width, int height, int pixelSize);
-	void Destroy();
 
-// Image parameter retrieval.
+	// Destroy the image buffer.
+	void Destroy();
 
 	// Get the buffer where image data is stored.
 	inline void *GetBuffer();

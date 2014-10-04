@@ -8,8 +8,8 @@ union KeyState
 		char pressed : 1;
 		char changed : 1;
 		char padding : 6;
-	};
-	unsigned char asCharacter;
+	} bits;
+	char asCharacter;
 };
 
 // Keyboard key values.

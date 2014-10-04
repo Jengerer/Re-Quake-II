@@ -1,17 +1,7 @@
 #pragma once
 
 #include "input_listener.h"
-
-// Engine window flag structure.
-union WindowFlags
-{
-	struct {
-		char fullscreen : 1;
-		char borderless : 1;
-		char verticalSync : 1;
-	} bits;
-	char asCharacter;
-};
+#include "window_shared.h"
 
 // Enumeration for handling window events.
 enum WindowEventResult
@@ -27,7 +17,10 @@ class Window
 
 public:
 
-	Window(InputListener *listener);
+	Window();
+
+	// Update the listener to pass input events to.
+	void SetInputListener(InputListener *listener);
 
 	// Get display flags for this window.
 	inline WindowFlags GetFlags() const;
@@ -49,16 +42,6 @@ protected:
 	InputListener *listener;
 
 };
-
-int Window::GetWidth() const
-{
-	return width;
-}
-
-int Window::GetHeight() const
-{
-	return height;
-}
 
 WindowFlags Window::GetFlags() const
 {
