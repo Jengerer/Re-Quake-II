@@ -1,74 +1,57 @@
+#include "error_stack.h"
 #include "file.h"
 #include "memory_manager.h"
 #include <stdio.h>
 
-/* Clears a file for safe destruction. */
-void file_null(file_t *out)
+// Empty file constructor.
+File::File() : buffer(0)
 {
-	out->buffer = NULL;
-	out->size = 0;
 }
 
-/*
- * Read an entire file into memory.
- * Returns 1 on success, 0 otherwise.
- * Caller is responsible for cleaning the returned structure.
- */
-int file_load(const char *filename, file_t *out)
+// Clear file buffer.
+File::File()
 {
-	FILE *file;
-	int length;
-	void *buffer;
+	if (buffer != nullptr) {
+		MemoryManager::Free(buffer);
+	}
+}
 
-	// Open the file.
-	file = fopen(filename, "rb");
-	if (file == NULL) {
-		return 0;
+// Read an entire file into a buffer.
+bool File::Read(const char *filename)
+{
+	FILE *file = fopen(filename, "rb");
+	if (file == nullptr) {
+		ErrorStack::Log("Failed to open file: %s\n", filename);
+		return false;
 	}
 
 	// Get file length and get back to the start.
 	if (fseek(file, 0, SEEK_END) != 0) {
 		fclose(file);
-		return 0;
+		ErrorStack::Log("Failed to seek to end of file: %s\n", filename);
+		return false;
 	}
-	length = ftell(file);
+	int length = ftell(file);
 	if (length == 0 || (fseek(file, 0, SEEK_SET) != 0)) {
 		fclose(file);
-		return 0;
+		ErrorStack::Log("Failed to get length of file: %s\n", filename);
+		return false;
 	}
 
 	// Allocate space for the file.
-	buffer = memory_allocate(length);
-	if (buffer == NULL) {
+	void *buffer = MemoryManager::Allocate(length);
+	if (buffer == nullptr) {
 		fclose(file);
-		return 0;
+		ErrorStack::Log("Failed to allocate space for file: %s\n", filename);
+		return false;
 	}
-
-	// Update the file structure for safe clean-up.
-	out->buffer = buffer;
-	out->size = length;
+	this->buffer = buffer;
 
 	// Read the file and fill out the buffer.
 	if (fread(buffer, length, 1, file) != 1) {
-		memory_free(buffer);
 		fclose(file);
-		return 0;
+		return false;
 	}
 	fclose(file);
-
-	// Fill output.
-	return 1;
-}
-
-/* Clean up a file structure. */
-void file_destroy(file_t *file)
-{
-	void *buffer;
-
-	// Free buffer if it has one.
-	buffer = file->buffer;
-	if (buffer != NULL) {
-		memory_free(buffer);
-	}
-	file_null(file);
+	return true;
 }

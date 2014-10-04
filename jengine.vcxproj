@@ -90,7 +90,7 @@
     <ClCompile Include="file.c" />
     <ClCompile Include="game_manager.c" />
     <ClCompile Include="game_manager_export.c" />
-    <ClCompile Include="image.c" />
+    <ClCompile Include="image.cpp" />
     <ClCompile Include="image_loader.cpp" />
     <ClCompile Include="indexed_mesh.c" />
     <ClCompile Include="keyboard_manager.c" />
@@ -115,8 +115,8 @@
     <ClCompile Include="vector2.cpp" />
     <ClCompile Include="vector3.cpp" />
     <ClCompile Include="vector4.cpp" />
-    <ClCompile Include="sdl_window.c" />
-    <ClCompile Include="window_common.cpp" />
+    <ClCompile Include="sdl_window.cpp" />
+    <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bsp_map.h" />
@@ -167,7 +167,7 @@
     <ClInclude Include="vector3.h" />
     <ClInclude Include="vector4.h" />
     <ClInclude Include="sdl_window.h" />
-    <ClInclude Include="window_common.h" />
+    <ClInclude Include="window.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
   <ItemGroup>

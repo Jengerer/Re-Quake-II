@@ -83,9 +83,6 @@
     <ClCompile Include="engine.c">
       <Filter>engine\src</Filter>
     </ClCompile>
-    <ClCompile Include="image.c">
-      <Filter>engine\src</Filter>
-    </ClCompile>
     <ClCompile Include="file.c">
       <Filter>engine\src</Filter>
     </ClCompile>
@@ -109,9 +106,6 @@
     </ClCompile>
     <ClCompile Include="bsp_map_parser.c">
       <Filter>game\common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="sdl_window.c">
-      <Filter>engine\src</Filter>
     </ClCompile>
     <ClCompile Include="camera.c">
       <Filter>game\client\src</Filter>
@@ -155,9 +149,6 @@
     <ClCompile Include="image_loader.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
-    <ClCompile Include="window_common.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
     <ClCompile Include="error_stack.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
@@ -188,6 +179,15 @@
     <ClCompile Include="opengl_indexed_model.cpp">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
+    <ClCompile Include="image.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl_window.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine_utilities.h">
@@ -209,9 +209,6 @@
       <Filter>engine\include</Filter>
     </ClInclude>
     <ClInclude Include="sdl_window.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="window_common.h">
       <Filter>engine\include</Filter>
     </ClInclude>
     <ClInclude Include="matrix3x3.h">
@@ -339,6 +336,9 @@
     </ClInclude>
     <ClInclude Include="opengl_indexed_model.h">
       <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="window.h">
+      <Filter>engine\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

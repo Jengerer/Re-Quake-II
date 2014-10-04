@@ -9,11 +9,7 @@ public:
 	File();
 	~File();
 
-	// Read a file to buffer.
 	bool Read(const char *filename);
-
-	// Retrieve buffer and size of read file.
-
 	inline const void *GetBuffer() const;
 	inline int GetSize() const;
 	

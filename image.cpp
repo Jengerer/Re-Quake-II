@@ -16,7 +16,7 @@ bool Image::Initialize(int width, int height, int pixelSize)
 
 	// Allocate space.
 	numPixels = width * height;
-	buffer = memory_array_allocate(pixelSize, numPixels);
+	buffer = MemoryManager::AllocateArray(pixelSize, numPixels);
 	if (buffer == nullptr) {
 		return false;
 	}
@@ -34,6 +34,6 @@ void Image::Destroy()
 {
 	// Free the buffer if it exists.
 	if (buffer != nullptr) {
-		memory_free(buffer);
+		MemoryManager::Free(buffer);
 	}
 }

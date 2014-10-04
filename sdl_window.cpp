@@ -1,38 +1,32 @@
 #include "sdl_window.h"
 #include "error_stack.h"
 #include <stdio.h>
-#include <stdlib.h>
 
-// Window constant parameters.
-#define WINDOW_BUFFER_DEPTH 24
-
-// Private functions.
-static window_event_result_t handle_keyboard_event(const sdl_window_t *window, const SDL_KeyboardEvent *event);
-static key_code_t translate_sdl_key(SDL_Keycode sdl_code);
-
-/*
- * Base window initialization for easier cleanup.
- */
-void sdl_window_null(sdl_window_t *window)
+SDLWindow::SDLWindow(InputListener *listener) : Window(listener)
 {
-	window_null(&window->base);
-	window->sdl_window = NULL;
-	window->gl_context = NULL;
 }
 
-/*
- * Initialize SDL window with OpenGL context.
- * Returns 1 on success and fills output struct.
- */
-int sdl_window_initialize(int width, int height, const char *title, sdl_window_t *out)
+SDLWindow::~SDLWindow()
+{
+	// Destroy context/window.
+	if (glContext != nullptr) {
+		SDL_GL_DeleteContext(glContext);
+	}
+	if (sdlWindow != nullptr) {
+		SDL_DestroyWindow(sdlWindow);
+	}
+}
+
+// Initialize SDL window with OpenGL context.
+bool SDLWindow::Initialize()
 {
     SDL_Window *result;
     SDL_GLContext context;
 
     // Initialize SDL.
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		error_stack_log("Failed to initialize SDL: %s.\n", SDL_GetError());
-        return 0;
+		ErrorStack::Log("Failed to initialize SDL: %s.\n", SDL_GetError());
+        return false;
     }
 
 	// Set GL version.
@@ -42,9 +36,38 @@ int sdl_window_initialize(int width, int height, const char *title, sdl_window_t
 
 	// Set buffering attributes.
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, WINDOW_BUFFER_DEPTH);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, BufferDepth);
+    return true;
+}
 
-    // Create SDL window.
+// Handle window events.
+WindowEventResult SDLWindow::HandleEvents()
+{
+	SDL_Event event;
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_QUIT:
+			return WindowEventQuit;
+		case SDL_KEYDOWN:
+			return HandleKeyPress(&event.key);
+		case SDL_KEYUP:
+			return HandleKeyRelease(&event.key);
+		default:
+			break;
+		}
+	}
+	return WindowEventSuccess;
+}
+
+// Update/create window for specific size and flags.
+bool SDLWindow::Update(int width, int height, WindowFlags flags)
+{
+	// Create window if there doesn't exist one.
+	SDL_Window *sdlWindow = this->sdlWindow;
+	if (sdlWindow == nullptr) {
+		sdlWindow = SDL_CreateWindow()
+	}
+	// Create SDL window.
     result = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
     if (result == NULL) {
         error_stack_log("Failed to create OpenGL window.\n");
@@ -62,44 +85,6 @@ int sdl_window_initialize(int width, int height, const char *title, sdl_window_t
 
 	// Enable vertical sync.
 	SDL_GL_SetSwapInterval(1);
-
-	// Finished!
-    return 1;
-}
-
-/*
- * Clean up window and GL context.
- */
-void sdl_window_destroy(sdl_window_t *window)
-{
-    // Destroy context/window.
-	if (window->gl_context != NULL) {
-		SDL_GL_DeleteContext(window->gl_context);
-	}
-	if (window->sdl_window != NULL) {
-		SDL_DestroyWindow(window->sdl_window);
-	}
-}
-
-/*
- * Handle events for the window.
- */
-window_event_result_t sdl_window_handle_events(sdl_window_t *window)
-{
-	SDL_Event event;
-	if (SDL_PollEvent(&event)) {
-		// Trigger close if event is to close window.
-		switch (event.type) {
-		case SDL_QUIT:
-			return WINDOW_EVENT_QUIT;
-
-		case SDL_KEYDOWN:
-		case SDL_KEYUP:
-			handle_keyboard_event(window, &event.key);
-			break;
-		}
-	}
-	return 1;
 }
 
 /*

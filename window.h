@@ -8,8 +8,8 @@ union WindowFlags
 	struct {
 		char fullscreen : 1;
 		char borderless : 1;
-		char padding : 6;
-	};
+		char verticalSync : 1;
+	} flags;
 	char asCharacter;
 };
 
@@ -27,23 +27,24 @@ class Window
 
 public:
 
-	Window(int width, int height, WindowFlags flags, InputListener *listener);
-	virtual ~Window();
+	Window(InputListener *listener);
 
-// Window parameter retrieval.
-
-	inline int GetWidth() const;
-	inline int GetHeight() const;
+	// Get display flags for this window.
 	inline WindowFlags GetFlags() const;
 
-// Window event handling.
+	// Handle and dispatch keyboard press event.
+	WindowEventResult HandleKeyPress(KeyCode key);
 
-	bool HandleKeyPress(KeyCode key);
-	bool HandleKeyRelease(KeyCode key);
+	// Handle and dispatch keyboard release event.
+	WindowEventResult HandleKeyRelease(KeyCode key);
+
+private:
+
+	// Helper for translating result enumerations.
+	static WindowEventResult TranslateInputResult(InputEventResult result);
 
 protected:
 
-	int width, height;
 	WindowFlags flags;
 	InputListener *listener;
 

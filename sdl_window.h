@@ -1,28 +1,49 @@
 #pragma once
 
-#include "window_common.h"
-#include "opengl_renderer.h"
+#include "window.h"
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-// Window structure.
-typedef struct sdl_window
+// SDL window implementation.
+class SDLWindow : public Window
 {
-	// Base window parameters.
-	window_t base;
 
-	// SDL specific references/parameters.
-    SDL_Window *sdl_window;
-	SDL_GLContext gl_context;
-} sdl_window_t;
+public:
 
-// Window initialization.
-void sdl_window_null(sdl_window_t *window);
-int sdl_window_initialize(int width, int height, const char *title, sdl_window_t *out);
-void sdl_window_destroy(sdl_window_t *window);
+	SDLWindow(InputListener *listener);
+	~SDLWindow();
 
-// Window running functions.
-window_event_result_t sdl_window_handle_events(sdl_window_t *window);
-void sdl_window_swap_buffers(sdl_window_t *window);
+	// Initialize modules needed to create/update window.
+	bool Initialize();
 
-#endif // _WINDOW_H_
+	// Create/update window size/flags.
+	bool Update(int width, int height, WindowFlags flags);
+
+	// Handle events pending for this window.
+	WindowEventResult HandleEvents();
+
+	// Display the next frame.
+	void SwapBuffers();
+
+private:
+
+	// Helper for dispatching a keyboard press event.
+	WindowEventResult HandleKeyPress(const SDL_KeyboardEvent *event);
+
+	// Helper for dispatching a keyboard release event.
+	WindowEventResult HandleKeyRelease(const SDL_KeyboardEvent *event);
+
+	// Translate key from SDL code to engine code.
+	static KeyCode TranslateSDLKey(SDL_Keycode sdlCode);
+
+private:
+
+	// Constant for window buffer depth.
+	static const int BufferDepth = 24;
+
+private:
+
+	SDL_Window *sdlWindow;
+	SDL_GLContext *glContext;
+
+};
