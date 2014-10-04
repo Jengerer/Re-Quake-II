@@ -14,7 +14,7 @@ namespace Engine
 	public:
 
 		// Create a window with a given set of parameters.
-		virtual bool CreateWindow(const char *title, int width, int height, WindowFlags flags) = 0;
+		virtual bool MakeWindow(const char *title, int width, int height, WindowFlags flags) = 0;
 
 		// Update the window's size.
 		virtual bool ResizeWindow(int width, int height) = 0;

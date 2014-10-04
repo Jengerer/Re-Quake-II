@@ -1,10 +1,12 @@
 #include "engine.h"
 #include "memory_manager.h"
 #include "sdl_window.h"
-#include <stdio.h>
 
 namespace Engine
 {
+
+	// Singleton instance.
+	Implementation Implementation::instance;
 
 	Implementation::Implementation()
 		: renderer(nullptr), rendererResources(nullptr), listener(nullptr)
@@ -119,6 +121,12 @@ namespace Engine
 	Renderer::Resources *Implementation::GetRendererResources()
 	{
 		return rendererResources;
+	}
+
+	// Get pointer to singleton instance.
+	Implementation *Implementation::GetInstance()
+	{
+		return &instance;
 	}
 
 }

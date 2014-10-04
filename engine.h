@@ -34,6 +34,14 @@ namespace Engine
 		virtual Renderer::Interface *GetRenderer();
 		virtual Renderer::Resources *GetRendererResources();
 
+		// Get singleton.
+		static Implementation *GetInstance();
+
+	private:
+
+		// Singleton instance.
+		static Implementation instance;
+
 	private:
 
 		SDLWindow window;
