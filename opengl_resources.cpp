@@ -14,6 +14,9 @@
 namespace OpenGL
 {
 
+	// Singleton instance instantiation.
+	Resources Resources::instance;
+
 	// Create a model from a set of vertex data.
 	Renderer::Model *Resources::CreateModel(
 		const void *vertexData,
@@ -235,5 +238,11 @@ namespace OpenGL
 		return 1;
 	}
 	*/
+
+	// Get singleton instance of resource loader.
+	Resources *Resources::GetInstance()
+	{
+		return &instance;
+	}
 
 };

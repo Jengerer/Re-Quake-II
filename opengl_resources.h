@@ -63,6 +63,16 @@ namespace OpenGL
 		// Destroy uniform variable.
 		virtual void DestroyUniform(Renderer::Uniform *uniform);
 
+	public:
+
+		// Singleton getter.
+		static Resources *GetInstance();
+
+	private:
+
+		// Singleton instance.
+		static Resources instance;
+
 	};
 
 }
