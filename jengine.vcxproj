@@ -99,7 +99,7 @@
     <ClCompile Include="matrix3x3.cpp" />
     <ClCompile Include="matrix4x4.cpp" />
     <ClCompile Include="memory_manager.cpp" />
-    <ClCompile Include="opengl_export.c" />
+    <ClCompile Include="opengl_export.cpp" />
     <ClCompile Include="opengl_indexed_model.cpp" />
     <ClCompile Include="opengl_model.cpp" />
     <ClCompile Include="opengl_program.cpp" />

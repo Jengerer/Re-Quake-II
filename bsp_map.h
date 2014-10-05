@@ -1,7 +1,6 @@
-#ifndef _BSP_MAP_H_
-#define _BSP_MAP_H_
+#pragma once
 
-#include "vector3d.h"
+#include "vector3.h"
 #include <stdint.h>
 
 // Structure for 3D short vector.
@@ -15,7 +14,7 @@ typedef struct vector3d_short
 // BSP plane structure.
 typedef struct bsp_plane
 {
-	vector3d_t normal;
+	Vector3 normal;
 	float distance;
 	uint32_t type;
 } bsp_plane_t;
@@ -55,5 +54,3 @@ void bsp_map_destroy(bsp_map_t *map);
 void bsp_map_null_planes(bsp_map_t *map);
 int bsp_map_initialize_planes(bsp_map_t *map, int num_planes);
 void bsp_map_destroy_planes(bsp_map_t *map);
-
-#endif // _BSP_MAP_H_

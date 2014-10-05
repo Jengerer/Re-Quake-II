@@ -77,9 +77,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="opengl_export.c">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
     <ClCompile Include="bsp_map.c">
       <Filter>game\common\src</Filter>
     </ClCompile>
@@ -183,6 +180,9 @@
       <Filter>game_manager\src</Filter>
     </ClCompile>
     <ClCompile Include="opengl_renderer.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_export.cpp">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
   </ItemGroup>

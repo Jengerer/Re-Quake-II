@@ -29,7 +29,7 @@ namespace GameManager
 	// Engine is set up.
 	bool Implementation::OnInitialize()
 	{
-		if (!clientListener->OnInitialize()) {
+		if (!clientListener->OnInitialized()) {
 			return false;
 		}
 		return true;
