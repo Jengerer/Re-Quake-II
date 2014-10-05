@@ -130,7 +130,9 @@
     <ClInclude Include="game_manager_export.h" />
     <ClInclude Include="game_manager_shared.h" />
     <ClInclude Include="game_manager_utilities.h" />
+    <ClInclude Include="game_module.h" />
     <ClInclude Include="image_loader.h" />
+    <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />
     <ClInclude Include="opengl_indexed_model.h" />
@@ -149,7 +151,6 @@
     <ClInclude Include="game_manager_listener.h" />
     <ClInclude Include="engine_listener.h" />
     <ClInclude Include="image.h" />
-    <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="input_listener.h" />
     <ClInclude Include="keyboard_shared.h" />
     <ClInclude Include="keyboard_manager.h" />
