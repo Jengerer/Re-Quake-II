@@ -114,16 +114,12 @@ void Vector3::SumMultiple(const Vector3 *base, const Vector3 *scaled, float fact
 // This vector cannot be the operand.
 void Vector3::AnglesFromVector(const Vector3 *direction)
 {
-	float xzDistance;
-	float xzArcTangent;
-	float yzArcTangent;
-
 	// Calculate yaw (rotation about Y axis).
 	y = MathCommon::ArcTangent(direction->x, direction->z);
 
 	// Calculate pitch (rotation about X axis).
 	float squarexzDistance = (direction->x * direction->x) + (direction->z * direction->z);
-	xzDistance = MathCommon::SquareRoot(squarexzDistance);
+	float xzDistance = MathCommon::SquareRoot(squarexzDistance);
 	x = MathCommon::ArcTangent(direction->y, xzDistance);
 
 	// Any roll will satisfy, so no roll.

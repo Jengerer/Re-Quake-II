@@ -77,35 +77,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="opengl_renderer.c">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
     <ClCompile Include="opengl_export.c">
       <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="game_client.c">
-      <Filter>game\client\src</Filter>
     </ClCompile>
     <ClCompile Include="bsp_map.c">
       <Filter>game\common\src</Filter>
     </ClCompile>
     <ClCompile Include="bsp_map_parser.c">
       <Filter>game\common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.c">
-      <Filter>game\client\src</Filter>
-    </ClCompile>
-    <ClCompile Include="client_export.c">
-      <Filter>game\client\src</Filter>
-    </ClCompile>
-    <ClCompile Include="indexed_mesh.c">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh.c">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="game_manager_export.c">
-      <Filter>game_manager\src</Filter>
     </ClCompile>
     <ClCompile Include="math_common.cpp">
       <Filter>common\src</Filter>
@@ -187,6 +166,24 @@
     </ClCompile>
     <ClCompile Include="keyboard_manager.cpp">
       <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>game\client\src</Filter>
+    </ClCompile>
+    <ClCompile Include="client_export.cpp">
+      <Filter>game\client\src</Filter>
+    </ClCompile>
+    <ClCompile Include="game_client.cpp">
+      <Filter>game\client\src</Filter>
+    </ClCompile>
+    <ClCompile Include="game_module.cpp">
+      <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="game_manager_export.cpp">
+      <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_renderer.cpp">
+      <Filter>opengl_renderer\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

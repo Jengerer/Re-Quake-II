@@ -83,7 +83,13 @@ bool Client::LoadResources(void)
 
 	// Get the location to the transform and projection matrix.
 	object = utilities->GetUniform(modelProgram, "object");
+	if (object == nullptr) {
+		return false;
+	}
 	projection = utilities->GetUniform(modelProgram, "projection");
+	if (projection == nullptr) {
+		return false;
+	}
 	
 	// Generate projection matrix.
 	Matrix4x4 projectionMatrix;
@@ -92,6 +98,7 @@ bool Client::LoadResources(void)
 
 	// Unset program.
 	utilities->UnsetProgram();
+	return true;
 }
 
 // Free base resources for client.

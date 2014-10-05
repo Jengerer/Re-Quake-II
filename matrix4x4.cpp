@@ -34,8 +34,6 @@ void Matrix4x4::Transpose(const Matrix4x4 *matrix)
 // This matrix cannot be one of the operands.
 void Matrix4x4::Product(const Matrix4x4 *a, const Matrix4x4 *b)
 {
-	int i, j, k;
-
 	// For each of our elements...
 	for (int i = 0; i < Size; ++i) {
 		for (int j = 0; j < Size; ++j) {

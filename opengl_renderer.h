@@ -4,48 +4,44 @@
 #include "renderer.h"
 #include "opengl_common.h"
 
-// Object for representing an OpenGL texture.
-class OpenGLTexture : public RendererTexture
+namespace OpenGL
 {
 
-public:
+	// OpenGL renderer implementation.
+	class Implementation : public Renderer::Interface
+	{
 
-	OpenGLTexture(GLuint handle);
+	public:
 
-public:
+		Implementation();
+		~Implementation();
 
-	GLuint handle;
+		// Renderer interface functions.
+		virtual bool Initialize();
+		virtual void Shutdown();
+		virtual void ClearScene();
+		virtual void SetUniform(const Renderer::Uniform *uniform, float value);
+		virtual void SetUniform(const Renderer::Uniform *uniform, const Vector3 *vector);
+		virtual void SetUniform(const Renderer::Uniform *uniform, const Vector4 *vector);
+		virtual void SetUniform(const Renderer::Uniform *uniform, const Matrix3x3 *matrix);
+		virtual void SetUniform(const Renderer::Uniform *uniform, const Matrix4x4 *matrix);
 
-};
+		// Singleton retriever.
+		static Implementation *GetInstance();
 
-typedef struct opengl_texture
-{
-	GLuint handle;
-} opengl_texture_t;
+	private:
 
-// Representation of a mesh for rendering in OpenGL.
-typedef struct opengl_model
-{
-	GLuint vertex_buffer;
-	GLuint index_buffer;
-	GLuint array_size;
-} opengl_model_t;
+		// Singleton instance.
+		static Implementation instance;
 
-// Renderer/OpenGL conversions.
-GLenum get_opengl_shader_type(renderer_shader_type_t type);
+	};
 
-// Renderer initialization and clean-up.
+}
+
+
 int opengl_initialize(void);
 void opengl_destroy(void);
 
-// Renderer texture functions.
-int opengl_create_texture2d(
-	const image_t *image,
-	renderer_texture_t *out);
-void opengl_bind_texture2d(
-	renderer_texture_t texture,
-	renderer_uniform_t shader_texture);
-void opengl_unbind_texture2d(void);
 
 // Renderer model functions.
 int opengl_create_model(

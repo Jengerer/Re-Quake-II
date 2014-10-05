@@ -15,8 +15,6 @@ void Matrix3x3::Identity()
 // This matrix cannot be one of the operands.
 void Matrix3x3::Product(const Matrix3x3 *a, const Matrix3x3 *b)
 {
-	int i, j, k;
-
 	// For each of our elements...
 	for (int i = 0; i < Size; ++i) {
 		for (int j = 0; j < Size; ++j) {
