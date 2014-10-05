@@ -35,7 +35,15 @@ namespace GameManager
 		virtual void DestroyShader(Renderer::Shader *shader);
 		virtual Renderer::Program *CreateProgram(const Renderer::Shader *vertexShader, const Renderer::Shader *fragmentShader);
 		virtual void DestroyProgram(Renderer::Program *program);
+		virtual void SetProgram(Renderer::Program *program);
+		virtual void UnsetProgram();
+		virtual Renderer::ShaderSchema *CreateShaderSchema(
+			const Renderer::Program *program,
+			const Renderer::Attribute *attributes,
+			int attributeCount);
+		virtual void DestroyShaderSchema(Renderer::ShaderSchema *schema);
 		virtual Renderer::Uniform *GetUniform(const Renderer::Program *program, const char *name);
+		virtual void DestroyUniform(Renderer::Uniform *uniform);
 		virtual void SetUniform(const Renderer::Uniform *uniform, const Matrix4x4 *matrix);
 
 		// Singleton retriever.

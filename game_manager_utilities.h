@@ -37,8 +37,26 @@ namespace GameManager
 		// Destroy shader program.
 		virtual void DestroyProgram(Renderer::Program *program) = 0;
 
+		// Set program for rendering.
+		virtual void SetProgram(Renderer::Program *program) = 0;
+
+		// Unset program from rendering.
+		virtual void UnsetProgram() = 0;
+
+		// Create shader schema from attributes.
+		virtual Renderer::ShaderSchema *CreateShaderSchema(
+			const Renderer::Program *program,
+			const Renderer::Attribute *attributes,
+			int attributeCount) = 0;
+
+		// Destroy shader schema.
+		virtual void DestroyShaderSchema(Renderer::ShaderSchema *schema) = 0;
+
 		// Get uniform variable.
 		virtual Renderer::Uniform *GetUniform(const Renderer::Program *program, const char *name) = 0;
+
+		// Destroy uniform variable reference.
+		virtual void DestroyUniform(Renderer::Uniform *uniform) = 0;
 
 		// Set uniform variable 4x4 matrix value.
 		virtual void SetUniform(const Renderer::Uniform *uniform, const Matrix4x4 *matrix) = 0;

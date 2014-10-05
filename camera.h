@@ -10,8 +10,10 @@ public:
 
 	Camera();
 
-	// Set position and angles.
+	// Set camera world position.
 	void SetPosition(const Vector3 *position);
+
+	// Set camera angles.
 	void SetAngles(const Vector3 *angles);
 
 	// Generate camera transform.

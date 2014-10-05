@@ -12,10 +12,12 @@ namespace GameManager
 
 	public:
 
-		// Set interface through which modules get game manager resources.
-		static void SetUtilities(GameManager::Utilities *utilities);
+		Module();
 
-	private:
+		// Set interface through which modules get game manager resources.
+		void SetUtilities(GameManager::Utilities *utilities);
+
+	protected:
 
 		// Game manager interface reference.
 		GameManager::Utilities *utilities;
