@@ -6,11 +6,10 @@ class ErrorStackNode
 
 public:
 
-	ErrorStackNode(char *message);
+	ErrorStackNode(char *message, ErrorStackNode *next);
 	~ErrorStackNode();
-
-	// Get error stack message.
-	const char *GetMessage() const;
+	inline const char *GetMessage() const;
+	inline ErrorStackNode *GetNext() const;
 
 private:
 
@@ -27,15 +26,28 @@ class ErrorStack
 
 public:
 
-// Error stack initialization and destruction.
-
 	static void Initialize();
 	static void Shutdown();
-
-// Error logging and reporting.
-
 	static void Log(const char *format, ...);
+
+	// Print all errors to standard error.
 	static void Dump();
+
+	// Clear errors.
 	static void Clear();
 
+private:
+
+	static ErrorStackNode *head;
+
 };
+
+const char *ErrorStackNode::GetMessage() const
+{
+	return message;
+}
+
+ErrorStackNode *ErrorStackNode::GetNext() const
+{
+	return next;
+}

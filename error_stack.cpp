@@ -3,107 +3,88 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-// Static instance of error stack.
-static error_stack_t stack;
-
-/* Null error stack node for clean destruction. */
-void error_stack_node_null(error_stack_node_t *node)
+// Set up error stack node.
+ErrorStackNode::ErrorStackNode(char *message, ErrorStackNode *next)
+	: message(message), next(next)
 {
-	node->error = NULL;
-	node->next = NULL;
 }
 
-/* Destroy error stack node. */
-void error_stack_node_destroy(error_stack_node_t *node)
+// Destroy error stack node.
+ErrorStackNode::~ErrorStackNode()
 {
-	char *buffer;
-
-	// Clean up string if any.
-	buffer = node->error;
-	if (buffer != NULL) {
-		memory_free(buffer);
-	}
-	error_stack_node_null(node);
+	MemoryManager::Free(message);
 }
 
-/* Null error stack for clean destruction. */
-void error_stack_null(error_stack_t *stack)
+// Set up empty error stack.
+void ErrorStack::Initialize()
 {
-	stack->head = NULL;
+	head = nullptr;
 }
 
-/* Initialize the global error stack. */
-void error_stack_initialize(void)
+// Free all error stack elements.
+void ErrorStack::Shutdown()
 {
-	error_stack_null(&stack);
+	Clear();
 }
 
-/* Clean up an error stack. */
-void error_stack_destroy(error_stack_t *stack)
+// Log an error message to the stack.
+void ErrorStack::Log(const char *format, ...
 {
-	error_stack_node_t *node;
-
-	// Clean up nodes.
-	node = stack->head;
-	while (node != NULL) {
-		error_stack_node_t *next;
-
-		// Get next and clean up.
-		next = node->next;
-		error_stack_node_destroy(node);
-		memory_free(node);
-		node = next;
-	}
-	error_stack_null(stack);
-}
-
-/*
- * Log a string to the error stack.
- * No return value since we can't do anything more if it fails.
- */
-void error_stack_log(const char *format, ...)
-{
+	// Get size of string.
 	va_list args;
 	va_list args_copy;
-	char *buffer;
-	int length, written;
-	error_stack_node_t *node;
-
-	// Get size of string.
 	va_start(args, format);
 	va_copy(args_copy, args);
-	length = vsnprintf(NULL, 0, format, args_copy);
+	int length = vsnprintf(nullptr, 0, format, args_copy);
 	va_end(args_copy);
 	if (length < 0) {
 		return;
 	}
 	
 	// Allocate space and copy the string.
-	buffer = memory_array_allocate(sizeof(char), length + 1);
-	if (buffer == NULL) {
+	char *buffer = reinterpret_cast<char*>(MemoryManager::Allocate(length + 1));
+	if (buffer == nullptr) {
 		return;
 	}
-	written = vsnprintf(buffer, length, format, args);
+	int written = vsnprintf(buffer, length, format, args);
 	va_end(args);
 	if (written < 0) {
-		memory_free(buffer);
+		MemoryManager::Free(buffer);
 		return;
 	}
 	buffer[length] = '\0';
 
 	// Allocate a stack node.
-	node = (error_stack_node_t*)memory_allocate(sizeof(error_stack_node_t));
+	ErrorStackNode *node;
+	if (!MemoryManager::Allocate(&node)) {}
+	node = reinterpret_cast<ErrorStackNode*>(MemoryManager::Allocate(sizeof(ErrorStackNode)));
 	if (node == NULL) {
-		memory_free(buffer);
+		MemoryManager::Free(buffer);
 		return;
 	}
-	node->error = buffer;
-	node->next = stack.head;
-	stack.head = node;
+
+	// Set this as new head.
+	new (node) ErrorStackNode(buffer, head);
+	head = node;
 }
 
-/* Dump the errors to standard output. */
-void error_stack_dump(void)
+// Dump all errors.
+void ErrorStack::Dump()
 {
+	int index = 1;
+	for (ErrorStackNode *node = head; node != nullptr; node = node->GetNext(), ++index) {
+		fprintf(stderr, "#%d: %s\n", index, node->GetMessage());
+		node = node->GetNext();
+	}
+}
 
+// Clear all errors in the stack.
+void ErrorStack::Clear()
+{
+	ErrorStackNode *node = head;
+	while (node != nullptr) {
+		ErrorStackNode *next = node->GetNext();
+		MemoryManager::Destroy(node);
+		node = next;
+	}
 }
