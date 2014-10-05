@@ -93,7 +93,7 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="image_loader.cpp" />
     <ClCompile Include="indexed_mesh.c" />
-    <ClCompile Include="keyboard_manager.c" />
+    <ClCompile Include="keyboard_manager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math_common.cpp" />
     <ClCompile Include="matrix3x3.cpp" />

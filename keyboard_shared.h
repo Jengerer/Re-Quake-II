@@ -9,7 +9,7 @@ union KeyState
 		char changed : 1;
 		char padding : 6;
 	} bits;
-	char asCharacter;
+	char raw;
 };
 
 // Keyboard key values.

@@ -176,9 +176,6 @@
     <ClCompile Include="file.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
-    <ClCompile Include="keyboard_manager.c">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
     <ClCompile Include="engine_export.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
@@ -186,6 +183,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="game_manager.cpp">
+      <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_manager.cpp">
       <Filter>game_manager\src</Filter>
     </ClCompile>
   </ItemGroup>
