@@ -178,7 +178,7 @@ namespace OpenGL
 		// Get uniform location.
 		const Program *glProgram = static_cast<const Program*>(program);
 		GLint location = glProgram->GetUniformLocation(name);
-		if (location == 0) {
+		if (location == -1) {
 			ErrorStack::Log("Failed to get location for uniform variable: %s", name);
 			return nullptr;
 		}

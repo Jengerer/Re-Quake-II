@@ -65,6 +65,7 @@ bool Client::OnTick()
 // Run end client frame.
 bool Client::OnTickEnd()
 {
+	utilities->PresentFrame();
 	return true;
 }
 
