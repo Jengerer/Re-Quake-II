@@ -16,7 +16,7 @@ namespace Engine
 		virtual void OnShutdown() = 0;
 
 		// Called on every frame.
-		virtual int OnTick(float timeDelta) = 0;
+		virtual bool OnTick(float timeDelta) = 0;
 
 	};
 

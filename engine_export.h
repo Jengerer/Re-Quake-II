@@ -4,4 +4,4 @@
 #include "engine_interface.h"
 
 // Request engine to populate structure for engine application interface.
-Engine::Interface *DLL_EXPORT GetEngineInterface();
+LibraryExport Engine::Interface *GetEngineInterface();

@@ -1,5 +1,5 @@
 #pragma once
 
-#ifndef DLL_EXPORT
-#define DLL_EXPORT
+#if !defined(LibraryExport)
+#define LibraryExport
 #endif

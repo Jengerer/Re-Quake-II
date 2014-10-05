@@ -1,38 +1,57 @@
-#ifndef _GAME_MANAGER_H_
-#define _GAME_MANAGER_H_
+#pragma once
 
+#include "engine_listener.h"
 #include "engine_utilities.h"
+#include "game_manager_utilities.h"
 #include "game_manager_listener.h"
-#include <setjmp.h>
 
-// The game manager is layered between the engine and the game modules.
-// It transmits messages between the client and server, manages resources,
-// input systems, and relegates messages from the engine.
-typedef struct game_manager
+namespace GameManager
 {
-	engine_utilities_t engine;
-	game_manager_listener_t client;
 
-	// Error handling locations.
-	jmp_buf	
-} game_manager_t;
+	// Implementing class for engine listener and game module manager.
+	class Implementation : public Engine::Listener, public GameManager::Utilities
+	{
 
-// Engine listener functions.
-void game_manager_null(void);
-int game_manager_initialize(void);
-void game_manager_shutdown(void);
-int game_manager_tick(float delta_time);
+		Listener *listener;
 
-// Game manager utility functions.
-// General utilities.
-float game_manager_get_time(void);
-// Renderer utilities.
-void game_manager_clear_frame(void);
-void game_manager_present_frame(void);
-void game_manager_create_shader(const )
+	public:
 
+		Implementation();
+		~Implementation();
 
-// Singleton instance of game manager.
-extern game_manager_t game_manager;
+		// Pass engine interface.
+		virtual void SetEngineUtilities(Engine::Utilities *utilities);
 
-#endif // _GAME_MANAGER_H_
+		// Engine listener functions.
+		virtual bool OnInitialize();
+		virtual void OnShutdown();
+		virtual bool OnTick(float timeDelta);
+
+		// Game manager utilities for modules.
+		virtual float GetTime() const;
+		virtual void ClearScene();
+		virtual void PresentFrame();
+		virtual Renderer::Shader *CreateShader(const char *filename, Renderer::ShaderType type);
+		virtual void DestroyShader(Renderer::Shader *shader);
+		virtual Renderer::Program *CreateProgram(const Renderer::Shader *vertexShader, const Renderer::Shader *fragmentShader);
+		virtual void DestroyProgram(Renderer::Program *program);
+		virtual Renderer::Uniform *GetUniform(const Renderer::Program *program, const char *name);
+		virtual void SetUniform(const Renderer::Uniform *uniform, const Matrix4x4 *matrix);
+
+		// Singleton retriever.
+		static Implementation *GetInstance();
+
+	private:
+
+		// Singleton instance.
+		static Implementation instance;
+
+		// Interface for retrieving assets from engine.
+		Engine::Utilities *engineUtilities;
+
+		// Game manager modules.
+		GameManager::Listener *clientListener;
+
+	};
+
+}

@@ -77,17 +77,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="opengl_renderer.c">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
     <ClCompile Include="opengl_export.c">
       <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_export.c">
-      <Filter>engine\src</Filter>
     </ClCompile>
     <ClCompile Include="game_client.c">
       <Filter>game\client\src</Filter>
@@ -108,9 +102,6 @@
       <Filter>game_manager\src</Filter>
     </ClCompile>
     <ClCompile Include="mesh.c">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="game_manager.c">
       <Filter>game_manager\src</Filter>
     </ClCompile>
     <ClCompile Include="game_manager_export.c">
@@ -186,6 +177,15 @@
       <Filter>engine\src</Filter>
     </ClCompile>
     <ClCompile Include="keyboard_manager.c">
+      <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_export.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game_manager.cpp">
       <Filter>game_manager\src</Filter>
     </ClCompile>
   </ItemGroup>
