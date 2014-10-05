@@ -14,6 +14,26 @@ int main(int argc, char *argv[])
 	// Get engine implementation.
 	Engine::Interface *engine = GetEngineInterface();
 
+	// Get renderer implementation.
+	Renderer::Interface *renderer = GetRendererInterface();
+	Renderer::Resources *resources = GetRendererResources();
+
+	// Get game manager implementation.
+	GameManager::Interface *gameManager = GetGameManagerInterface();
+	Engine::Listener *engineListener = gameManager->GetEngineListener();
+	InputListener *inputListener = gameManager->GetInputListener();
+
+	// Get client implementation.
+	GameManager::ModuleInterface *client = GetClientInterface();
+	GameManager::Listener *clientListener = client->GetGameManagerListener();
+
+	// Set up engine.
+	engine->SetRendererInterfaces(renderer, resources);
+	engine->SetListeners(engineListener, inputListener);
+
+	// Set up game manager.
+	gameManager->SetListeners(clientListener, nullptr);
+
 	// Initialize error stack for error logging..
 	ErrorStack::Initialize();
 

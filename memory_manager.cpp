@@ -1,6 +1,6 @@
 #include "memory_manager.h"
 #include <stdio.h>
-#include <stdlib.h>
+#include <new>
 
 // Allocation count static.
 int MemoryManager::activeAllocations = 0;
@@ -11,7 +11,7 @@ void MemoryManager::Initialize(void)
 }
 
 // Clean up memory manager.
-void MemoryManager::Destroy(void)
+void MemoryManager::Shutdown(void)
 {
 	fprintf(stderr, "There are %d unfreed memory allocations.\n", activeAllocations);
 }
@@ -19,24 +19,11 @@ void MemoryManager::Destroy(void)
 // Allocate base memory chunk.
 void *MemoryManager::Allocate(unsigned int size)
 {
-	void *result = malloc(size);
+	void *result = new (std::nothrow) char[size];
 	if (result != nullptr) {
 		++activeAllocations;
 	}
 	return result;
-}
-
-// Allocate space for a certain object type.
-template <class Type>
-static bool Allocate(Type **out)
-{
-	// Allocate space for type.
-	Type *object = Allocate(sizeof(Type));
-	if (object != nullptr) {
-		*out = object;
-		return true;
-	}
-	return false;
 }
 
 // Allocate array memory chunk.
@@ -50,13 +37,4 @@ void MemoryManager::Free(void* buffer)
 {
 	--activeAllocations;
 	free(buffer);
-}
-
-// Destroy and deallocate an object buffer.
-template <class Type>
-static void Destroy(Type *object)
-{
-	// Call destructor and free memory.
-	object->~Type();
-	Free(object);
 }

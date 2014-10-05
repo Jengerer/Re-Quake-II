@@ -6,7 +6,7 @@
 #include "game_module.h"
 
 // Game module for client.
-class Client : public GameManager::Module
+class Client : public GameModule
 {
 
 public:
@@ -14,7 +14,7 @@ public:
 	Client();
 
 	// Game manager listener functions.
-	virtual bool OnInitialized();
+	virtual bool OnInitialized(GameManager::Utilities *utilities);
 	virtual void OnShutdown();
 	virtual bool OnTickBegin();
 	virtual bool OnTick();

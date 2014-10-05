@@ -18,10 +18,10 @@ namespace OpenGL
 		bool Initialize(const Renderer::Shader *vertex, const Renderer::Shader *fragment);
 
 		// Set this program as active.
-		void Activate();
+		void Activate() const;
 
 		// Unset this program from rendering.
-		void Deactivate();
+		void Deactivate() const;
 
 		// Get location of a uniform within this program.
 		GLint GetUniformLocation(const char *name) const;

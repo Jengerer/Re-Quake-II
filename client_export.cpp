@@ -4,8 +4,8 @@
 // Instantiate singleton instance.
 Client Client::instance;
 
-// Get structure for game manager to fill with utilities.
-GameManager::Listener *GetClientGameManagerListener()
+// Get interface for game manager to pass events to.
+GameManager::ModuleInterface *GetClientInterface()
 {
-	return Client::GetInstance();
+	return static_cast<GameManager::ModuleInterface*>(Client::GetInstance());
 }

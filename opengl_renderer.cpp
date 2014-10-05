@@ -1,6 +1,7 @@
 #include "error_stack.h"
 #include "file.h"
 #include "memory_manager.h"
+#include "opengl_program.h"
 #include "opengl_renderer.h"
 #include "opengl_uniform.h"
 
@@ -44,6 +45,20 @@ namespace OpenGL
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+	// Set program as active.
+	void Implementation::SetProgram(const Renderer::Program *program)
+	{
+		const Program *glProgram = static_cast<const Program*>(program);
+		glProgram->Activate();
+	}
+
+	// Set program as active.
+	void Implementation::UnsetProgram(const Renderer::Program *program)
+	{
+		const Program *glProgram = static_cast<const Program*>(program);
+		glProgram->Deactivate();
+	}
+
 	// Set uniform value as float.
 	void Implementation::SetUniform(const Renderer::Uniform *uniform, float value)
 	{
@@ -77,6 +92,12 @@ namespace OpenGL
 	{
 		const Uniform *glUniform = static_cast<const Uniform*>(uniform);
 		glUniform->SetValue(matrix);
+	}
+
+	// Get singleton instance of renderer.
+	Implementation *Implementation::GetInstance()
+	{
+		return &instance;
 	}
 
 }

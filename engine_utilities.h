@@ -26,10 +26,10 @@ namespace Engine
 		virtual void SwapBuffers() = 0;
 
 		// Get the renderer interface.
-		virtual Renderer::Interface *GetRenderer();
+		virtual Renderer::Interface *GetRenderer() = 0;
 
 		// Get the renderer resource interface.
-		virtual Renderer::Resources *GetRendererResources();
+		virtual Renderer::Resources *GetRendererResources() = 0;
 
 	};
 

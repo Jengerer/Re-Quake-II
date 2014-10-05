@@ -25,6 +25,12 @@ namespace Renderer
 		// Clear the scene for a new frame.
 		virtual void ClearScene() = 0;
 
+		// Set program as active for rendering.
+		virtual void SetProgram(const Renderer::Program *program) = 0;
+
+		// Unset program as active for rendering.
+		virtual void UnsetProgram(const Renderer::Program *program) = 0;
+
 		// Set uniform variable value as float.
 		virtual void SetUniform(const Uniform *uniform, float value) = 0;
 

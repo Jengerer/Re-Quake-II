@@ -1,5 +1,7 @@
 #pragma once
 
+#include "engine_utilities.h"
+
 namespace Engine
 {
 
@@ -10,7 +12,7 @@ namespace Engine
 	public:
 
 		// Triggered when the engine is fully initialized.
-		virtual bool OnInitialize() = 0;
+		virtual bool OnInitialize(Utilities *utilities) = 0;
 
 		// Triggered when engine wants to exit.
 		virtual void OnShutdown() = 0;

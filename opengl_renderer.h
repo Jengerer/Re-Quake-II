@@ -19,6 +19,8 @@ namespace OpenGL
 		virtual bool Initialize();
 		virtual void Shutdown();
 		virtual void ClearScene();
+		virtual void SetProgram(const Renderer::Program *program);
+		virtual void UnsetProgram(const Renderer::Program *program);
 		virtual void SetUniform(const Renderer::Uniform *uniform, float value);
 		virtual void SetUniform(const Renderer::Uniform *uniform, const Vector3 *vector);
 		virtual void SetUniform(const Renderer::Uniform *uniform, const Vector4 *vector);

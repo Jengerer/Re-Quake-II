@@ -34,3 +34,25 @@ private:
 	static int activeAllocations;
 
 };
+
+// Allocate space for a certain object type.
+template <class Type>
+bool MemoryManager::Allocate(Type **out)
+{
+	// Allocate space for type.
+	Type *object = reinterpret_cast<Type*>(Allocate(sizeof(Type)));
+	if (object != nullptr) {
+		*out = object;
+		return true;
+	}
+	return false;
+}
+
+// Destroy and deallocate an object buffer.
+template <class Type>
+void MemoryManager::Destroy(Type *object)
+{
+	// Call destructor and free memory.
+	object->~Type();
+	Free(object);
+}

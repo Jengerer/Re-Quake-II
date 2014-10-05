@@ -1,8 +1,9 @@
 #pragma once
 
+#include "engine_listener.h"
+#include "input_listener.h"
 #include "renderer.h"
 #include "renderer_resources.h"
-#include "engine_listener.h"
 
 // Interface for an application to interact with the engine.
 namespace Engine
@@ -15,8 +16,8 @@ namespace Engine
 	public:
 
 		// Pass in interfaces.
-		virtual void SetRendererInterfaces(Renderer::Interface *renderer, Renderer::Resources *resources);
-		virtual void SetEngineListener(Engine::Listener *listener);
+		virtual void SetRendererInterfaces(Renderer::Interface *renderer, Renderer::Resources *resources) = 0;
+		virtual void SetListeners(Engine::Listener *engineListener, InputListener *inputListener) = 0;
 
 		// Engine initialization.
 		virtual bool Initialize() = 0;

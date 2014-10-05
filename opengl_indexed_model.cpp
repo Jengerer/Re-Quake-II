@@ -10,7 +10,7 @@ namespace OpenGL
 	}
 
 	// Destroy model and its buffers.
-	IndexedModel::IndexedModel()
+	IndexedModel::~IndexedModel()
 	{
 		// Destroy buffers if we have them.
 		if (vertexBuffer != 0) {

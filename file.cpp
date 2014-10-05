@@ -9,7 +9,7 @@ File::File() : buffer(0)
 }
 
 // Clear file buffer.
-File::File()
+File::~File()
 {
 	if (buffer != nullptr) {
 		MemoryManager::Free(buffer);
@@ -53,5 +53,6 @@ bool File::Read(const char *filename)
 		return false;
 	}
 	fclose(file);
+	fileSize = length;
 	return true;
 }

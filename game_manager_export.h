@@ -1,8 +1,7 @@
 #pragma once
 
-#include "engine_listener.h"
-#include "game_manager_utilities.h"
+#include "game_manager_interface.h"
 #include "shared_defines.h"	
 
-// Get the interface for engine to communicate with game manager.
-LibraryExport Engine::Listener *GetEngineListener();
+// Get game manager interface for setting its interface references.
+LibraryExport GameManager::Interface *GetGameManagerInterface();

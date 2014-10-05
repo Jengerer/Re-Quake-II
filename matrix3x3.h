@@ -18,7 +18,7 @@ private:
 	// Helper constant for duplicating code.
 	static const int Size = 3;
 
-private:
+public:
 
 	float matrixArray[Size][Size];
 

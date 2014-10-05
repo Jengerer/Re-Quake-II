@@ -3,6 +3,9 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+// Error stack head.
+ErrorStackNode *ErrorStack::head;
+
 // Set up error stack node.
 ErrorStackNode::ErrorStackNode(char *message, ErrorStackNode *next)
 	: message(message), next(next)
@@ -28,7 +31,7 @@ void ErrorStack::Shutdown()
 }
 
 // Log an error message to the stack.
-void ErrorStack::Log(const char *format, ...
+void ErrorStack::Log(const char *format, ...)
 {
 	// Get size of string.
 	va_list args;
@@ -74,7 +77,6 @@ void ErrorStack::Dump()
 	int index = 1;
 	for (ErrorStackNode *node = head; node != nullptr; node = node->GetNext(), ++index) {
 		fprintf(stderr, "#%d: %s\n", index, node->GetMessage());
-		node = node->GetNext();
 	}
 }
 

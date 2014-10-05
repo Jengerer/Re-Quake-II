@@ -1,27 +1,23 @@
 #pragma once
 
-#include "game_manager_listener.h"
-#include "game_manager_utilities.h"
+#include "game_module_interface.h"
 
-namespace GameManager
+// Base game module.
+class GameModule : public GameManager::ModuleInterface, GameManager::Listener
 {
 
-	// Base game module for game manager to interact with.
-	class Module : public GameManager::Listener
-	{
+public:
 
-	public:
+	GameModule();
 
-		Module();
+	// Base game manager initialization function.
+	void SetGameManagerUtilities(GameManager::Utilities *utilities);
 
-		// Set interface through which modules get game manager resources.
-		void SetUtilities(GameManager::Utilities *utilities);
+	// Get game manager listener interface.
+	virtual GameManager::Listener *GetGameManagerListener();
 
-	protected:
+protected:
 
-		// Game manager interface reference.
-		GameManager::Utilities *utilities;
+	GameManager::Utilities *utilities;
 
-	};
-
-}
+};

@@ -35,8 +35,9 @@ Client::Client()
 }
 
 // Initialize client.
-bool Client::OnInitialized()
+bool Client::OnInitialized(GameManager::Utilities *utilities)
 {
+	SetGameManagerUtilities(utilities);
 	if (!LoadResources()) {
 		return false;
 	}
@@ -76,7 +77,9 @@ Client *Client::GetInstance()
 // Load all base resources required by client.
 bool Client::LoadResources(void)
 {
-	InitializeShaders();
+	if (!InitializeShaders()) {
+		return false;
+	}
 
 	// Set up the program for retrieving the uniforms.
 	utilities->SetProgram(modelProgram);
@@ -97,7 +100,7 @@ bool Client::LoadResources(void)
 	utilities->SetUniform(projection, &projectionMatrix);
 
 	// Unset program.
-	utilities->UnsetProgram();
+	utilities->UnsetProgram(modelProgram);
 	return true;
 }
 

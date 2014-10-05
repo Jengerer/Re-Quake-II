@@ -8,5 +8,5 @@ union WindowFlags
 		char borderless : 1;
 		char verticalSync : 1;
 	} bits;
-	char asCharacter;
+	char raw;
 };

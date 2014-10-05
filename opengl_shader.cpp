@@ -2,6 +2,7 @@
 #include "error_stack.h"
 #include "file.h"
 #include "memory_manager.h"
+#include <stdio.h>
 
 namespace OpenGL
 {
@@ -53,6 +54,7 @@ namespace OpenGL
 			if (log != nullptr) {
 				glGetShaderInfoLog(handle, logLength, &logLength, log);
 				// TODO: log to warning handler.
+				printf("Output for compilation of %s:\n%s\n", sourceFile, log);
 				MemoryManager::Free(log);
 			}
 		}

@@ -1,10 +1,16 @@
 #include "window.h"
 #include "error_stack.h"
 
-Window::Window(InputListener *listener) : listener(listener)
+Window::Window()
 {
 	// Reset flags.
-	flags.asCharacter = 0;
+	flags.raw = 0;
+}
+
+// Set interface for passing input events.
+void Window::SetInputListener(InputListener *listener)
+{
+	this->listener = listener;
 }
 
 // Pass keyboard event to the listener and convert result.

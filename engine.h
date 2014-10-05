@@ -19,6 +19,9 @@ namespace Engine
 		Implementation();
 		~Implementation();
 
+		// Get engine utilities interface.
+		virtual Utilities *GetUtilities();
+
 		// Engine interface implementation.
 		virtual void SetRendererInterfaces(Renderer::Interface *renderer, Renderer::Resources *resources);
 		virtual void SetListeners(Engine::Listener *engineListener, InputListener *inputListener);

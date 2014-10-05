@@ -32,11 +32,8 @@ namespace Renderer
 	public:
 
 		Attribute(const char *name, VariableType type);
-
-		// Name and type retrieval.
-
 		inline const char *GetName() const;
-		VariableType GetType() const;
+		inline VariableType GetType() const;
 
 	private:
 
@@ -79,5 +76,15 @@ namespace Renderer
 	class IndexedModel
 	{
 	};
+
+	const char *Attribute::GetName() const
+	{
+		return name;
+	}
+
+	VariableType Attribute::GetType() const
+	{
+		return type;
+	}
 
 }

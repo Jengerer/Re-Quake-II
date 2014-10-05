@@ -38,10 +38,10 @@ namespace GameManager
 		virtual void DestroyProgram(Renderer::Program *program) = 0;
 
 		// Set program for rendering.
-		virtual void SetProgram(Renderer::Program *program) = 0;
+		virtual void SetProgram(const Renderer::Program *program) = 0;
 
 		// Unset program from rendering.
-		virtual void UnsetProgram() = 0;
+		virtual void UnsetProgram(const Renderer::Program *program) = 0;
 
 		// Create shader schema from attributes.
 		virtual Renderer::ShaderSchema *CreateShaderSchema(

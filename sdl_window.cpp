@@ -177,3 +177,16 @@ KeyCode SDLWindow::TranslateSDLKey(SDL_Keycode sdlCode)
 	}
 	return static_cast<KeyCode>(EngineKeyInvalid);
 }
+
+// Translate window flags to SDL flags.
+Uint32 SDLWindow::TranslateWindowFlags(WindowFlags flags)
+{
+	Uint32 result = 0;
+	if (flags.bits.borderless) {
+		result |= SDL_WINDOW_BORDERLESS;
+	}
+	if (flags.bits.fullscreen) {
+		result |= SDL_WINDOW_FULLSCREEN;
+	}
+	return result;
+}

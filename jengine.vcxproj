@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -80,8 +80,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bsp_map.c" />
-    <ClCompile Include="bsp_map_parser.c" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="client_export.cpp" />
     <ClCompile Include="engine.cpp" />
@@ -109,6 +107,7 @@
     <ClCompile Include="opengl_shader_schema.cpp" />
     <ClCompile Include="opengl_resources.cpp" />
     <ClCompile Include="opengl_shader.cpp" />
+    <ClCompile Include="opengl_uniform.cpp" />
     <ClCompile Include="plane.cpp" />
     <ClCompile Include="renderer_shared.cpp" />
     <ClCompile Include="vector2.cpp" />
@@ -127,9 +126,11 @@
     <ClInclude Include="engine_interface.h" />
     <ClInclude Include="game_manager.h" />
     <ClInclude Include="game_manager_export.h" />
+    <ClInclude Include="game_manager_interface.h" />
     <ClInclude Include="game_manager_shared.h" />
     <ClInclude Include="game_manager_utilities.h" />
     <ClInclude Include="game_module.h" />
+    <ClInclude Include="game_module_interface.h" />
     <ClInclude Include="image_loader.h" />
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="opengl_common.h" />

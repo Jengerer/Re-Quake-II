@@ -4,34 +4,34 @@
 #include <stdint.h>
 
 // Structure for 3D short vector.
-typedef struct vector3d_short
+struct Vector3Short
 {
 	int16_t x;
 	int16_t y;
 	int16_t z;
-} vector3d_short_t;
+};
 
 // BSP plane structure.
-typedef struct bsp_plane
+struct BSPPlane
 {
 	Vector3 normal;
 	float distance;
 	uint32_t type;
-} bsp_plane_t;
+};
 
 // BSP tree node structure.
-typedef struct bsp_node
+struct BSPNode
 {
 	// Splitting plane index.
 	uint32_t plane;
 
 	// Children indices.
-	int32_t child_front;
-	int32_t child_back;
+	int32_t childFront;
+	int32_t childBack;
 
 	// Bounding box min and max points.
-	vector3d_short_t bbox_min;
-	vector3d_short_t bbox_max;
+	Vector3Short bbox_min;
+	Vector3Short bbox_max;
 
 	// Faces index/length that are on this plane.
 	uint16_t face_start;
@@ -39,18 +39,9 @@ typedef struct bsp_node
 };
 
 // BSP map structure.
-typedef struct bsp_map
+struct BSPMap
 {
 	// Splitting plane array.
-	bsp_plane_t *planes;
-	int num_planes;
-} bsp_map_t;
-
-// Map initialization and destruction.
-void bsp_map_null(bsp_map_t *map);
-void bsp_map_destroy(bsp_map_t *map);
-
-// Splitting planes functions.
-void bsp_map_null_planes(bsp_map_t *map);
-int bsp_map_initialize_planes(bsp_map_t *map, int num_planes);
-void bsp_map_destroy_planes(bsp_map_t *map);
+	BSPPlane *planes;
+	int planeCount;
+};

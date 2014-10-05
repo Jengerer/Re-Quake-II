@@ -9,6 +9,9 @@ const int GameHeight = 768;
 namespace GameManager
 {
 
+	// Singleton instance.
+	Implementation Implementation::instance;
+
 	// Clearing game manager constructor.
 	Implementation::Implementation()
 		: engineUtilities(nullptr)
@@ -20,16 +23,40 @@ namespace GameManager
 	{
 	}
 
-	// Set interface for requesting engine resources.
-	void Implementation::SetEngineUtilities(Engine::Utilities *utilities)
+	// Get interface for engine to pass events to.
+	Engine::Listener *Implementation::GetEngineListener()
 	{
-		engineUtilities = utilities;
+		return static_cast<Engine::Listener*>(this);
+	}
+
+	// Get interface for engine to pass input events to.
+	InputListener *Implementation::GetInputListener()
+	{
+		return static_cast<InputListener*>(this);
+	}
+
+	// Set client and server module listeners.
+	void Implementation::SetListeners(GameManager::Listener *client, GameManager::Listener *server)
+	{
+		(void)server;
+		this->clientListener = client;
 	}
 
 	// Engine is set up.
-	bool Implementation::OnInitialize()
+	bool Implementation::OnInitialize(Engine::Utilities *engineUtilities)
 	{
-		if (!clientListener->OnInitialized()) {
+		// Save the utilities interface.
+		this->engineUtilities = engineUtilities;
+
+		// Set up renderer and create window.
+		WindowFlags flags;
+		flags.raw = 0;
+		if (!engineUtilities->MakeWindow(GameTitle, GameWidth, GameHeight, flags)) {
+			return false;
+		}
+
+		// Pass to client to set up.
+		if (!clientListener->OnInitialized(this)) {
 			return false;
 		}
 		return true;
@@ -44,9 +71,31 @@ namespace GameManager
 	// Engine frame update.
 	bool Implementation::OnTick(float timeDelta)
 	{
-		clientListener->OnTickBegin();
-		clientListener->OnTick();
-		clientListener->OnTickEnd();
+		(float)timeDelta;
+		if (!clientListener->OnTickBegin()) {
+			return false;
+		}
+		if (!clientListener->OnTick()) {
+			return false;
+		}
+		if (!clientListener->OnTickEnd()) {
+			return false;
+		}
+		return true;
+	}
+
+	// Handle key press event.
+	InputEventResult Implementation::OnKeyPress(KeyCode key)
+	{
+		(void)key;
+		return InputEventSuccess;
+	}
+
+	// Handle key release event.
+	InputEventResult Implementation::OnKeyRelease(KeyCode key)
+	{
+		(void)key;
+		return InputEventSuccess;
 	}
 
 	// Get current game time.
@@ -100,12 +149,52 @@ namespace GameManager
 		}
 	}
 
+	// Set program as active for rendering.
+	void Implementation::SetProgram(const Renderer::Program *program)
+	{
+		Renderer::Interface *renderer = engineUtilities->GetRenderer();
+		renderer->SetProgram(program);
+	}
+
+	// Unset program as active for rendering.
+	void Implementation::UnsetProgram(const Renderer::Program *program)
+	{
+		Renderer::Interface *renderer = engineUtilities->GetRenderer();
+		renderer->UnsetProgram(program);
+	}
+
+	// Create shader schema.
+	Renderer::ShaderSchema *Implementation::CreateShaderSchema(
+		const Renderer::Program *program,
+		const Renderer::Attribute *attributes,
+		int attributeCount)
+	{
+		Renderer::Resources *resources = engineUtilities->GetRendererResources();
+		return resources->CreateShaderSchema(program, attributes, attributeCount);
+	}
+
+	// Destroy shader schema.
+	void Implementation::DestroyShaderSchema(Renderer::ShaderSchema *schema)
+	{
+		if (schema != nullptr) {
+			Renderer::Resources *resources = engineUtilities->GetRendererResources();
+			resources->DestroyShaderSchema(schema);
+		}
+	}
+
 	// Get reference to shader uniform variable.
 	// Assumes program is bound.
 	Renderer::Uniform *Implementation::GetUniform(const Renderer::Program *program, const char *name)
 	{
 		Renderer::Resources *resources = engineUtilities->GetRendererResources();
 		return resources->GetUniform(program, name);
+	}
+
+	// Destroy uniform variable.
+	void Implementation::DestroyUniform(Renderer::Uniform *uniform)
+	{
+		Renderer::Resources *resources = engineUtilities->GetRendererResources();
+		resources->DestroyUniform(uniform);
 	}
 
 	// Set value of uniform by 4x4 matrix.

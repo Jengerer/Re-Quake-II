@@ -77,12 +77,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bsp_map.c">
-      <Filter>game\common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="bsp_map_parser.c">
-      <Filter>game\common\src</Filter>
-    </ClCompile>
     <ClCompile Include="math_common.cpp">
       <Filter>common\src</Filter>
     </ClCompile>
@@ -173,9 +167,6 @@
     <ClCompile Include="game_client.cpp">
       <Filter>game\client\src</Filter>
     </ClCompile>
-    <ClCompile Include="game_module.cpp">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
     <ClCompile Include="game_manager_export.cpp">
       <Filter>game_manager\src</Filter>
     </ClCompile>
@@ -184,6 +175,12 @@
     </ClCompile>
     <ClCompile Include="opengl_export.cpp">
       <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_uniform.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="game_module.cpp">
+      <Filter>game\common\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -280,9 +277,6 @@
     <ClInclude Include="opengl_common.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
-    <ClInclude Include="input_listener.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
     <ClInclude Include="keyboard_shared.h">
       <Filter>common\include</Filter>
     </ClInclude>
@@ -340,8 +334,17 @@
     <ClInclude Include="indexed_mesh.h">
       <Filter>game_manager\include</Filter>
     </ClInclude>
-    <ClInclude Include="game_module.h">
+    <ClInclude Include="input_listener.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="game_manager_interface.h">
+      <Filter>game_manager\include\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="game_module_interface.h">
       <Filter>game_manager\include</Filter>
+    </ClInclude>
+    <ClInclude Include="game_module.h">
+      <Filter>game\common\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

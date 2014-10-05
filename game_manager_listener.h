@@ -1,5 +1,7 @@
 #pragma once
 
+#include "game_manager_utilities.h"
+
 namespace GameManager
 {
 
@@ -10,7 +12,7 @@ namespace GameManager
 	public:
 
 		// Game manager initialized.
-		virtual bool OnInitialized() = 0;
+		virtual bool OnInitialized(Utilities *utilities) = 0;
 
 		// Game manager about to be shut down.
 		virtual void OnShutdown() = 0;

@@ -17,6 +17,12 @@ namespace Engine
 	{
 	}
 
+	// Get reference to engine utilities.
+	Utilities *Implementation::GetUtilities()
+	{
+		return static_cast<Utilities*>(this);
+	}
+
 	// Update renderer interface references.
 	void Implementation::SetRendererInterfaces(Renderer::Interface *renderer, Renderer::Resources *resources)
 	{
@@ -36,7 +42,7 @@ namespace Engine
 	{
 		// Don't initialize renderer yet; game manager should get to choose size/flags.
 		MemoryManager::Initialize();
-		if (!listener->OnInitialize()) {
+		if (!listener->OnInitialize(this)) {
 			return false;
 		}
 		return true;

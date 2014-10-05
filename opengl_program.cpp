@@ -12,7 +12,7 @@ namespace OpenGL
 	}
 
 	// Destroy the program (linked shaders are automatically unlinked).
-	Program::Program()
+	Program::~Program()
 	{
 		// Free the handle if we have one.
 		if (handle != 0) {
@@ -59,13 +59,13 @@ namespace OpenGL
 	}
 
 	// Set this program to be used for rendering.
-	void Program::Activate()
+	void Program::Activate() const
 	{
 		glUseProgram(handle);
 	}
 
 	// Unset this program from being used for rendering.
-	void Program::Deactivate()
+	void Program::Deactivate() const
 	{
 		glUseProgram(0);
 	}

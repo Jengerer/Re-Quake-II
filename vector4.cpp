@@ -14,7 +14,7 @@ Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
 // Set all components to zero.
 void Vector4::Clear()
 {
-	Set(0.0f, 0.0f, 0.0f);
+	Set(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 // Copy components from other vector.

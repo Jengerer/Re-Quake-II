@@ -28,7 +28,7 @@ namespace OpenGL
 		int attributeCount)
 	{
 		// Allocate space for OpenGL attributes.
-		ShaderAttribute *glAttributes = reinterpret_cast<ShaderAttribute*>(MemoryManager::AllocateArray(sizeof(ShaderAttribute) * attributeCount));
+		ShaderAttribute *glAttributes = reinterpret_cast<ShaderAttribute*>(MemoryManager::AllocateArray(sizeof(ShaderAttribute), attributeCount));
 		if (attributes == nullptr) {
 			ErrorStack::Log("Failed to allocate buffer for attribute array.\n");
 			return false;
