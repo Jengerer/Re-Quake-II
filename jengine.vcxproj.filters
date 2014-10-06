@@ -182,6 +182,15 @@
     <ClCompile Include="game_module.cpp">
       <Filter>game\common\src</Filter>
     </ClCompile>
+    <ClCompile Include="opengl_common.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="entity_model.cpp">
+      <Filter>game\client\src</Filter>
+    </ClCompile>
+    <ClCompile Include="md2_file.cpp">
+      <Filter>game\client\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine_utilities.h">
@@ -262,9 +271,6 @@
     <ClInclude Include="game_manager.h">
       <Filter>game_manager\include</Filter>
     </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>game_manager\include</Filter>
-    </ClInclude>
     <ClInclude Include="world.h">
       <Filter>game_manager\include</Filter>
     </ClInclude>
@@ -331,9 +337,6 @@
     <ClInclude Include="window_shared.h">
       <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="indexed_mesh.h">
-      <Filter>game_manager\include</Filter>
-    </ClInclude>
     <ClInclude Include="input_listener.h">
       <Filter>common\include</Filter>
     </ClInclude>
@@ -345,6 +348,18 @@
     </ClInclude>
     <ClInclude Include="game_module.h">
       <Filter>game\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="entity_model.h">
+      <Filter>game\client\include</Filter>
+    </ClInclude>
+    <ClInclude Include="md2_file.h">
+      <Filter>game\client\include</Filter>
+    </ClInclude>
+    <ClInclude Include="indexed_mesh.h">
+      <Filter>game\client\include</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>game\client\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,9 +4,16 @@ namespace OpenGL
 {
 
 	// Shader attribute parameter constructor.
-	ShaderAttribute::ShaderAttribute(GLint location, GLint floatCount, GLchar *offset)
-		: location(location), floatCount(floatCount), offset(offset)
+	ShaderAttribute::ShaderAttribute()
 	{
+	}
+
+	// Set shader attribute parameters.
+	void ShaderAttribute::SetParameters(GLint location, GLint floatCount, GLchar *offset)
+	{
+		this->location = location;
+		this->floatCount = floatCount;
+		this->offset = offset;
 	}
 
 	// Activate this shader attribute for rendering.

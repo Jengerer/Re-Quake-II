@@ -11,7 +11,7 @@ namespace OpenGL
 
 	public:
 
-		Model();
+		Model(Renderer::ModelType modelType);
 		~Model();
 
 		// Create the model from a set of vertex data.
@@ -30,6 +30,7 @@ namespace OpenGL
 
 		GLuint vertexBuffer;
 		GLsizei vertexCount;
+		GLenum modelType;
 
 	};
 

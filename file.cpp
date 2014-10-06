@@ -12,7 +12,7 @@ File::File() : buffer(0)
 File::~File()
 {
 	if (buffer != nullptr) {
-		MemoryManager::Free(buffer);
+		MemoryManager::DestroyArray(buffer);
 	}
 }
 
@@ -39,8 +39,8 @@ bool File::Read(const char *filename)
 	}
 
 	// Allocate space for the file.
-	void *buffer = MemoryManager::Allocate(length);
-	if (buffer == nullptr) {
+	char *buffer;
+	if (!MemoryManager::AllocateArray(&buffer, length)) {
 		fclose(file);
 		ErrorStack::Log("Failed to allocate space for file: %s\n", filename);
 		return false;

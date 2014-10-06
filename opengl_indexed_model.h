@@ -11,7 +11,7 @@ namespace OpenGL
 
 	public:
 
-		IndexedModel();
+		IndexedModel(Renderer::ModelType modelType);
 		~IndexedModel();
 
 		// Create the model from a set of vertex and index data.
@@ -39,6 +39,7 @@ namespace OpenGL
 		// Buffer objects.
 		GLuint vertexBuffer, indexBuffer;
 		GLsizei indexCount;
+		GLenum modelType;
 	
 	};
 

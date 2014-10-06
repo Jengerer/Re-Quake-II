@@ -84,6 +84,7 @@
     <ClCompile Include="client_export.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="engine_export.cpp" />
+    <ClCompile Include="entity_model.cpp" />
     <ClCompile Include="error_stack.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="game_manager.cpp" />
@@ -96,7 +97,9 @@
     <ClCompile Include="math_common.cpp" />
     <ClCompile Include="matrix3x3.cpp" />
     <ClCompile Include="matrix4x4.cpp" />
+    <ClCompile Include="md2_file.cpp" />
     <ClCompile Include="memory_manager.cpp" />
+    <ClCompile Include="opengl_common.cpp" />
     <ClCompile Include="opengl_export.cpp" />
     <ClCompile Include="opengl_indexed_model.cpp" />
     <ClCompile Include="opengl_model.cpp" />
@@ -133,6 +136,8 @@
     <ClInclude Include="game_module_interface.h" />
     <ClInclude Include="image_loader.h" />
     <ClInclude Include="indexed_mesh.h" />
+    <ClInclude Include="entity_model.h" />
+    <ClInclude Include="md2_file.h" />
     <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />
     <ClInclude Include="opengl_indexed_model.h" />

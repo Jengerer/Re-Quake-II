@@ -1,3 +1,4 @@
+#include "md2_file.h"
 #include "game_client.h"
 #include "math_common.h"
 #include "memory_manager.h"
@@ -103,6 +104,13 @@ bool Client::LoadResources(void)
 
 	// Unset program.
 	utilities->UnsetProgram(modelProgram);
+
+	// Load model.
+	EntityModel model;
+	MD2File file(&model);
+	if (!file.Load("tris.md2")) {
+		return false;
+	}
 	return true;
 }
 

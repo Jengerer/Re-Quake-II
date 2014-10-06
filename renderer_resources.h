@@ -19,6 +19,7 @@ namespace Renderer
 		virtual Model *CreateModel(
 			const void *vertexData,
 			int vertexCount,
+			ModelType modelType,
 			const ShaderSchema *schema) = 0;
 
 		// Create a model from a set of vertices and the indices referencing them.
@@ -27,6 +28,7 @@ namespace Renderer
 			int vertexCount,
 			const unsigned int *indexData,
 			int indexCount,
+			ModelType modelType,
 			const ShaderSchema *schema) = 0;
 
 		// Destroy a model.

@@ -11,7 +11,10 @@ namespace OpenGL
 
 	public:
 
-		ShaderAttribute(GLint location, GLint floatCount, GLchar *offset);
+		ShaderAttribute();
+		
+		// Set attribute parameters.
+		void SetParameters(GLint location, GLint floatCount, GLchar *offset);
 
 		// Enable this shader attribute for rendering.
 		void Activate(GLsizei vertexSize) const;

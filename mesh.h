@@ -52,12 +52,13 @@ Mesh<VertexType>::~Mesh()
 template <typename VertexType>
 bool Mesh<VertexType>::Initialize(int vertexCount)
 {
-	VertexType *vertices = reinterpret_cast<VertexType*>(MemoryManager::AllocateArray(sizeof(VertexType)));
-	if (vertices == nullptr) {
+	VertexType *vertices;
+	if (!MemoryManager::AllocateArray(&vertices, vertexCount)) {
 		return false;
 	}
 	this->vertices = vertices;
 	this->vertexCount = vertexCount;
+	return true;
 }
 
 // Allocate space for vertices.
@@ -67,18 +68,18 @@ int Mesh<VertexType>::GetVertexCount() const
 	return vertexCount;
 }
 
-// Get mutable vertex reference.
+// Get mutable vertex references.
 template <typename VertexType>
-VertexType *Mesh<VertexType>::GetVertex(int index)
+VertexType *Mesh<VertexType>::GetVertexBuffer()
 {
-	return vertices[index];
+	return vertices;
 }
 
-// Get immutable vertex reference.
+// Get immutable vertex references.
 template <typename VertexType>
-const VertexType *Mesh<VertexType>::GetVertex(int index) const
+const VertexType *Mesh<VertexType>::GetVertexBuffer() const
 {
-	return vertices[index];
+	return vertices;
 }
 
 // Common vertex defines.

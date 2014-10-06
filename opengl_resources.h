@@ -20,6 +20,7 @@ namespace OpenGL
 		virtual Renderer::Model *CreateModel(
 			const void *vertexData,
 			int vertexCount,
+			Renderer::ModelType modelType,
 			const Renderer::ShaderSchema *schema);
 
 		// Create a model from a set of vertices and the indices referencing them.
@@ -28,6 +29,7 @@ namespace OpenGL
 			int vertexCount,
 			const unsigned int *indexData,
 			int indexCount,
+			Renderer::ModelType modelType,
 			const Renderer::ShaderSchema *schema);
 
 		// Destroy a model.

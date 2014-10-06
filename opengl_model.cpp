@@ -5,8 +5,9 @@ namespace OpenGL
 {
 
 	// Constructor for an empty model.
-	Model::Model() : vertexBuffer(0)
+	Model::Model(Renderer::ModelType modelType) : vertexBuffer(0)
 	{
+		this->modelType = TranslateModelType(modelType);
 	}
 
 	// Destroy model and its vertex buffer.
@@ -52,7 +53,7 @@ namespace OpenGL
 	void Model::Draw()
 	{
 		Bind();
-		glDrawElements(GL_TRIANGLES, vertexCount, GL_FLOAT, nullptr);
+		glDrawElements(modelType, vertexCount, GL_FLOAT, nullptr);
 		Unbind();
 	}
 

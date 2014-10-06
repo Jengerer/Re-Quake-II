@@ -4,6 +4,7 @@
 
 // Allocation count static.
 int MemoryManager::activeAllocations = 0;
+int MemoryManager::totalMemoryUsage = 0;
 
 // Initialize memory management.
 void MemoryManager::Initialize(void)
@@ -23,13 +24,8 @@ void *MemoryManager::Allocate(unsigned int size)
 	if (result != nullptr) {
 		++activeAllocations;
 	}
+	totalMemoryUsage += size;
 	return result;
-}
-
-// Allocate array memory chunk.
-void *MemoryManager::AllocateArray(unsigned int elementSize, unsigned int count)
-{
-	return Allocate(elementSize * count);
 }
 
 // Free memory chunk.

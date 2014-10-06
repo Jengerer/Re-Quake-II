@@ -50,8 +50,8 @@ namespace OpenGL
 		GLint logLength;
 		glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &logLength);
 		if (logLength != 0) {
-			GLchar *log = reinterpret_cast<GLchar*>(MemoryManager::AllocateArray(sizeof(GLchar), logLength));
-			if (log != nullptr) {
+			GLchar *log;
+			if (MemoryManager::AllocateArray(&log, logLength)) {
 				glGetShaderInfoLog(handle, logLength, &logLength, log);
 				// TODO: log to warning handler.
 				printf("Output for compilation of %s:\n%s\n", sourceFile, log);

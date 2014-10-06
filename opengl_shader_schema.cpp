@@ -28,8 +28,8 @@ namespace OpenGL
 		int attributeCount)
 	{
 		// Allocate space for OpenGL attributes.
-		ShaderAttribute *glAttributes = reinterpret_cast<ShaderAttribute*>(MemoryManager::AllocateArray(sizeof(ShaderAttribute), attributeCount));
-		if (attributes == nullptr) {
+		ShaderAttribute *glAttributes;
+		if (!MemoryManager::AllocateArray(&glAttributes, attributeCount)) {
 			ErrorStack::Log("Failed to allocate buffer for attribute array.\n");
 			return false;
 		}
@@ -44,7 +44,8 @@ namespace OpenGL
 			GLint location = glGetAttribLocation(handle, attributes->GetName());
 			int floatCount = GetVariableFloatCount(attributes->GetType());
 			GLchar *offset = reinterpret_cast<GLchar*>(vertexSize);
-			new (current) ShaderAttribute(location, floatCount, offset);
+			new (current) ShaderAttribute();
+			current->SetParameters(location, floatCount, offset);
 
 			// Increase vertex size.
 			vertexSize += floatCount * sizeof(float);

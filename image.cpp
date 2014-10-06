@@ -11,12 +11,10 @@ Image::Image() : buffer(nullptr)
 // Initialize image buffer for a size/depth.
 bool Image::Initialize(int width, int height, int pixelSize)
 {
-	void *buffer;
-	int numPixels;
-
 	// Allocate space.
-	numPixels = width * height;
-	buffer = MemoryManager::AllocateArray(pixelSize, numPixels);
+	void *buffer;
+	int pixelCount = width * height;
+	buffer = MemoryManager::Allocate(pixelCount);
 	if (buffer == nullptr) {
 		return false;
 	}

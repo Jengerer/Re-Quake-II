@@ -25,6 +25,14 @@ namespace Renderer
 		Matrix4x4Type
 	};
 
+	// Renderer model type.
+	enum ModelType
+	{
+		InvalidModel,
+		TriangleFanModel,
+		TriangleStripModel
+	};
+
 	// Shader attribute definition.
 	class Attribute
 	{

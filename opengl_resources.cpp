@@ -21,6 +21,7 @@ namespace OpenGL
 	Renderer::Model *Resources::CreateModel(
 		const void *vertexData,
 		int vertexCount,
+		Renderer::ModelType modelType,
 		const Renderer::ShaderSchema *schema)
 	{
 		// Allocate space for a model.
@@ -29,7 +30,7 @@ namespace OpenGL
 			ErrorStack::Log("Failed to allocate OpenGL model object.\n");
 			return nullptr;
 		}
-		new (model) Model();
+		new (model) Model(modelType);
 
 		// Initialize the model.
 		if (model->Initialize(vertexData, vertexCount, schema)) {
@@ -48,6 +49,7 @@ namespace OpenGL
 		int vertexCount,
 		const unsigned int *indexData,
 		int indexCount,
+		Renderer::ModelType modelType,
 		const Renderer::ShaderSchema *schema)
 	{
 		// Allocate space for a model.
@@ -56,7 +58,7 @@ namespace OpenGL
 			ErrorStack::Log("Failed to allocate OpenGL indexed model object.\n");
 			return nullptr;
 		}
-		new (model) Model();
+		new (model) Model(modelType);
 
 		// Initialize the model.
 		if (model->Initialize(vertexData, vertexCount, indexData, indexCount, schema)) {

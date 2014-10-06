@@ -44,10 +44,12 @@ namespace OpenGL
 		glLinkProgram(handle);
 		glGetProgramiv(handle, GL_INFO_LOG_LENGTH, &logLength);
 		if (logLength != 0) {
-			GLchar *log = reinterpret_cast<GLchar*>(MemoryManager::AllocateArray(sizeof(GLchar), logLength));
-			glGetProgramInfoLog(handle, logLength, &logLength, log);
-			// TODO: print to warning handler.
-			MemoryManager::Free(log);
+			GLchar *log;
+			if (MemoryManager::AllocateArray(&log, logLength)) {
+				glGetProgramInfoLog(handle, logLength, &logLength, log);
+				// TODO: print to warning handler.
+				MemoryManager::Free(log);
+			}
 		}
 		GLint linkStatus;
 		glGetProgramiv(handle, GL_LINK_STATUS, &linkStatus);

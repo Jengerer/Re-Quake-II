@@ -5,8 +5,9 @@ namespace OpenGL
 {
 
 	// Constructor for empty index model.
-	IndexedModel::IndexedModel() : vertexBuffer(0), indexBuffer(0)
+	IndexedModel::IndexedModel(Renderer::ModelType modelType) : vertexBuffer(0), indexBuffer(0)
 	{
+		this->modelType = TranslateModelType(modelType);
 	}
 
 	// Destroy model and its buffers.
@@ -60,7 +61,7 @@ namespace OpenGL
 	void IndexedModel::Draw()
 	{
 		Bind();
-		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(modelType, indexCount, GL_UNSIGNED_INT, nullptr);
 		Unbind();
 	}
 

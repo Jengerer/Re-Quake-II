@@ -10,18 +10,18 @@ public:
 	~File();
 
 	bool Read(const char *filename);
-	inline const void *GetBuffer() const;
+	inline const char *GetBuffer() const;
 	inline int GetSize() const;
 	
 private:
 
-	void *buffer;
+	char *buffer;
 	int fileSize;
 
 };
 
 // Get the file buffer.
-const void *File::GetBuffer() const
+const char *File::GetBuffer() const
 {
 	return buffer;
 }
