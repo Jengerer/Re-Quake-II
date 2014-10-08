@@ -313,9 +313,6 @@
     <ClInclude Include="opengl_shader_attribute.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
-    <ClInclude Include="opengl_shader_schema.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
     <ClInclude Include="opengl_uniform.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
@@ -323,9 +320,6 @@
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
     <ClInclude Include="opengl_resources.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_model.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
     <ClInclude Include="opengl_indexed_model.h">
@@ -360,6 +354,12 @@
     </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>game\client\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_buffer.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_buffer_schema.h">
+      <Filter>opengl_renderer\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

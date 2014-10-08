@@ -25,15 +25,16 @@ namespace Renderer
 		Matrix4x4Type
 	};
 
-	// Renderer model type.
-	enum ModelType
+	// Renderer buffer type.
+	enum BufferType
 	{
-		InvalidModel,
+		BufferTypeInvalid,
+		BufferType
 		TriangleFanModel,
 		TriangleStripModel
 	};
 
-	// Shader attribute definition.
+	// Vertex buffer representation of shader attributes.
 	class Attribute
 	{
 
@@ -60,8 +61,8 @@ namespace Renderer
 	{
 	};
 
-	// Schema for a shader program.
-	class ShaderSchema
+	// Schema for mapping buffer data to shader program attributes.
+	class BufferSchema
 	{
 	};
 
@@ -75,13 +76,8 @@ namespace Renderer
 	{
 	};
 
-	// Renderable component made of sequential vertices.
-	class Model
-	{
-	};
-
-	// Renderable component made of vertices and sequential indices that index them.
-	class IndexedModel
+	// Generic renderer buffer through which data is passed to shader.
+	class Buffer
 	{
 	};
 

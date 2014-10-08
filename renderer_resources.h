@@ -15,27 +15,14 @@ namespace Renderer
 
 	public:
 
-		// Create a model from a set of vertices.
-		virtual Model *CreateModel(
-			const void *vertexData,
-			int vertexCount,
-			ModelType modelType,
-			const ShaderSchema *schema) = 0;
+		// Generate a buffer from a set of data.
+		virtual Buffer *CreateBuffer(
+			const void *bufferData,
+			int bufferSize,
+			const Renderer::BufferSchema *schema) = 0;
 
-		// Create a model from a set of vertices and the indices referencing them.
-		virtual IndexedModel *CreateIndexedModel(
-			const void *vertexData,
-			int vertexCount,
-			const unsigned int *indexData,
-			int indexCount,
-			ModelType modelType,
-			const ShaderSchema *schema) = 0;
-
-		// Destroy a model.
-		virtual void DestroyModel(Model *model) = 0;
-
-		// Destroy an indexed model.
-		virtual void DestroyIndexedModel(IndexedModel *model) = 0;
+		// Destroy a buffer.
+		virtual void DestroyBuffer(Buffer *buffer) = 0;
 
 		// Loading and compiling a single shader.
 		virtual Shader *CreateShader(const char *filename, ShaderType type) = 0;
@@ -49,14 +36,14 @@ namespace Renderer
 		// Destroy a shader program.
 		virtual void DestroyProgram(Program *program) = 0;
 
-		// Prepare a shader schema for vertex attributes.
-		virtual ShaderSchema *CreateShaderSchema(
+		// Prepare a schema for a buffer to map data to shader attributes.
+		virtual BufferSchema *CreateBufferSchema(
 			const Program *program,
 			const Attribute *attributes,
 			int attributeCount) = 0;
 
-		// Destroy a shader schema.
-		virtual void DestroyShaderSchema(ShaderSchema *schema) = 0;
+		// Destroy a buffer schema.
+		virtual void DestroyBufferSchema(BufferSchema *schema) = 0;
 
 		// Get uniform variable from a program.
 		virtual Uniform *GetUniform(const Program *program, const char *name) = 0;

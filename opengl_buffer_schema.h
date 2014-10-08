@@ -7,8 +7,8 @@
 namespace OpenGL
 {
 
-	// Structure for representing an OpenGL shader schema.
-	class ShaderSchema : public Renderer::ShaderSchema
+	// Structure for representing an OpenGL buffer schema.
+	class ShaderSchema : public Renderer::BufferSchema
 	{
 
 	public:
@@ -16,16 +16,16 @@ namespace OpenGL
 		ShaderSchema();
 		~ShaderSchema();
 
-		// Initialize shader schema from a set of renderer attributes.
+		// Initialize schema from a set of renderer attributes.
 		bool Initialize(
 			const Program *program,
 			const Renderer::Attribute *attributes,
 			int attributeCount);
 
-		// Enable this shader schema for the current render.
+		// Enable this schema for the current render.
 		void Activate() const;
 
-		// Disable this shader schema from rendering.
+		// Disable this schema from rendering.
 		void Deactivate() const;
 
 		// Get vertex size.

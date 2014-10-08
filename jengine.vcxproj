@@ -141,9 +141,9 @@
     <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />
     <ClInclude Include="opengl_indexed_model.h" />
-    <ClInclude Include="opengl_model.h" />
+    <ClInclude Include="opengl_buffer.h" />
     <ClInclude Include="opengl_program.h" />
-    <ClInclude Include="opengl_shader_schema.h" />
+    <ClInclude Include="opengl_buffer_schema.h" />
     <ClInclude Include="opengl_resources.h" />
     <ClInclude Include="opengl_shader.h" />
     <ClInclude Include="opengl_shader_attribute.h" />

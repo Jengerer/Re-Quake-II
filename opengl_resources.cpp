@@ -18,7 +18,7 @@ namespace OpenGL
 	Resources Resources::instance;
 
 	// Create a model from a set of vertex data.
-	Renderer::Model *Resources::CreateModel(
+	Renderer::Model *Resources::CreateBuffer(
 		const void *vertexData,
 		int vertexCount,
 		Renderer::ModelType modelType,
