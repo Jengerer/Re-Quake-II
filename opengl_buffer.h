@@ -1,7 +1,5 @@
 #pragma once
 
-#include "opengl_common.h"
-
 namespace OpenGL
 {
 
@@ -15,10 +13,7 @@ namespace OpenGL
 		~Buffer();
 
 		// Create the model from a set of vertex data.
-		bool Initialize(
-			const void *bufferData,
-			int bufferSize,
-			const Renderer::BufferSchema *schema);
+		bool Initialize(const void *bufferData,	int bufferSize);
 
 		// Bind the buffer for rendering.
 		void Bind();
@@ -26,14 +21,9 @@ namespace OpenGL
 		// Unbind the buffer from rendering.
 		void Unbind();
 
-		// Draw the model.
-		void Draw();
-
 	private:
 
 		GLuint vertexBuffer;
-		GLsizei vertexCount;
-		GLenum modelType;
 
 	};
 

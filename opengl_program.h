@@ -26,19 +26,10 @@ namespace OpenGL
 		// Get location of a uniform within this program.
 		GLint GetUniformLocation(const char *name) const;
 
-		// Get handle.
-		inline GLuint GetHandle() const;
-
 	private:
 
 		GLuint handle;
 
 	};
-
-	// Return the program's OpenGL handle.
-	GLuint Program::GetHandle() const
-	{
-		return handle;
-	}
 
 }

@@ -16,13 +16,16 @@ namespace Renderer
 	public:
 
 		// Generate a buffer from a set of data.
-		virtual Buffer *CreateBuffer(
-			const void *bufferData,
-			int bufferSize,
-			const Renderer::BufferSchema *schema) = 0;
+		virtual Buffer *CreateBuffer(const void *bufferData, int bufferSize) = 0;
 
 		// Destroy a buffer.
 		virtual void DestroyBuffer(Buffer *buffer) = 0;
+
+		// Generate an index buffer of a certain size.
+		virtual IndexBuffer *CreateIndexBuffer(const void *indexData, int indexCount, IndexType type) = 0;
+
+		// Destroy an index buffer.
+		virtual void DestroyBuffer(IndexBuffer *buffer) = 0;
 
 		// Loading and compiling a single shader.
 		virtual Shader *CreateShader(const char *filename, ShaderType type) = 0;

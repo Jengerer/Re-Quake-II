@@ -27,6 +27,7 @@ public:
 	static void Destroy(Type *object);
 
 	// Allocate a buffer for an array.
+	// Objects are not constructed.
 	template <class Type>
 	static bool AllocateArray(Type **out, unsigned int count);
 
@@ -59,7 +60,7 @@ bool MemoryManager::Allocate(Type **out)
 template <class Type>
 bool MemoryManager::AllocateArray(Type **out, unsigned int count)
 {
-	Type *buffer = new (std::nothrow) Type[count];
+	Type *buffer = new (std::nothrow) char[count];
 	if (buffer == nullptr) {
 		return false;
 	}

@@ -1,8 +1,5 @@
 #pragma once
 
-#include "matrix3x3.h"
-#include "matrix4x4.h"
-
 namespace Renderer
 {
 
@@ -14,8 +11,14 @@ namespace Renderer
 	};
 
 	// Generic renderer variable types.
-	enum VariableType
+	enum DataType
 	{
+		ByteType,
+		UnsignedByteType,
+		ShortType,
+		UnsignedShortType,
+		IntType,
+		UnsignedIntType,
 		FloatType,
 		Vector2Type,
 		Vector3Type,
@@ -25,29 +28,20 @@ namespace Renderer
 		Matrix4x4Type
 	};
 
-	// Renderer buffer type.
-	enum BufferType
-	{
-		BufferTypeInvalid,
-		BufferType
-		TriangleFanModel,
-		TriangleStripModel
-	};
-
 	// Vertex buffer representation of shader attributes.
 	class Attribute
 	{
 
 	public:
 
-		Attribute(const char *name, VariableType type);
-		inline const char *GetName() const;
-		inline VariableType GetType() const;
+		Attribute(const char *name, DataType type);
+		inline const char *GetName() const { return name; }
+		inline DataType GetType() const { return type; }
 
 	private:
 
 		const char *name;
-		VariableType type;
+		DataType type;
 
 	};
 
@@ -81,14 +75,9 @@ namespace Renderer
 	{
 	};
 
-	const char *Attribute::GetName() const
+	// Generic index buffer for mapping to a set of vertices.
+	class IndexBuffer
 	{
-		return name;
-	}
-
-	VariableType Attribute::GetType() const
-	{
-		return type;
-	}
+	};
 
 }

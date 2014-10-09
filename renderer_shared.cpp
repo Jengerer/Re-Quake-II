@@ -4,7 +4,7 @@ namespace Renderer
 {
 
 	// Renderer attribute constructor.
-	Attribute::Attribute(const char *name, VariableType type) : name(name), type(type)
+	Attribute::Attribute(const char *name, DataType type) : name(name), type(type)
 	{
 	}
 

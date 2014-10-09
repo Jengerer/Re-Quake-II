@@ -17,10 +17,22 @@ namespace OpenGL
 	public:
 
 		// Generate a buffer from a set of data.
-		virtual Renderer::Buffer *CreateBuffer(const void *bufferData, int bufferSize);
+		virtual Renderer::Buffer *CreateBuffer(
+			const void *bufferData,
+			int bufferSize,
+			const Renderer::BufferSchema *schema);
 
 		// Destroy a buffer.
 		virtual void DestroyBuffer(Renderer::Buffer *buffer);
+
+		// Generate an index buffer for referring to vertex data.
+		virtual Renderer::IndexBuffer *CreateIndexBuffer(
+			const void *indexData,
+			int indexCount,
+			Renderer::DataType type);
+
+		// Destroy an index buffer.
+		virtual void DestroyIndexBuffer(Renderer::IndexBuffer *buffer);
 
 		// Loading and compiling a single shader.
 		virtual Renderer::Shader *CreateShader(const char *filename, Renderer::ShaderType type);

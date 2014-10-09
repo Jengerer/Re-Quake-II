@@ -8,13 +8,13 @@ namespace OpenGL
 {
 
 	// Structure for representing an OpenGL buffer schema.
-	class ShaderSchema : public Renderer::BufferSchema
+	class BufferSchema : public Renderer::BufferSchema
 	{
 
 	public:
 
-		ShaderSchema();
-		~ShaderSchema();
+		BufferSchema();
+		~BufferSchema();
 
 		// Initialize schema from a set of renderer attributes.
 		bool Initialize(
@@ -28,26 +28,11 @@ namespace OpenGL
 		// Disable this schema from rendering.
 		void Deactivate() const;
 
-		// Get vertex size.
-		inline GLsizei GetVertexSize() const;
-
 	private:
 
-		// Helper for determining number of floats in a given type.
-		static int GetVariableFloatCount(Renderer::VariableType type);
-
-	private:
-
-		GLsizei vertexSize;
 		ShaderAttribute *attributes;
 		int attributeCount;
 
 	};
-
-	// Retrieve total size of vertex defined by all attributes in this schema.
-	GLsizei ShaderSchema::GetVertexSize() const
-	{
-		return vertexSize;
-	}
 
 }

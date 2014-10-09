@@ -1,15 +1,14 @@
 #include "error_stack.h"
 #include "file.h"
 #include "memory_manager.h"
+#include "opengl_buffer.h"
+#include "opengl_buffer_schema.h"
 #include "opengl_indexed_model.h"
-#include "opengl_model.h"
 #include "opengl_program.h"
 #include "opengl_resources.h"
 #include "opengl_shader.h"
-#include "opengl_shader_schema.h"
 #include "opengl_uniform.h"
 #include "shared_defines.h"
-#include <new.h>
 
 namespace OpenGL
 {
@@ -17,72 +16,34 @@ namespace OpenGL
 	// Singleton instance instantiation.
 	Resources Resources::instance;
 
-	// Create a model from a set of vertex data.
-	Renderer::Model *Resources::CreateBuffer(
-		const void *vertexData,
-		int vertexCount,
-		Renderer::ModelType modelType,
-		const Renderer::ShaderSchema *schema)
+	// Generate a buffer from a set of data.
+	Renderer::Buffer *Resources::CreateBuffer(
+		const void *bufferData,
+		int bufferSize)
 	{
-		// Allocate space for a model.
-		Model *model;
-		if (!MemoryManager::Allocate(&model)) {
-			ErrorStack::Log("Failed to allocate OpenGL model object.\n");
+		// Allocate space for the OpenGL buffer.
+		Buffer *buffer;
+		if (!MemoryManager::Allocate(&buffer)) {
+			ErrorStack::Log("Failed to allocate OpenGL buffer object.\n");
 			return nullptr;
 		}
-		new (model) Model(modelType);
+		new (buffer) Buffer();
 
-		// Initialize the model.
-		if (model->Initialize(vertexData, vertexCount, schema)) {
-			ErrorStack::Log("Failed to initialize OpenGL model from vertex data.\n");
-			return static_cast<Renderer::Model*>(model);
-		}
-
-		// Failed to initialize, delete and cleanup.
-		MemoryManager::Destroy(model);
-		return nullptr;
-	}
-
-	// Create a model from a set of vertex and index data.
-	Renderer::IndexedModel *Resources::CreateIndexedModel(
-		const void *vertexData,
-		int vertexCount,
-		const unsigned int *indexData,
-		int indexCount,
-		Renderer::ModelType modelType,
-		const Renderer::ShaderSchema *schema)
-	{
-		// Allocate space for a model.
-		IndexedModel *model;
-		if (!MemoryManager::Allocate(&model)) {
-			ErrorStack::Log("Failed to allocate OpenGL indexed model object.\n");
+		// Initialize the buffer.
+		if (!buffer->Initialize(bufferData, bufferSize, type)) {
+			MemoryManager::Destroy(buffer);
 			return nullptr;
 		}
-		new (model) Model(modelType);
+		return buffer;
+	}
 
-		// Initialize the model.
-		if (model->Initialize(vertexData, vertexCount, indexData, indexCount, schema)) {
-			ErrorStack::Log("Failed to initialize OpenGL indexed model from vertex/index data.\n");
-			return static_cast<Renderer::IndexedModel*>(model);
+	// Destroy the buffer object.
+	void Resources::DestroyBuffer(Renderer::Buffer *buffer)
+	{
+		if (buffer != nullptr) {
+			OpenGL::Buffer *glBuffer = static_cast<OpenGL::Buffer*>(buffer);
+			MemoryManager::Destroy(glBuffer);
 		}
-
-		// Failed to initialize, delete and cleanup.
-		MemoryManager::Destroy(model);
-		return nullptr;
-	}
-
-	// Destroy a vertex model.
-	void Resources::DestroyModel(Renderer::Model *model)
-	{
-		Model *glModel = static_cast<Model*>(model);
-		MemoryManager::Destroy(glModel);
-	}
-
-	// Destroy an indexed model.
-	void Resources::DestroyIndexedModel(Renderer::IndexedModel *model)
-	{
-		IndexedModel *glModel = static_cast<IndexedModel*>(model);
-		MemoryManager::Destroy(glModel);
 	}
 
 	// Create shader from file.
