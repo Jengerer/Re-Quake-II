@@ -99,15 +99,14 @@
     <ClCompile Include="matrix4x4.cpp" />
     <ClCompile Include="md2_file.cpp" />
     <ClCompile Include="memory_manager.cpp" />
-    <ClCompile Include="opengl_common.cpp" />
     <ClCompile Include="opengl_export.cpp" />
     <ClCompile Include="opengl_indexed_model.cpp" />
-    <ClCompile Include="opengl_model.cpp" />
+    <ClCompile Include="opengl_buffer.cpp" />
     <ClCompile Include="opengl_program.cpp" />
     <ClCompile Include="opengl_renderer.cpp" />
     <ClCompile Include="game_client.cpp" />
     <ClCompile Include="opengl_shader_attribute.cpp" />
-    <ClCompile Include="opengl_shader_schema.cpp" />
+    <ClCompile Include="opengl_buffer_schema.cpp" />
     <ClCompile Include="opengl_resources.cpp" />
     <ClCompile Include="opengl_shader.cpp" />
     <ClCompile Include="opengl_uniform.cpp" />
@@ -137,6 +136,7 @@
     <ClInclude Include="image_loader.h" />
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="entity_model.h" />
+    <ClInclude Include="index_buffer.h" />
     <ClInclude Include="md2_file.h" />
     <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />

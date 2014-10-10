@@ -1,5 +1,8 @@
 #pragma once
 
+#include "opengl_common.h"
+#include "opengl_buffer_schema.h"
+
 namespace OpenGL
 {
 
@@ -9,7 +12,7 @@ namespace OpenGL
 
 	public:
 
-		Buffer();
+		Buffer(const BufferSchema *schema);
 		~Buffer();
 
 		// Create the model from a set of vertex data.
@@ -23,7 +26,8 @@ namespace OpenGL
 
 	private:
 
-		GLuint vertexBuffer;
+		GLuint handle;
+		const BufferSchema *schema;
 
 	};
 

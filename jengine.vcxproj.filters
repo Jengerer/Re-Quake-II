@@ -113,9 +113,6 @@
     <ClCompile Include="opengl_program.cpp">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
-    <ClCompile Include="opengl_shader_schema.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
     <ClCompile Include="renderer_shared.cpp">
       <Filter>common\src</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
     <ClCompile Include="opengl_resources.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_model.cpp">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
     <ClCompile Include="opengl_indexed_model.cpp">
@@ -182,14 +176,17 @@
     <ClCompile Include="game_module.cpp">
       <Filter>game\common\src</Filter>
     </ClCompile>
-    <ClCompile Include="opengl_common.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
     <ClCompile Include="entity_model.cpp">
       <Filter>game\client\src</Filter>
     </ClCompile>
     <ClCompile Include="md2_file.cpp">
       <Filter>game\client\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_buffer.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_buffer_schema.cpp">
+      <Filter>opengl_renderer\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -280,9 +277,6 @@
     <ClInclude Include="renderer_shared.h">
       <Filter>common\include</Filter>
     </ClInclude>
-    <ClInclude Include="opengl_common.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
     <ClInclude Include="keyboard_shared.h">
       <Filter>common\include</Filter>
     </ClInclude>
@@ -359,6 +353,12 @@
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
     <ClInclude Include="opengl_buffer_schema.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_common.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="index_buffer.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
   </ItemGroup>

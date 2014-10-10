@@ -4,15 +4,15 @@ namespace OpenGL
 {
 
 	// Constructor for an empty model.
-	Buffer::Buffer() : vertexBuffer(0)
+	Buffer::Buffer(const BufferSchema *schema) : handle(0), schema(schema)
 	{
 	}
 
 	// Destroy model and its vertex buffer.
 	Buffer::~Buffer()
 	{
-		if (vertexBuffer != 0) {
-			glDeleteBuffers(1, &vertexBuffer);
+		if (handle != 0) {
+			glDeleteBuffers(1, &handle);
 		}
 	}
 
@@ -20,25 +20,27 @@ namespace OpenGL
 	bool Buffer::Initialize(const void *bufferData, int bufferSize)
 	{
 		// Get a buffer for vertex data.
-		glGenBuffers(1, &vertexBuffer);
+		glGenBuffers(1, &handle);
 		// TODO: error checking?
 
-		// Bind, load, unbind.
-		Bind();
+		// Bind, load, unbind. Don't use class binds since those activate schema.
+		glBindBuffer(GL_ARRAY_BUFFER, handle);
 		glBufferData(GL_ARRAY_BUFFER, bufferSize, bufferData, GL_STATIC_DRAW);
-		Unbind();
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		return true;
 	}
 
 	// Bind the buffer for drawing or loading data.
 	void Buffer::Bind()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, handle);
+		schema->Activate();
 	}
 
 	// Unbind the buffer.
 	void Buffer::Unbind()
 	{
+		schema->Deactivate();
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
