@@ -1,6 +1,6 @@
-CC=gcc
+CC=g++
 AR=ar
-CFLAGS=-Wall -g
+CFLAGS=-Wall -g -std=c++11
 INCLUDES=-I/usr/include/SDL2
 LIBDIR=-L./
 LIBS=-lSDL2 -lGL -lGLEW -lm -lengine -lopengl_renderer -lplatformer -lcommon
@@ -22,7 +22,7 @@ libplatformer.a: platformer.o map.o player.o player_move.o
 libcommon.a: vector3d.o vector2d.o file.o
 	$(AR) rcs $@ $^
 
-%.o: %.c
+%.o: %.cpp
 	$(CC) -c -o $@ $< $(CFLAGS) $(INCLUDES)
 
 clean:

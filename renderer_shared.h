@@ -55,11 +55,6 @@ namespace Renderer
 	{
 	};
 
-	// Schema for mapping buffer data to shader program attributes.
-	class BufferSchema
-	{
-	};
-
 	// Shader uniform variable.
 	class Uniform
 	{
@@ -77,6 +72,11 @@ namespace Renderer
 
 	// Generic index buffer for mapping to a set of vertices.
 	class IndexBuffer
+	{
+	};
+
+	// Schema for mapping buffer data to shader program attributes.
+	class BufferSchema
 	{
 	};
 

@@ -16,36 +16,6 @@ namespace OpenGL
 	// Singleton instance instantiation.
 	Resources Resources::instance;
 
-	// Generate a buffer from a set of data.
-	Renderer::Buffer *Resources::CreateBuffer(
-		const void *bufferData,
-		int bufferSize)
-	{
-		// Allocate space for the OpenGL buffer.
-		Buffer *buffer;
-		if (!MemoryManager::Allocate(&buffer)) {
-			ErrorStack::Log("Failed to allocate OpenGL buffer object.\n");
-			return nullptr;
-		}
-		new (buffer) Buffer();
-
-		// Initialize the buffer.
-		if (!buffer->Initialize(bufferData, bufferSize, type)) {
-			MemoryManager::Destroy(buffer);
-			return nullptr;
-		}
-		return buffer;
-	}
-
-	// Destroy the buffer object.
-	void Resources::DestroyBuffer(Renderer::Buffer *buffer)
-	{
-		if (buffer != nullptr) {
-			OpenGL::Buffer *glBuffer = static_cast<OpenGL::Buffer*>(buffer);
-			MemoryManager::Destroy(glBuffer);
-		}
-	}
-
 	// Create shader from file.
 	Renderer::Shader *Resources::CreateShader(const char *filename, Renderer::ShaderType type)
 	{
@@ -104,15 +74,15 @@ namespace OpenGL
 	}
 
 	// Convert generic renderer schema to OpenGL schema.
-	Renderer::ShaderSchema *Resources::CreateShaderSchema(
+	Renderer::ShaderSchema *Resources::CreateBufferSchema(
 		const Renderer::Program *program,
 		const Renderer::Attribute *attributes,
 		int attributeCount)
 	{
 		// Allocate space for the schema.
-		ShaderSchema *schema;
+		BufferSchema *schema;
 		if (!MemoryManager::Allocate(&schema)) {
-			ErrorStack::Log("Failed to allocate OpenGL shader schema object.\n");
+			ErrorStack::Log("Failed to allocate OpenGL buffer schema object.\n");
 			return nullptr;
 		}
 
@@ -127,11 +97,42 @@ namespace OpenGL
 		return nullptr;
 	}
 
-	// Clean up shader schema.
-	void Resources::DestroyShaderSchema(Renderer::ShaderSchema *schema)
+	// Clean up buffer schema.
+	void Resources::DestroyBufferSchema(Renderer::BufferSchema *schema)
 	{
-		ShaderSchema *glSchema = static_cast<ShaderSchema*>(schema);
+		BufferSchema *glSchema = static_cast<BufferSchema*>(schema);
 		MemoryManager::Destroy(glSchema);
+	}
+
+	// Generate a buffer from a set of data.
+	Renderer::Buffer *Resources::CreateBuffer(
+		const void *bufferData,
+		int bufferSize,
+		const Renderer::BufferSchema *schema)
+	{
+		// Allocate space for the OpenGL object.
+		Buffer *buffer;
+		if (!MemoryManager::Allocate(&buffer)) {
+			ErrorStack::Log("Failed to allocate OpenGL buffer object.\n");
+			return nullptr;
+		}
+		new (buffer) Buffer();
+
+		// Initialize the buffer.
+		if (!buffer->Initialize(bufferData, bufferSize, type)) {
+			MemoryManager::Destroy(buffer);
+			return nullptr;
+		}
+		return buffer;
+	}
+
+	// Destroy the buffer object.
+	void Resources::DestroyBuffer(Renderer::Buffer *buffer)
+	{
+		if (buffer != nullptr) {
+			OpenGL::Buffer *glBuffer = static_cast<OpenGL::Buffer*>(buffer);
+			MemoryManager::Destroy(glBuffer);
+		}
 	}
 
 	// Get a uniform from a program.

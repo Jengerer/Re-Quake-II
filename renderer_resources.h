@@ -15,18 +15,6 @@ namespace Renderer
 
 	public:
 
-		// Generate a buffer from a set of data.
-		virtual Buffer *CreateBuffer(const void *bufferData, int bufferSize) = 0;
-
-		// Destroy a buffer.
-		virtual void DestroyBuffer(Buffer *buffer) = 0;
-
-		// Generate an index buffer of a certain size.
-		virtual IndexBuffer *CreateIndexBuffer(const void *indexData, int indexCount, IndexType type) = 0;
-
-		// Destroy an index buffer.
-		virtual void DestroyBuffer(IndexBuffer *buffer) = 0;
-
 		// Loading and compiling a single shader.
 		virtual Shader *CreateShader(const char *filename, ShaderType type) = 0;
 
@@ -47,6 +35,18 @@ namespace Renderer
 
 		// Destroy a buffer schema.
 		virtual void DestroyBufferSchema(BufferSchema *schema) = 0;
+
+		// Generate a buffer from a set of data.
+		virtual Buffer *CreateBuffer(const void *data, int bufferSize, const BufferSchema *schema) = 0;
+
+		// Destroy a buffer.
+		virtual void DestroyBuffer(Buffer *buffer) = 0;
+
+		// Generate an index buffer for referencing buffer data.
+		virtual IndexBuffer *CreateIndexBuffer(const void *data, int count, DataType type) = 0;
+
+		// Destroy an index buffer.
+		virtual void DestroyIndexBuffer(IndexBuffer *buffer) = 0;
 
 		// Get uniform variable from a program.
 		virtual Uniform *GetUniform(const Program *program, const char *name) = 0;

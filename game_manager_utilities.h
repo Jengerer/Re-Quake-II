@@ -25,6 +25,12 @@ namespace GameManager
 		// Swap buffer and present frame.
 		virtual void PresentFrame() = 0;
 
+		// Allocate a graphics buffer for vertex/index data.
+		virtual Renderer::Buffer *CreateBuffer(const void *data, int bufferSize, int elementSize) = 0;
+
+		// Destroy a buffer.
+		virtual void DestroyBuffer(Renderer::Buffer *buffer) = 0;
+
 		// Create shader from file.
 		virtual Renderer::Shader *CreateShader(const char *filename, Renderer::ShaderType type) = 0;
 
@@ -42,15 +48,6 @@ namespace GameManager
 
 		// Unset program from rendering.
 		virtual void UnsetProgram(const Renderer::Program *program) = 0;
-
-		// Create shader schema from attributes.
-		virtual Renderer::ShaderSchema *CreateShaderSchema(
-			const Renderer::Program *program,
-			const Renderer::Attribute *attributes,
-			int attributeCount) = 0;
-
-		// Destroy shader schema.
-		virtual void DestroyShaderSchema(Renderer::ShaderSchema *schema) = 0;
 
 		// Get uniform variable.
 		virtual Renderer::Uniform *GetUniform(const Renderer::Program *program, const char *name) = 0;
