@@ -100,8 +100,8 @@
     <ClCompile Include="md2_file.cpp" />
     <ClCompile Include="memory_manager.cpp" />
     <ClCompile Include="opengl_export.cpp" />
-    <ClCompile Include="opengl_indexed_model.cpp" />
     <ClCompile Include="opengl_buffer.cpp" />
+    <ClCompile Include="opengl_index_buffer.cpp" />
     <ClCompile Include="opengl_program.cpp" />
     <ClCompile Include="opengl_renderer.cpp" />
     <ClCompile Include="game_client.cpp" />
@@ -140,8 +140,8 @@
     <ClInclude Include="md2_file.h" />
     <ClInclude Include="opengl_common.h" />
     <ClInclude Include="opengl_export.h" />
-    <ClInclude Include="opengl_indexed_model.h" />
     <ClInclude Include="opengl_buffer.h" />
+    <ClInclude Include="opengl_index_buffer.h" />
     <ClInclude Include="opengl_program.h" />
     <ClInclude Include="opengl_buffer_schema.h" />
     <ClInclude Include="opengl_resources.h" />

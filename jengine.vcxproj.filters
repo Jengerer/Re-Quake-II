@@ -122,9 +122,6 @@
     <ClCompile Include="opengl_resources.cpp">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
-    <ClCompile Include="opengl_indexed_model.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
     <ClCompile Include="image.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
@@ -186,6 +183,9 @@
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
     <ClCompile Include="opengl_buffer_schema.cpp">
+      <Filter>opengl_renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl_index_buffer.cpp">
       <Filter>opengl_renderer\src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -316,9 +316,6 @@
     <ClInclude Include="opengl_resources.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
-    <ClInclude Include="opengl_indexed_model.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
     <ClInclude Include="window.h">
       <Filter>engine\include</Filter>
     </ClInclude>
@@ -359,6 +356,9 @@
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
     <ClInclude Include="index_buffer.h">
+      <Filter>opengl_renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_index_buffer.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
   </ItemGroup>

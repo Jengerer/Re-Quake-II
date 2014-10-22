@@ -3,28 +3,25 @@
 #include "memory_manager.h"
 #include <string.h>
 
-EntityModelSegment::EntityModelSegment()
-	: model(nullptr),
-	modelType(Renderer::InvalidModel)
+EntityModelSegment::EntityModelSegment(Renderer::GeometryType geometryType)
+	: indices(nullptr),
+	vertices(nullptr),
+	type(geometryType)
 {
 }
 
-// Initialize segment for vertex count.
-bool EntityModelSegment::Initialize(int vertexCount)
+// Initialize segment for index count.
+bool EntityModelSegment::Initialize(int indexCount)
 {
-	if (!mesh.Initialize(vertexCount)) {
+	// Allocate space for buffer.
+	if (!MemoryManager::AllocateArray(&indices, indexCount)) {
 		return false;
 	}
+	this->indexCount = indexCount;
 	return true;
 }
 
-// Set model type.
-void EntityModelSegment::SetModelType(Renderer::ModelType modelType)
-{
-	this->modelType = modelType;
-}
-
-// Set the model for this segment.
+// Set the reference to the data holding this segment's vertex data.
 void EntityModelSegment::SetModel(Renderer::Model *model)
 {
 	this->model = model;

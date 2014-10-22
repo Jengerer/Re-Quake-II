@@ -48,12 +48,13 @@ namespace OpenGL
 
 		// Create an index buffer for referencing buffer data.
 		virtual Renderer::IndexBuffer *CreateIndexBuffer(
-			const void *data,
-			int count,
+			const void *indices,
+			int bufferSize,
+			int indexCount,
 			Renderer::DataType type);
 
 		// Destroy an index buffer.
-		virtual Renderer::DestroyIndexBuffer(Renderer::IndexBuffer *buffer);
+		virtual DestroyIndexBuffer(Renderer::IndexBuffer *buffer);
 
 		// Get uniform variable from a program.
 		virtual Renderer::Uniform *GetUniform(const Renderer::Program *program, const char *name);

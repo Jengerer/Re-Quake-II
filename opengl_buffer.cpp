@@ -4,7 +4,9 @@ namespace OpenGL
 {
 
 	// Constructor for an empty model.
-	Buffer::Buffer(const BufferSchema *schema) : handle(0), schema(schema)
+	Buffer::Buffer(const BufferSchema *schema)
+		: handle(0),
+		schema(schema)
 	{
 	}
 

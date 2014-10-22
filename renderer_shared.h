@@ -7,7 +7,7 @@ namespace Renderer
 	enum ShaderType
 	{
 		VertexShader,
-		FragmentShader
+		FragmentShader,
 	};
 
 	// Generic renderer variable types.
@@ -25,7 +25,15 @@ namespace Renderer
 		Vector4Type,
 		Matrix2x2Type,
 		Matrix3x3Type,
-		Matrix4x4Type
+		Matrix4x4Type,
+	};
+
+	// Geometry rendering type.
+	enum GeometryType
+	{
+		Triangles,
+		TriangleFan,
+		TriangleStrip,
 	};
 
 	// Vertex buffer representation of shader attributes.

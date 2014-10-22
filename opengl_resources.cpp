@@ -3,7 +3,7 @@
 #include "memory_manager.h"
 #include "opengl_buffer.h"
 #include "opengl_buffer_schema.h"
-#include "opengl_indexed_model.h"
+#include "opengl_index_buffer.h"
 #include "opengl_program.h"
 #include "opengl_resources.h"
 #include "opengl_shader.h"
@@ -113,13 +113,13 @@ namespace OpenGL
 		// Allocate space for the OpenGL object.
 		Buffer *buffer;
 		if (!MemoryManager::Allocate(&buffer)) {
-			ErrorStack::Log("Failed to allocate OpenGL buffer object.\n");
+			ErrorStack::Log("Failed to allocate OpenGL buffer object.");
 			return nullptr;
 		}
-		new (buffer) Buffer();
+		new (buffer) Buffer(schema);
 
 		// Initialize the buffer.
-		if (!buffer->Initialize(bufferData, bufferSize, type)) {
+		if (!buffer->Initialize(bufferData, bufferSize)) {
 			MemoryManager::Destroy(buffer);
 			return nullptr;
 		}
@@ -131,6 +131,37 @@ namespace OpenGL
 	{
 		if (buffer != nullptr) {
 			OpenGL::Buffer *glBuffer = static_cast<OpenGL::Buffer*>(buffer);
+			MemoryManager::Destroy(glBuffer);
+		}
+	}
+
+	// Create an index buffer to reference vertex data.
+	Renderer::IndexBuffer *Resources::CreateIndexBuffer(
+		const void *indices,
+		int bufferSize,
+		int indexCount,
+		Renderer::DataType type)
+	{
+		// Allocate space for the OpenGL object.
+		IndexBuffer *buffer;
+		if (!MemoryManager::Allocate(&buffer)) {
+			ErrorStack::Log("Failed to allocate OpenGL index buffer object.");
+			return nullptr;
+		}
+		new (buffer) IndexBuffer(type, indexCount)
+
+		// Initialize the buffer.
+		if (!buffer->Initialize(indices, bufferSize)) {
+			MemoryManager::Destroy(buffer);
+			return nullptr;
+		}
+		return buffer;
+	}
+
+	// Destroy an index buffer.
+	void Resources::DestroyIndexBuffer(Renderer::IndexBuffer *buffer) {
+		if (buffer != nullptr) {
+			IndexBuffer glBuffer = static_cast<IndexBuffer*>(buffer);
 			MemoryManager::Destroy(glBuffer);
 		}
 	}

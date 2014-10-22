@@ -43,7 +43,7 @@ namespace Renderer
 		virtual void DestroyBuffer(Buffer *buffer) = 0;
 
 		// Generate an index buffer for referencing buffer data.
-		virtual IndexBuffer *CreateIndexBuffer(const void *data, int count, DataType type) = 0;
+		virtual IndexBuffer *CreateIndexBuffer(const void *data, int bufferSize, int count, DataType type) = 0;
 
 		// Destroy an index buffer.
 		virtual void DestroyIndexBuffer(IndexBuffer *buffer) = 0;

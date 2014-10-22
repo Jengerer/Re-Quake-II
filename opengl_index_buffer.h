@@ -11,11 +11,11 @@ namespace OpenGL
 
 	public:
 
-		IndexBuffer(DataType type, int indexCount);
+		IndexBuffer(Renderer::DataType type, int indexCount);
 		~IndexBuffer();
 
 		// Initialize from a set of index data.
-		bool Initialize(const void *data, int bufferSize, int indexCount);
+		bool Initialize(const void *data, int bufferSize);
 
 		// Bind the index buffer to be used for element data.
 		void Bind();
@@ -25,12 +25,12 @@ namespace OpenGL
 
 		// Make a draw call for this index data.
 		// Assumes buffer was previously bound.
-		void Draw();
+		void Draw(GLenum geometryType);
 
 	private:
 
-		// Convert data type to OpenGL index type.
-		static GLenum TranslateIndexType(DataType indexType);
+		// Convert data type to OpenGL enum.
+		static GLenum TranslateIndexType(Renderer::DataType indexType);
 
 	private:
 

@@ -52,7 +52,6 @@ bool MemoryManager::Allocate(Type **out)
 		return false;
 	}
 	*out = object;
-	totalMemoryUsage += sizeof(Type);
 	return true;
 }
 
@@ -60,12 +59,11 @@ bool MemoryManager::Allocate(Type **out)
 template <class Type>
 bool MemoryManager::AllocateArray(Type **out, unsigned int count)
 {
-	Type *buffer = new (std::nothrow) char[count];
+	Type *buffer = Allocate(sizeof(Type) * count);
 	if (buffer == nullptr) {
 		return false;
 	}
 	*out = buffer;
-	totalMemoryUsage += sizeof(Type) * count;
 	return true;
 }
 

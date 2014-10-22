@@ -4,34 +4,32 @@
 #include "renderer_shared.h"
 #include "renderer_resources.h"
 
-// Entity model segment that's rendered 
+// Entity model segment that's rendered as triangle strip or fan.
 class EntityModelSegment
 {
 
 public:
 
-	EntityModelSegment();
+	EntityModelSegment(Renderer::GeometryType geometryType);
 
 	// Initialize segment for vertices.
-	bool Initialize(int vertexCount);
-	inline TexturedMesh *GetMesh();
+	bool Initialize(int indexCount);
+	inline int *GetIndexData() { return indices; }
 
-	// Set model type.
-	void SetModelType(Renderer::ModelType modelType);
-
-	// Set renderer model.
-	void SetModel(Renderer::Model *model);
-	void DestroyModel(Renderer::Resources *resources);
-	inline const Renderer::Model *GetModel() const;
+	// Loading and cleaning renderer resources.
+	void LoadRendererResources(Renderer::Resources *resources);
+	void DestroyRendererResources(Renderer::Resources *resources);
+	inline const Renderer::IndexBuffer *GetIndexBuffer() const { return vertices; }
 
 private:
 
-	// Mesh for this segment.
-	TexturedMesh mesh;
+	// Index data buffer.
+	int *indices;
+	int indexCount;
 
-	// Renderable element of this segment.
-	Renderer::Model *model;
-	Renderer::ModelType modelType;
+	// Renderer parameters for this segment.
+	Renderer::IndexBuffer *indexBuffer;
+	Renderer::GeometryType type;
 
 };
 
@@ -86,6 +84,8 @@ public:
 	inline EntityModelFrame *GetFrames();
 
 private:
+
+	// Array of model segments (and their index buffers).
 
 	EntityModelFrame *frames;
 	int frameCount;
