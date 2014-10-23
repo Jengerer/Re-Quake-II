@@ -57,6 +57,7 @@ bool MD2File::VerifyHeader()
 void MD2File::LoadFrames()
 {
 	// Get space between frames.
+	const int32_t FrameCount = header->frameCount;
 	const int32_t FrameStride = sizeof(MD2Frame) + (header->vertexCount * sizeof(MD2Vertex));
 	const int32_t FrameStart = header->framesOffset;
 	const int32_t FrameEnd = FrameStart + (header->frameCount * FrameStride);
@@ -68,51 +69,67 @@ void MD2File::LoadFrames()
 	for (int32_t i = FrameStart; i < FrameEnd; i += FrameStride, ++outFrame) {
 		// Get vertices for this frame.
 		const MD2Frame *frame = reinterpret_cast<const MD2Frame*>(file.GetBuffer() + i);
-		const MD2Vertex *vertices = reinterpret_cast<const MD2Vertex*>(frame + 1);
+		const MD2Vertex *vertex = reinterpret_cast<const MD2Vertex*>(frame + 1);
+
+		// Get frame offset and scale.
+		Vector3 scale = frame->scale;
+		Vector3 offset = frame->offset;
 
 		// Copy frame name over.
 		outFrame->SetFrameName(frame->name);
 
-		// Go through each command segment.
-		int32_t vertexCount;
-		Renderer::ModelType modelType;
-		const MD2Command *currentCommand = commands;
-
-		// Go through each command segment.
-		// When number of vertices to draw is 0, we're done.
-		EntityModelSegment *currentSegment = outFrame->GetSegments();
-		for (currentCommand = commands; (vertexCount = (currentCommand++)->vertexCount) != 0; ++currentSegment) {
-			// If it's negative, we're drawing a fan.
-			if (vertexCount < 0) {
-				modelType = Renderer::TriangleFanModel;
-				vertexCount = -vertexCount;
-			}
-			else {
-				modelType = Renderer::TriangleStripModel;
-			}
-			currentSegment->SetModelType(modelType);
-
-			// Get output vertex buffer.
-			TexturedMesh *currentMesh = currentSegment->GetMesh();
-			TexturedVertex *currentVertex = currentMesh->GetVertexBuffer();
-
-			// Get starting packet.
-			const MD2CommandPacket *packet = reinterpret_cast<const MD2CommandPacket*>(currentCommand);
-
-			// Skip appropriate number of packets for next command.
-			currentCommand += vertexCount * PacketIntegerCount;
-
-			// Go through each packet in this command.
-			for (; vertexCount > 0; --vertexCount, ++packet, ++currentVertex) {
-				const MD2Vertex *packetVertex = &vertices[packet->vertexIndex];
-
-				// Copy position and texture.
-				currentVertex->position.x = (frame->scale.x * static_cast<float>(packetVertex->x)) + frame->offset.x;
-				currentVertex->position.y = (frame->scale.x * static_cast<float>(packetVertex->x)) + frame->offset.y;
-				currentVertex->position.z = (frame->scale.x * static_cast<float>(packetVertex->x)) + frame->offset.z;
-				currentVertex->texture.x = packet->textureS;
-				currentVertex->texture.y = packet->textureT;
-			}
+		// Copy vertices.
+		TexturedMesh *mesh = outFrame->GetMesh();
+		TexturedVertex *outVertex = mesh->GetVertexBuffer();
+		for (int j = 0; j < FrameCount; ++j, ++vertex, ++outVertex) {
+			outVertex->position.x = (static_cast<float>(vertex->x) * scale.x) + offset.x;
+			outVertex->position.y = (static_cast<float>(vertex->y) * scale.y) + offset.y;
+			outVertex->position.z = (static_cast<float>(vertex->y) * scale.z) + offset.z;
 		}
+	}
+}
+
+// Load segments and their indices.
+void MD2File::LoadCommands()
+{
+
+	// ARRAY ALLOCATION NEEDS TO CONSTRUCT; OTHERWISE BAD DELETE.
+
+	const int SegmentCount = out->GetSegmentCount();
+	for (int i = 0;	i < SegmentCount; ++i) {
+	// Go through each command segment.
+	int32_t vertexCount;
+	Renderer::ModelType modelType;
+	const MD2Command *currentCommand = commands;
+
+	// Go through each command segment.
+	// When number of vertices to draw is 0, we're done.
+	EntityModelSegment *currentSegment = outFrame->GetSegments();
+	for (currentCommand = commands; (vertexCount = (currentCommand++)->vertexCount) != 0; ++currentSegment) {
+		// If it's negative, we're drawing a fan.
+		if (vertexCount < 0) {
+			modelType = Renderer::TriangleFanModel;
+			vertexCount = -vertexCount;
+		}
+		else {
+			modelType = Renderer::TriangleStripModel;
+		}
+		new (currentSegment) Mod
+		currentSegment->SetModelType(modelType);
+
+		// Get output vertex buffer.
+		TexturedMesh *currentMesh = currentSegment->GetMesh();
+		TexturedVertex *currentVertex = currentMesh->GetVertexBuffer();
+
+		// Get starting packet.
+		const MD2CommandPacket *packet = reinterpret_cast<const MD2CommandPacket*>(currentCommand);
+
+		// Skip appropriate number of packets for next command.
+		currentCommand += vertexCount * PacketIntegerCount;
+
+		// Go through each packet in this command.
+		for (; vertexCount > 0; --vertexCount, ++packet, ++currentVertex) {
+			const MD2Vertex *packetVertex = &vertices[packet->vertexIndex];
+
 	}
 }

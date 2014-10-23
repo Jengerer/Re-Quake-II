@@ -17,8 +17,8 @@ public:
 	inline int *GetIndexData() { return indices; }
 
 	// Loading and cleaning renderer resources.
-	void LoadRendererResources(Renderer::Resources *resources);
-	void DestroyRendererResources(Renderer::Resources *resources);
+	bool LoadRendererResources(Renderer::Resources *resources);
+	void FreeRendererResources(Renderer::Resources *resources);
 	inline const Renderer::IndexBuffer *GetIndexBuffer() const { return vertices; }
 
 private:
@@ -48,20 +48,39 @@ public:
 	~EntityModelFrame();
 
 	// Initialize model frame.
-	bool Initialize(int segmentCount,
-		int vertexCount);
+	bool Initialize(int vertexCount);
+
+	// Get vertex data.
+	inline TexturedMesh *GetMesh() { return &mesh; }
+
+	// Handle renderer resources.
+	bool LoadRendererResources(Renderer::Resources *resources);
+	void FreeRendererResources(Renderer::Resources *resources);
+	inline Renderer::Buffer *GetVertexBuffer() { return vertexBuffer; }
 
 	// Set frame name.
 	void SetFrameName(const char frameName[FrameNameLength]);
 
-	// Get the segment buffer for this frame.
-	inline EntityModelSegment *GetSegments();
+public:
+
+	// Prepare model-generic renderer resources.
+	static void SetBufferSchema(Renderer::BufferSchema *vertexSchema);
+	static void FreeBufferSchema(Renderer::Resources *resources);
+
+private:
+
+	// Buffer schema for the model.
+	static Renderer::BufferSchema *vertexSchema;
 
 private:
 
 	char frameName[FrameNameLength];
-	EntityModelSegment *segments;
-	int segmentCount;
+
+	// Vertex data for this frame.
+	TexturedMesh mesh;
+
+	// Renderer resource for this frame.
+	Renderer::Buffer *vertexBuffer;
 
 };
 
@@ -82,11 +101,19 @@ public:
 
 	// Get buffer of frames.
 	inline EntityModelFrame *GetFrames();
+	inline int GetFrameCount() const { return frameCount; }
+
+	// Get buffer of segments.
+	inline EntityModelSegment *GetSegments();
+	inline int GetSegmentCount() const { return segmentCount; }
 
 private:
 
 	// Array of model segments (and their index buffers).
+	EntityModelSegment *segments;
+	int segmentCount;
 
+	// Frames of the model's animations (and their vertex buffers).
 	EntityModelFrame *frames;
 	int frameCount;
 

@@ -22,9 +22,10 @@ public:
 
 	// Initialize for number of vertices.
 	bool Initialize(int vertexCount);
-	inline int GetVertexCount() const;
-	inline VertexType *GetVertexBuffer();
-	inline const VertexType *GetVertexBuffer() const;
+	inline int GetVertexCount() const { return vertexCount; }
+	inline int GetVertexBufferSize() const { return GetVertexCount * sizeof(VertexType); }
+	inline VertexType *GetVertexBuffer() { return vertices; }
+	inline const VertexType *GetVertexBuffer() const { return vertices; }
 
 private:
 

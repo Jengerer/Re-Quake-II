@@ -5,7 +5,7 @@
 
 EntityModelSegment::EntityModelSegment(Renderer::GeometryType geometryType)
 	: indices(nullptr),
-	vertices(nullptr),
+	indexBuffer(nullptr),
 	type(geometryType)
 {
 }
@@ -21,50 +21,68 @@ bool EntityModelSegment::Initialize(int indexCount)
 	return true;
 }
 
-// Set the reference to the data holding this segment's vertex data.
-void EntityModelSegment::SetModel(Renderer::Model *model)
+// Prepare the index buffer resource for this segment.
+bool EntityModelSegment::LoadRendererResources(Renderer::Resources *resources)
 {
-	this->model = model;
+	// Create an index buffer with this data.
+	int bufferSize = sizeof(int) * indexCount;
+	Renderer::IndexBuffer *indexBuffer = resources->CreateIndexBuffer(indices, bufferSize, indexCount);
+	if (indexBuffer == nullptr) {
+		ErrorStack::Log("Failed to create index buffer for segment.");
+		return false;
+	}
+	this->indexBuffer = indexBuffer;
+	return true;
 }
 
-// Destroy the model.
-void EntityModelSegment::DestroyModel(Renderer::Resources *resources)
+// Free the index buffer resource.
+void EntityModelSegment::FreeRendererResources(Renderer::Resources *resources)
 {
-	resources->DestroyModel(model);
+	resources->DestroyIndexBuffer(indexBuffer);
 }
 
-EntityModelFrame::EntityModelFrame() : segments(nullptr)
+// Model-generic buffer schema.
+Renderer::BufferSchema *EntityModelFrame::vertexSchema = nullptr;
+
+EntityModelFrame::EntityModelFrame() : vertexBuffer(nullptr)
 {
 }
 
 EntityModelFrame::~EntityModelFrame()
 {
-	if (segments != nullptr) {
-		MemoryManager::DestroyArray(segments);
-	}
 }
 
 // Initialize model frame.
-bool EntityModelFrame::Initialize(
-	int segmentCount,
-	int vertexCount)
+bool EntityModelFrame::Initialize(int vertexCount)
 {
-	// Allocate segments.
-	EntityModelSegment *segments;
-	if (!MemoryManager::AllocateArray(&segments, segmentCount)) {
+	// Allocate mesh.
+	if (!mesh.Initialize(vertexCount)) {
+		ErrorStack::Log("Failed to initialize mesh for frame vertices.");
 		return false;
 	}
-	this->segments = segments;
-	this->segmentCount = segmentCount;
-
-	// Initialize each segment.
-	EntityModelSegment *currentSegment = &segments[0];
-	for (int i = 0; i < segmentCount; ++i, ++currentSegment) {
-		if (!currentSegment->Initialize(vertexCount)) {
-			return false;
-		}
-	}
 	return true;
+}
+
+// Create a renderer reference from the vertex data.
+bool EntityModelFrame::LoadRendererResources(Renderer::Resources *resources)
+{
+	// Pass vertex data to renderer resource loader.
+	Renderer::Buffer *vertexBuffer = resources->CreateVertexBuffer(
+		mesh.GetVertexBuffer(),
+		mesh.GetVertexBufferSize(),
+		vertexSchema);
+	if (vertexBuffer == nullptr) {
+		ErrorStack::Log("Failed to create vertex buffer for frame.");
+		return false;
+	}
+	this->vertexBuffer = vertexBuffer;
+	return true;
+}
+
+// Free vertex buffer for this frame.
+void EntityModelFrame::FreeRendererResources(Renderer::Resources *resources)
+{
+	resources->DestroyVertexBuffer(vertexBuffer);
 }
 
 // Copy frame name.
@@ -72,6 +90,18 @@ void EntityModelFrame::SetFrameName(const char frameName[FrameNameLength])
 {
 	// Copy name.
 	strncpy(this->frameName, frameName, FrameNameLength);
+}
+
+// Set the buffer schema used by all models.
+void EntityModelFrame::SetBufferSchema(Renderer::BufferSchema *vertexSchema)
+{
+	EntityModelFrame::vertexSchema = vertexSchema;
+}
+
+// Free the buffer schema used by all models.
+void EntityModelFrame::FreeBufferSchema(Renderer::Resources *resources)
+{
+	resources->DestroyBufferSchema(vertexSchema);
 }
 
 EntityModel::EntityModel() : frames(nullptr), frameCount(0)
@@ -96,11 +126,15 @@ bool EntityModel::Initialize(
 	if (!MemoryManager::AllocateArray(&frames, frameCount)) {
 		return false;
 	}
-
-	// Initialize the frames.
 	EntityModelFrame *currentFrame = &frames[0];
 	for (int i = 0; i < frameCount; ++i, ++currentFrame) {
-		if (!currentFrame->Initialize(segmentCount, vertexCount)) {
+		new (currentFrame) EntityModelFrame();
+	}
+
+	// Initialize the frames.
+	currentFrame = &frames[0];
+	for (int i = 0; i < frameCount; ++i, ++currentFrame) {
+		if (!currentFrame->Initialize(vertexCount)) {
 			return false;
 		}
 	}
