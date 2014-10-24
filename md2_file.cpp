@@ -92,14 +92,11 @@ void MD2File::LoadFrames()
 // Load segments and their indices.
 void MD2File::LoadCommands()
 {
-
-	// ARRAY ALLOCATION NEEDS TO CONSTRUCT; OTHERWISE BAD DELETE.
-
 	const int SegmentCount = out->GetSegmentCount();
 	for (int i = 0;	i < SegmentCount; ++i) {
 	// Go through each command segment.
 	int32_t vertexCount;
-	Renderer::ModelType modelType;
+	Renderer::GeometryType commandType;
 	const MD2Command *currentCommand = commands;
 
 	// Go through each command segment.
@@ -108,11 +105,11 @@ void MD2File::LoadCommands()
 	for (currentCommand = commands; (vertexCount = (currentCommand++)->vertexCount) != 0; ++currentSegment) {
 		// If it's negative, we're drawing a fan.
 		if (vertexCount < 0) {
-			modelType = Renderer::TriangleFanModel;
+			commandType = Renderer::TriangleFan;
 			vertexCount = -vertexCount;
 		}
 		else {
-			modelType = Renderer::TriangleStripModel;
+			commandType = Renderer::TriangleStrip;
 		}
 		new (currentSegment) Mod
 		currentSegment->SetModelType(modelType);

@@ -3,15 +3,21 @@
 #include "memory_manager.h"
 #include <string.h>
 
-EntityModelSegment::EntityModelSegment(Renderer::GeometryType geometryType)
+EntityModelSegment::EntityModelSegment()
 	: indices(nullptr),
-	indexBuffer(nullptr),
-	type(geometryType)
+	indexBuffer(nullptr)
 {
 }
 
+EntityModelSegment::~EntityModelSegment()
+{
+	if (indices != nullptr) {
+		MemoryManager::DestroyArray(indices);
+	}
+}
+
 // Initialize segment for index count.
-bool EntityModelSegment::Initialize(int indexCount)
+bool EntityModelSegment::Initialize(int indexCount, Renderer::GeometryType type)
 {
 	// Allocate space for buffer.
 	if (!MemoryManager::AllocateArray(&indices, indexCount)) {
@@ -67,10 +73,9 @@ bool EntityModelFrame::Initialize(int vertexCount)
 bool EntityModelFrame::LoadRendererResources(Renderer::Resources *resources)
 {
 	// Pass vertex data to renderer resource loader.
-	Renderer::Buffer *vertexBuffer = resources->CreateVertexBuffer(
+	Renderer::Buffer *vertexBuffer = resources->CreateBuffer(
 		mesh.GetVertexBuffer(),
-		mesh.GetVertexBufferSize(),
-		vertexSchema);
+		mesh.GetVertexBufferSize());
 	if (vertexBuffer == nullptr) {
 		ErrorStack::Log("Failed to create vertex buffer for frame.");
 		return false;
@@ -82,7 +87,7 @@ bool EntityModelFrame::LoadRendererResources(Renderer::Resources *resources)
 // Free vertex buffer for this frame.
 void EntityModelFrame::FreeRendererResources(Renderer::Resources *resources)
 {
-	resources->DestroyVertexBuffer(vertexBuffer);
+	resources->DestroyBuffer(vertexBuffer);
 }
 
 // Copy frame name.
@@ -121,22 +126,19 @@ bool EntityModel::Initialize(
 	int segmentCount,
 	int vertexCount)
 {
-	// Allocate array of frames.
-	EntityModelFrame *frames;
-	if (!MemoryManager::AllocateArray(&frames, frameCount)) {
-		return false;
-	}
-	EntityModelFrame *currentFrame = &frames[0];
-	for (int i = 0; i < frameCount; ++i, ++currentFrame) {
-		new (currentFrame) EntityModelFrame();
+	// Allocate enough vertices for all frames.
+	const int TotalVertices = frameCount * vertexCount;
+	if (!vertices.Initialize(TotalVertices)) {
+		ErrorStack::Log("Failed to allocate %d vertices for model.", TotalVertices);
 	}
 
-	// Initialize the frames.
-	currentFrame = &frames[0];
-	for (int i = 0; i < frameCount; ++i, ++currentFrame) {
-		if (!currentFrame->Initialize(vertexCount)) {
-			return false;
-		}
+	// Allocate frame objects and give them their vertices.
+
+
+	// Allocate segments array.
+	if (!MemoryManager::AllocateArray(&segments, segmentCount)) {
+		ErrorStack::Log("Failed to allocate ")
+		return false;
 	}
 	return true;
 }

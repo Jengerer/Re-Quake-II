@@ -37,7 +37,7 @@ namespace Renderer
 		virtual void DestroyBufferSchema(BufferSchema *schema) = 0;
 
 		// Generate a buffer from a set of data.
-		virtual Buffer *CreateBuffer(const void *data, int bufferSize, const BufferSchema *schema) = 0;
+		virtual Buffer *CreateBuffer(const void *data, int bufferSize) = 0;
 
 		// Destroy a buffer.
 		virtual void DestroyBuffer(Buffer *buffer) = 0;

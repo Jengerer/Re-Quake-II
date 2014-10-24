@@ -10,16 +10,17 @@ class EntityModelSegment
 
 public:
 
-	EntityModelSegment(Renderer::GeometryType geometryType);
+	EntityModelSegment();
+	~EntityModelSegment();
 
 	// Initialize segment for vertices.
-	bool Initialize(int indexCount);
+	bool Initialize(int indexCount, Renderer::GeometryType type);
 	inline int *GetIndexData() { return indices; }
 
 	// Loading and cleaning renderer resources.
 	bool LoadRendererResources(Renderer::Resources *resources);
 	void FreeRendererResources(Renderer::Resources *resources);
-	inline const Renderer::IndexBuffer *GetIndexBuffer() const { return vertices; }
+	inline const Renderer::IndexBuffer *GetIndexBuffer() const { return indices; }
 
 private:
 
@@ -47,15 +48,13 @@ public:
 	EntityModelFrame();
 	~EntityModelFrame();
 
-	// Initialize model frame.
-	bool Initialize(int vertexCount);
-
-	// Get vertex data.
-	inline TexturedMesh *GetMesh() { return &mesh; }
+	void SetVertices(const TexturedVertex *vertices, int vertexCount);
 
 	// Handle renderer resources.
-	bool LoadRendererResources(Renderer::Resources *resources);
-	void FreeRendererResources(Renderer::Resources *resources);
+	bool LoadVertices(const TexturedVertex *vertices,
+		int vertexCount,
+		Renderer::Resources *resources);
+	void Precache(Renderer::Resources *resources);
 	inline Renderer::Buffer *GetVertexBuffer() { return vertexBuffer; }
 
 	// Set frame name.
@@ -77,7 +76,8 @@ private:
 	char frameName[FrameNameLength];
 
 	// Vertex data for this frame.
-	TexturedMesh mesh;
+	const TexturedVertex *vertices;
+	int vertexCount;
 
 	// Renderer resource for this frame.
 	Renderer::Buffer *vertexBuffer;
@@ -114,6 +114,7 @@ private:
 	int segmentCount;
 
 	// Frames of the model's animations (and their vertex buffers).
+	TexturedMesh vertices;
 	EntityModelFrame *frames;
 	int frameCount;
 

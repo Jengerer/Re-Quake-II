@@ -40,8 +40,7 @@ namespace OpenGL
 		// Generate a buffer from a set of data.
 		virtual Renderer::Buffer *CreateBuffer(
 			const void *data,
-			int bufferSize,
-			const Renderer::BufferSchema *schema);
+			int bufferSize);
 
 		// Destroy a buffer.
 		virtual void DestroyBuffer(Renderer::Buffer *buffer);
@@ -54,7 +53,7 @@ namespace OpenGL
 			Renderer::DataType type);
 
 		// Destroy an index buffer.
-		virtual DestroyIndexBuffer(Renderer::IndexBuffer *buffer);
+		virtual void DestroyIndexBuffer(Renderer::IndexBuffer *buffer);
 
 		// Get uniform variable from a program.
 		virtual Renderer::Uniform *GetUniform(const Renderer::Program *program, const char *name);

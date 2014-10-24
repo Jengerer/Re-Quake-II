@@ -12,7 +12,7 @@ namespace OpenGL
 
 	public:
 
-		Buffer(const BufferSchema *schema);
+		Buffer();
 		~Buffer();
 
 		// Create the model from a set of vertex data.
@@ -27,7 +27,6 @@ namespace OpenGL
 	private:
 
 		GLuint handle;
-		const BufferSchema *schema;
 
 	};
 

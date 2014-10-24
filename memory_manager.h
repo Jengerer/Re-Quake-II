@@ -59,7 +59,7 @@ bool MemoryManager::Allocate(Type **out)
 template <class Type>
 bool MemoryManager::AllocateArray(Type **out, unsigned int count)
 {
-	Type *buffer = Allocate(sizeof(Type) * count);
+	Type *buffer = new (std::nothrow) Type[count];
 	if (buffer == nullptr) {
 		return false;
 	}
