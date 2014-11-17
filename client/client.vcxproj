@@ -76,6 +76,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\bsp_map.h" />
+    <ClInclude Include="include\bsp_map_parser.h" />
+    <ClInclude Include="include\camera.h" />
+    <ClInclude Include="include\image.h" />
+    <ClInclude Include="include\image_loader.h" />
+    <ClInclude Include="include\client_export.h" />
+    <ClInclude Include="include\game_client.h" />
+    <ClInclude Include="include\mesh.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\camera.cpp" />
+    <ClCompile Include="source\image.cpp" />
+    <ClCompile Include="source\image_loader.cpp" />
+    <ClCompile Include="source\client_export.cpp" />
+    <ClCompile Include="source\game_client.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

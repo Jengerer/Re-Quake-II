@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>.\jcommon\include;$(SDK_LIB_DIR)\libpng;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;.\jcommon\include;$(SDK_LIB_DIR)\libpng;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>.\jcommon\lib;$(SDK_LIB_DIR)\libpng\projects\vstudio\Debug;$(SDK_LIB_DIR)\glew\lib\Release\Win32;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
@@ -80,73 +80,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="camera.cpp" />
-    <ClCompile Include="client_export.cpp" />
-    <ClCompile Include="engine.cpp" />
-    <ClCompile Include="engine_export.cpp" />
-    <ClCompile Include="entity_model.cpp" />
-    <ClCompile Include="error_stack.cpp" />
-    <ClCompile Include="file.cpp" />
-    <ClCompile Include="game_manager.cpp" />
-    <ClCompile Include="game_manager_export.cpp" />
-    <ClCompile Include="game_module.cpp" />
-    <ClCompile Include="image.cpp" />
-    <ClCompile Include="image_loader.cpp" />
-    <ClCompile Include="keyboard_manager.cpp" />
+    <ClCompile Include="source\engine.cpp" />
+    <ClCompile Include="source\engine_export.cpp" />
+    <ClCompile Include="source\file.cpp" />
+    <ClCompile Include="source\keyboard_manager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="md2_file.cpp" />
-    <ClCompile Include="memory_manager.cpp" />
-    <ClCompile Include="game_client.cpp" />
-    <ClCompile Include="plane.cpp" />
-    <ClCompile Include="include\renderer\shared.cpp" />
-    <ClCompile Include="sdl_window.cpp" />
-    <ClCompile Include="window.cpp" />
+    <ClCompile Include="source\renderer\attribute.cpp" />
+    <ClCompile Include="source\sdl_window.cpp" />
+    <ClCompile Include="source\renderer\buffer_layout.cpp" />
+    <ClCompile Include="source\renderer\material_layout.cpp" />
+    <ClCompile Include="source\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bsp_map.h" />
-    <ClInclude Include="bsp_map_parser.h" />
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="client_export.h" />
-    <ClInclude Include="include\renderer\attribute.h" />
-    <ClInclude Include="include\renderer\buffer.h" />
-    <ClInclude Include="include\renderer\buffer_schema.h" />
-    <ClInclude Include="include\renderer\index_buffer.h" />
-    <ClInclude Include="include\renderer\material.h" />
-    <ClInclude Include="engine.h" />
-    <ClInclude Include="engine_export.h" />
-    <ClInclude Include="engine_interface.h" />
-    <ClInclude Include="game_manager.h" />
-    <ClInclude Include="game_manager_export.h" />
-    <ClInclude Include="game_manager_interface.h" />
-    <ClInclude Include="game_manager_shared.h" />
-    <ClInclude Include="game_manager_utilities.h" />
-    <ClInclude Include="game_module.h" />
-    <ClInclude Include="game_module_interface.h" />
-    <ClInclude Include="image_loader.h" />
-    <ClInclude Include="indexed_mesh.h" />
-    <ClInclude Include="entity_model.h" />
-    <ClInclude Include="md2_file.h" />
-    <ClInclude Include="include\renderer\resources.h" />
-    <ClInclude Include="include\renderer\variable.h" />
-    <ClInclude Include="engine_utilities.h" />
-    <ClInclude Include="error_stack.h" />
-    <ClInclude Include="file.h" />
-    <ClInclude Include="game_manager_listener.h" />
-    <ClInclude Include="engine_listener.h" />
-    <ClInclude Include="image.h" />
-    <ClInclude Include="input_listener.h" />
-    <ClInclude Include="keyboard_shared.h" />
-    <ClInclude Include="keyboard_manager.h" />
-    <ClInclude Include="memory_manager.h" />
-    <ClInclude Include="mesh.h" />
-    <ClInclude Include="plane.h" />
-    <ClInclude Include="game_client.h" />
-    <ClInclude Include="include\renderer\shared.h" />
-    <ClInclude Include="include\renderer\renderer.h" />
-    <ClInclude Include="sdl_window.h" />
-    <ClInclude Include="window.h" />
-    <ClInclude Include="window_shared.h" />
-    <ClInclude Include="world.h" />
+    <ClInclude Include="include\engine.h" />
+    <ClInclude Include="include\engine_export.h" />
+    <ClInclude Include="include\engine_interface.h" />
+    <ClInclude Include="include\game_manager_interface.h" />
+    <ClInclude Include="include\engine_utilities.h" />
+    <ClInclude Include="include\file.h" />
+    <ClInclude Include="include\engine_listener.h" />
+    <ClInclude Include="include\input_listener.h" />
+    <ClInclude Include="include\keyboard_shared.h" />
+    <ClInclude Include="include\keyboard_manager.h" />
+    <ClInclude Include="include\sdl_window.h" />
+    <ClInclude Include="include\window.h" />
+    <ClInclude Include="include\window_shared.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="engine.frag" />

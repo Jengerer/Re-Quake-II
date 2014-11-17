@@ -80,193 +80,77 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="plane.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="image_loader.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="error_stack.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_manager.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="image.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="sdl_window.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="window.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="engine.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="file.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_export.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="game_manager.cpp">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="keyboard_manager.cpp">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>game\client\src</Filter>
-    </ClCompile>
-    <ClCompile Include="client_export.cpp">
-      <Filter>game\client\src</Filter>
-    </ClCompile>
-    <ClCompile Include="game_client.cpp">
-      <Filter>game\client\src</Filter>
-    </ClCompile>
-    <ClCompile Include="game_manager_export.cpp">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="game_module.cpp">
-      <Filter>game\common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="entity_model.cpp">
-      <Filter>game\client\src</Filter>
-    </ClCompile>
-    <ClCompile Include="md2_file.cpp">
-      <Filter>game\client\src</Filter>
-    </ClCompile>
-    <ClCompile Include="include\renderer\shared.cpp">
+    <ClCompile Include="source\renderer\attribute.cpp">
       <Filter>common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="source\renderer\buffer_layout.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="source\renderer\material_layout.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sdl_window.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="source\keyboard_manager.cpp">
+      <Filter>game_manager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="source\file.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="source\engine.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="source\engine_export.cpp">
+      <Filter>engine\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="engine_utilities.h">
+    <ClInclude Include="include\game_manager_interface.h">
+      <Filter>game_manager\include\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window_shared.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sdl_window.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\keyboard_shared.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\keyboard_manager.h">
+      <Filter>game_manager\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input_listener.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine_interface.h">
       <Filter>engine\include\shared</Filter>
     </ClInclude>
-    <ClInclude Include="engine_listener.h">
+    <ClInclude Include="include\engine_listener.h">
       <Filter>engine\include\shared</Filter>
     </ClInclude>
-    <ClInclude Include="game_manager_listener.h">
-      <Filter>game_manager\include\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="game_manager_utilities.h">
-      <Filter>game_manager\include\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="image.h">
+    <ClInclude Include="include\engine.h">
       <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="memory_manager.h">
+    <ClInclude Include="include\file.h">
       <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="sdl_window.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="engine_export.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="engine_interface.h">
+    <ClInclude Include="include\engine_utilities.h">
       <Filter>engine\include\shared</Filter>
     </ClInclude>
-    <ClInclude Include="game_manager_export.h">
-      <Filter>game_manager\include</Filter>
-    </ClInclude>
-    <ClInclude Include="engine.h">
+    <ClInclude Include="include\engine_export.h">
       <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="keyboard_manager.h">
-      <Filter>game_manager\include</Filter>
-    </ClInclude>
-    <ClInclude Include="bsp_map.h">
-      <Filter>game\common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="bsp_map_parser.h">
-      <Filter>game\common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="file.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>game\client\include</Filter>
-    </ClInclude>
-    <ClInclude Include="client_export.h">
-      <Filter>game\client\include</Filter>
-    </ClInclude>
-    <ClInclude Include="game_client.h">
-      <Filter>game\client\include</Filter>
-    </ClInclude>
-    <ClInclude Include="plane.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="game_manager.h">
-      <Filter>game_manager\include</Filter>
-    </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>game_manager\include</Filter>
-    </ClInclude>
-    <ClInclude Include="game_manager_shared.h">
-      <Filter>game_manager\include\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="keyboard_shared.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="image_loader.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="error_stack.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="window.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="window_shared.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="input_listener.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="game_manager_interface.h">
-      <Filter>game_manager\include\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="game_module_interface.h">
-      <Filter>game_manager\include</Filter>
-    </ClInclude>
-    <ClInclude Include="game_module.h">
-      <Filter>game\common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="entity_model.h">
-      <Filter>game\client\include</Filter>
-    </ClInclude>
-    <ClInclude Include="md2_file.h">
-      <Filter>game\client\include</Filter>
-    </ClInclude>
-    <ClInclude Include="indexed_mesh.h">
-      <Filter>game\client\include</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>game\client\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderer\material.h" />
-    <ClInclude Include="include\renderer\resources.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderer\shared.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderer\variable.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderer\buffer.h" />
-    <ClInclude Include="include\renderer\index_buffer.h" />
-    <ClInclude Include="include\renderer\buffer_schema.h" />
-    <ClInclude Include="include\renderer\renderer.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderer\attribute.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="engine.frag">

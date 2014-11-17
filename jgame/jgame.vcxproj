@@ -77,11 +77,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\entity_model.h" />
     <ClInclude Include="include\game_manager.h" />
     <ClInclude Include="include\game_manager_export.h" />
     <ClInclude Include="include\game_manager_listener.h" />
+    <ClInclude Include="include\game_manager_shared.h" />
     <ClInclude Include="include\game_manager_utilities.h" />
     <ClInclude Include="include\game_module.h" />
+    <ClInclude Include="include\game_module_interface.h" />
+    <ClInclude Include="include\md2_file.h" />
+    <ClInclude Include="include\plane.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\game_manager.cpp" />
+    <ClCompile Include="source\game_manager_export.cpp" />
+    <ClCompile Include="source\entity_model.cpp" />
+    <ClCompile Include="source\game_module.cpp" />
+    <ClCompile Include="source\md2_file.cpp" />
+    <ClCompile Include="source\plane.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

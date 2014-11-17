@@ -8,6 +8,18 @@
     <ClInclude Include="include\vector3.h" />
     <ClInclude Include="include\vector4.h" />
     <ClInclude Include="include\define.h" />
+    <ClInclude Include="include\renderer\attribute.h" />
+    <ClInclude Include="include\renderer\buffer_layout.h" />
+    <ClInclude Include="include\renderer\resources.h" />
+    <ClInclude Include="include\renderer\shared.h" />
+    <ClInclude Include="include\memory_manager.h" />
+    <ClInclude Include="include\error_stack.h" />
+    <ClInclude Include="include\renderer\renderer_interface.h" />
+    <ClInclude Include="include\renderer\buffer_interface.h" />
+    <ClInclude Include="include\renderer\index_buffer_interface.h" />
+    <ClInclude Include="include\renderer\material_interface.h" />
+    <ClInclude Include="include\renderer\material_layout_interface.h" />
+    <ClInclude Include="include\renderer\variable_interface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\math_common.cpp" />
@@ -16,5 +28,7 @@
     <ClCompile Include="source\vector2.cpp" />
     <ClCompile Include="source\vector3.cpp" />
     <ClCompile Include="source\vector4.cpp" />
+    <ClCompile Include="source\memory_manager.cpp" />
+    <ClCompile Include="source\error_stack.cpp" />
   </ItemGroup>
 </Project>
