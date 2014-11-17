@@ -250,9 +250,6 @@
     <ClInclude Include="mesh.h">
       <Filter>game\client\include</Filter>
     </ClInclude>
-    <ClInclude Include="index_buffer.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
     <ClInclude Include="include\renderer\material.h" />
     <ClInclude Include="include\renderer\resources.h">
       <Filter>common\include</Filter>

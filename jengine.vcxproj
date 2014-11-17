@@ -125,7 +125,6 @@
     <ClInclude Include="image_loader.h" />
     <ClInclude Include="indexed_mesh.h" />
     <ClInclude Include="entity_model.h" />
-    <ClInclude Include="index_buffer.h" />
     <ClInclude Include="md2_file.h" />
     <ClInclude Include="include\renderer\resources.h" />
     <ClInclude Include="include\renderer\variable.h" />
