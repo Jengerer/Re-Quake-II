@@ -1,7 +1,7 @@
 #pragma once
 
-#include "opengl_common.h"
-#include "opengl_buffer_schema.h"
+#include "common.h"
+#include "renderer/buffer_interface.h"
 
 namespace OpenGL
 {
@@ -13,16 +13,26 @@ namespace OpenGL
 	public:
 
 		Buffer();
-		~Buffer();
 
-		// Create the model from a set of vertex data.
-		bool Initialize(const void *bufferData,	int bufferSize);
+		// Initialize the buffer for loading.
+		bool Initialize();
+
+		// Free the buffer.
+		virtual void Destroy();
+
+		// Set the buffer data.
+		virtual void Load(const void *data, unsigned int size);
 
 		// Bind the buffer for rendering.
-		void Bind();
+		void Bind() const;
 
 		// Unbind the buffer from rendering.
-		void Unbind();
+		void Unbind() const;
+
+	private:
+
+		// Private destructor, must be killed through Destroy().
+		~Buffer();
 
 	private:
 

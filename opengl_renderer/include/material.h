@@ -1,34 +1,58 @@
 #pragma once
 
-#include "opengl_common.h"
+#include "common.h"
+#include "renderer/material_interface.h"
 
 namespace OpenGL
 {
 
-	// OpenGL full shader program object.
-	class Program : public Renderer::Program
+	// Full OpenGL shader program.
+	class Material : public Renderer::Material
 	{
 
 	public:
 
-		Program();
-		~Program();
+		Material();
 
-		// Initialize program from vertex and fragment shaders.
-		bool Initialize(const Renderer::Shader *vertex, const Renderer::Shader *fragment);
+		// Initialize the material.
+		bool Initialize(
+			const char *vertexSource,
+			int vertexSourceLength,
+			const char *pixelSource,
+			int pixelSourceLength);
+		
+		// Free this material.
+		virtual void Destroy();
+
+		// Get a reference to a variable in this material.
+		virtual Renderer::Variable *GetVariable(const char *name);
+
+		// Get a matching material layout for this material.
+		virtual Renderer::MaterialLayout *GetLayout(
+			const Renderer::BufferLayout *bufferLayouts,
+			int bufferCount);
 
 		// Set this program as active.
-		void Activate() const;
+		virtual void Activate();
 
 		// Unset this program from rendering.
-		void Deactivate() const;
+		virtual void Deactivate();
 
-		// Get location of a uniform within this program.
-		GLint GetUniformLocation(const char *name) const;
+	private:
+
+		// Private destructor; must be killed by Destroy().
+		~Material();
+
+	private:
+
+		// Compile a shader from source.
+		static bool Compile(GLuint shader, const char *source, int sourceLength);
 
 	private:
 
 		GLuint handle;
+		GLuint vertexShader;
+		GLuint pixelShader;
 
 	};
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer.h"
-#include "opengl_common.h"
+#include "renderer/renderer_interface.h"
+#include "common.h"
 
 namespace OpenGL
 {
