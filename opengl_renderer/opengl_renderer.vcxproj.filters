@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="include\opengl_renderer.h" />
+    <ClInclude Include="include\opengl_resources.h" />
+    <ClInclude Include="include\opengl_shader_attribute.h" />
+    <ClInclude Include="include\opengl_uniform.h" />
+    <ClInclude Include="include\buffer.h" />
+    <ClInclude Include="include\buffer_schema.h" />
+    <ClInclude Include="include\common.h" />
+    <ClInclude Include="include\opengl_export.h" />
+    <ClInclude Include="include\index_buffer.h" />
+    <ClInclude Include="include\material.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\opengl_buffer.cpp" />
+    <ClCompile Include="source\opengl_buffer_schema.cpp" />
+    <ClCompile Include="source\opengl_export.cpp" />
+    <ClCompile Include="source\opengl_index_buffer.cpp" />
+    <ClCompile Include="source\opengl_program.cpp" />
+    <ClCompile Include="source\opengl_renderer.cpp" />
+    <ClCompile Include="source\opengl_resources.cpp" />
+    <ClCompile Include="source\opengl_shader.cpp" />
+    <ClCompile Include="source\opengl_shader_attribute.cpp" />
+    <ClCompile Include="source\opengl_uniform.cpp" />
+  </ItemGroup>
+</Project>

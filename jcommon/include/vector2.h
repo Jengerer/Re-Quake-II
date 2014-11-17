@@ -1,7 +1,9 @@
 #pragma once
 
+#include "define.h"
+
 // Two dimensional vector class.
-class Vector2
+class LibraryExport Vector2
 {
 
 public:

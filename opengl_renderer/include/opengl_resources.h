@@ -3,7 +3,7 @@
 #include "matrix3x3.h"
 #include "matrix4x4.h"
 #include "opengl_common.h"
-#include "renderer_resources.h"
+#include "renderer/resources.h"
 #include "vector3.h"
 #include "vector4.h"
 

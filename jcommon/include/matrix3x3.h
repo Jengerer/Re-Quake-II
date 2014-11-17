@@ -1,7 +1,9 @@
 #pragma once
 
+#include "define.h"
+
 // Class for representing a 3x3 matrix.
-class Matrix3x3
+class LibraryExport Matrix3x3
 {
 
 public:

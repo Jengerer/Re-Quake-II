@@ -1,8 +1,10 @@
 #pragma once
 
+#include "define.h"
+
 // Class representing a three dimensional vector/point or angle, in which the
 // components are rotations about the corresponding axis (in the order X, Y, Z).
-class Vector3
+class LibraryExport Vector3
 {
 
 public:

@@ -39,10 +39,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SDK_LIB_DIR)\libpng;$(SDK_LIB_DIR)\glew\include;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\jcommon\include;$(SDK_LIB_DIR)\libpng;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(SDK_LIB_DIR)\libpng\projects\vstudio\Debug;$(SDK_LIB_DIR)\glew\lib\Release\Win32;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>.\jcommon\lib;$(SDK_LIB_DIR)\libpng\projects\vstudio\Debug;$(SDK_LIB_DIR)\glew\lib\Release\Win32;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SDK_LIB_DIR)\glew\include;$(SDK_LIB_DIR)\sdl2\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -94,27 +94,11 @@
     <ClCompile Include="image_loader.cpp" />
     <ClCompile Include="keyboard_manager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="math_common.cpp" />
-    <ClCompile Include="matrix3x3.cpp" />
-    <ClCompile Include="matrix4x4.cpp" />
     <ClCompile Include="md2_file.cpp" />
     <ClCompile Include="memory_manager.cpp" />
-    <ClCompile Include="opengl_export.cpp" />
-    <ClCompile Include="opengl_buffer.cpp" />
-    <ClCompile Include="opengl_index_buffer.cpp" />
-    <ClCompile Include="opengl_program.cpp" />
-    <ClCompile Include="opengl_renderer.cpp" />
     <ClCompile Include="game_client.cpp" />
-    <ClCompile Include="opengl_shader_attribute.cpp" />
-    <ClCompile Include="opengl_buffer_schema.cpp" />
-    <ClCompile Include="opengl_resources.cpp" />
-    <ClCompile Include="opengl_shader.cpp" />
-    <ClCompile Include="opengl_uniform.cpp" />
     <ClCompile Include="plane.cpp" />
-    <ClCompile Include="renderer_shared.cpp" />
-    <ClCompile Include="vector2.cpp" />
-    <ClCompile Include="vector3.cpp" />
-    <ClCompile Include="vector4.cpp" />
+    <ClCompile Include="include\renderer\shared.cpp" />
     <ClCompile Include="sdl_window.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -123,6 +107,11 @@
     <ClInclude Include="bsp_map_parser.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="client_export.h" />
+    <ClInclude Include="include\renderer\attribute.h" />
+    <ClInclude Include="include\renderer\buffer.h" />
+    <ClInclude Include="include\renderer\buffer_schema.h" />
+    <ClInclude Include="include\renderer\index_buffer.h" />
+    <ClInclude Include="include\renderer\material.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="engine_export.h" />
     <ClInclude Include="engine_interface.h" />
@@ -138,18 +127,8 @@
     <ClInclude Include="entity_model.h" />
     <ClInclude Include="index_buffer.h" />
     <ClInclude Include="md2_file.h" />
-    <ClInclude Include="opengl_common.h" />
-    <ClInclude Include="opengl_export.h" />
-    <ClInclude Include="opengl_buffer.h" />
-    <ClInclude Include="opengl_index_buffer.h" />
-    <ClInclude Include="opengl_program.h" />
-    <ClInclude Include="opengl_buffer_schema.h" />
-    <ClInclude Include="opengl_resources.h" />
-    <ClInclude Include="opengl_shader.h" />
-    <ClInclude Include="opengl_shader_attribute.h" />
-    <ClInclude Include="opengl_uniform.h" />
-    <ClInclude Include="renderer_resources.h" />
-    <ClInclude Include="shared_defines.h" />
+    <ClInclude Include="include\renderer\resources.h" />
+    <ClInclude Include="include\renderer\variable.h" />
     <ClInclude Include="engine_utilities.h" />
     <ClInclude Include="error_stack.h" />
     <ClInclude Include="file.h" />
@@ -159,19 +138,12 @@
     <ClInclude Include="input_listener.h" />
     <ClInclude Include="keyboard_shared.h" />
     <ClInclude Include="keyboard_manager.h" />
-    <ClInclude Include="math_common.h" />
-    <ClInclude Include="matrix3x3.h" />
-    <ClInclude Include="matrix4x4.h" />
     <ClInclude Include="memory_manager.h" />
     <ClInclude Include="mesh.h" />
-    <ClInclude Include="opengl_renderer.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="game_client.h" />
-    <ClInclude Include="renderer_shared.h" />
-    <ClInclude Include="renderer.h" />
-    <ClInclude Include="vector2.h" />
-    <ClInclude Include="vector3.h" />
-    <ClInclude Include="vector4.h" />
+    <ClInclude Include="include\renderer\shared.h" />
+    <ClInclude Include="include\renderer\renderer.h" />
     <ClInclude Include="sdl_window.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="window_shared.h" />

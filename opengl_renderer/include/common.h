@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
-#include "renderer_shared.h"
+#include "renderer/shared.h"
 #include "vector2.h"
 #include "vector3.h"
 #include "vector4.h"

@@ -75,26 +75,11 @@
     <Filter Include="engine\include\shared">
       <UniqueIdentifier>{2d1182b2-4a3c-4211-be96-4f3e12a5ccf2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common\include\renderer">
+      <UniqueIdentifier>{9e3777f4-8368-41a1-8830-7f39862ced1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="math_common.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix3x3.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix4x4.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="vector2.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="vector3.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="vector4.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
     <ClCompile Include="plane.cpp">
       <Filter>common\src</Filter>
     </ClCompile>
@@ -106,21 +91,6 @@
     </ClCompile>
     <ClCompile Include="memory_manager.cpp">
       <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_shader.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_program.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer_shared.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_shader_attribute.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_resources.cpp">
-      <Filter>opengl_renderer\src</Filter>
     </ClCompile>
     <ClCompile Include="image.cpp">
       <Filter>engine\src</Filter>
@@ -161,15 +131,6 @@
     <ClCompile Include="game_manager_export.cpp">
       <Filter>game_manager\src</Filter>
     </ClCompile>
-    <ClCompile Include="opengl_renderer.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_export.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_uniform.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
     <ClCompile Include="game_module.cpp">
       <Filter>game\common\src</Filter>
     </ClCompile>
@@ -179,14 +140,8 @@
     <ClCompile Include="md2_file.cpp">
       <Filter>game\client\src</Filter>
     </ClCompile>
-    <ClCompile Include="opengl_buffer.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_buffer_schema.cpp">
-      <Filter>opengl_renderer\src</Filter>
-    </ClCompile>
-    <ClCompile Include="opengl_index_buffer.cpp">
-      <Filter>opengl_renderer\src</Filter>
+    <ClCompile Include="include\renderer\shared.cpp">
+      <Filter>common\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -211,26 +166,11 @@
     <ClInclude Include="sdl_window.h">
       <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="matrix3x3.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="matrix4x4.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_renderer.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_export.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
     <ClInclude Include="engine_export.h">
       <Filter>engine\include</Filter>
     </ClInclude>
     <ClInclude Include="engine_interface.h">
       <Filter>engine\include\shared</Filter>
-    </ClInclude>
-    <ClInclude Include="shared_defines.h">
-      <Filter>common\include</Filter>
     </ClInclude>
     <ClInclude Include="game_manager_export.h">
       <Filter>game_manager\include</Filter>
@@ -259,9 +199,6 @@
     <ClInclude Include="game_client.h">
       <Filter>game\client\include</Filter>
     </ClInclude>
-    <ClInclude Include="math_common.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
     <ClInclude Include="plane.h">
       <Filter>common\include</Filter>
     </ClInclude>
@@ -274,25 +211,7 @@
     <ClInclude Include="game_manager_shared.h">
       <Filter>game_manager\include\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="renderer_shared.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
     <ClInclude Include="keyboard_shared.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="vector2.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="vector3.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="vector4.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer_resources.h">
       <Filter>common\include</Filter>
     </ClInclude>
     <ClInclude Include="image_loader.h">
@@ -300,21 +219,6 @@
     </ClInclude>
     <ClInclude Include="error_stack.h">
       <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_shader.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_shader_attribute.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_uniform.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_program.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_resources.h">
-      <Filter>opengl_renderer\include</Filter>
     </ClInclude>
     <ClInclude Include="window.h">
       <Filter>engine\include</Filter>
@@ -346,21 +250,26 @@
     <ClInclude Include="mesh.h">
       <Filter>game\client\include</Filter>
     </ClInclude>
-    <ClInclude Include="opengl_buffer.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_buffer_schema.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
-    <ClInclude Include="opengl_common.h">
-      <Filter>opengl_renderer\include</Filter>
-    </ClInclude>
     <ClInclude Include="index_buffer.h">
       <Filter>opengl_renderer\include</Filter>
     </ClInclude>
-    <ClInclude Include="opengl_index_buffer.h">
-      <Filter>opengl_renderer\include</Filter>
+    <ClInclude Include="include\renderer\material.h" />
+    <ClInclude Include="include\renderer\resources.h">
+      <Filter>common\include</Filter>
     </ClInclude>
+    <ClInclude Include="include\renderer\shared.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderer\variable.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderer\buffer.h" />
+    <ClInclude Include="include\renderer\index_buffer.h" />
+    <ClInclude Include="include\renderer\buffer_schema.h" />
+    <ClInclude Include="include\renderer\renderer.h">
+      <Filter>common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderer\attribute.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="engine.frag">
