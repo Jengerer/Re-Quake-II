@@ -1,9 +1,9 @@
 #pragma once
 
-#include "define.h"
+#include "jcommon_define.h"
 
 // Common math functions.
-class LibraryExport MathCommon
+class CommonLibrary MathCommon
 {
 
 public:

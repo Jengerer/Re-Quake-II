@@ -1,10 +1,10 @@
 #pragma once
 
-#include "define.h"
+#include "jcommon_define.h"
 
 // Class representing a three dimensional vector/point or angle, in which the
 // components are rotations about the corresponding axis (in the order X, Y, Z).
-class LibraryExport Vector3
+class CommonLibrary Vector3
 {
 
 public:

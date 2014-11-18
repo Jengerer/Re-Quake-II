@@ -1,5 +1,6 @@
 #pragma once
 
+#include "jcommon_define.h"
 #include "renderer/shared.h"
 
 namespace Renderer
@@ -7,7 +8,7 @@ namespace Renderer
 
 	// Single input attribute for a material.
 	// Intended to be used as a static constant object (does not copy the string).
-	class Attribute
+	class CommonLibrary Attribute
 	{
 
 	public:

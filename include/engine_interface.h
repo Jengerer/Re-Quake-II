@@ -2,7 +2,7 @@
 
 #include "engine_listener.h"
 #include "input_listener.h"
-#include "renderer.h"
+#include "renderer/renderer.h"
 #include "renderer_resources.h"
 
 // Interface for an application to interact with the engine.

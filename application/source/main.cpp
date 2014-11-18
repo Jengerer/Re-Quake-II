@@ -1,16 +1,41 @@
-#include "engine_export.h"
 #include "error_stack.h"
-#include "game_manager_export.h"
-#include "opengl_export.h"
-#include "client_export.h"
+#include "renderer/attribute.h"
+#include "renderer/buffer_layout.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+// Sample Quake II buffer layout.
+const int StartFrameAttributeCount = 2;
+const int EndFrameAttributeCount = StartFrameAttributeCount;
+const int TextureAttributeCount = 1;
+const Renderer::Attribute startFrameAttributes[StartFrameAttributeCount] =
+{
+	Renderer::Attribute("position0", Renderer::PositionType, Renderer::Vector3Type),
+	Renderer::Attribute("normal0", Renderer::NormalType, Renderer::Vector3Type)
+};
+const Renderer::Attribute endFrameAttributes[EndFrameAttributeCount] = {
+	Renderer::Attribute("position1", Renderer::PositionType, Renderer::Vector3Type),
+	Renderer::Attribute("normal1", Renderer::NormalType, Renderer::Vector3Type)
+};
+const Renderer::Attribute textureAttributes[TextureAttributeCount] = {
+	Renderer::Attribute("uv", Renderer::TextureCoordinateType, Renderer::Vector2Type)
+};
+const int QuakeBufferCount = 3;
+const Renderer::BufferLayout QuakeBufferLayouts[QuakeBufferCount] = {
+	Renderer::BufferLayout(startFrameAttributes, StartFrameAttributeCount),
+	Renderer::BufferLayout(endFrameAttributes, EndFrameAttributeCount),
+	Renderer::BufferLayout(textureAttributes, TextureAttributeCount)
+};
 
 int main(int argc, char *argv[])
 {
 	(void)argc;
 	(void)argv;
 
+	bool success;
+
+
+	/*
 	// Get engine implementation.
 	Engine::Interface *engine = GetEngineInterface();
 
@@ -38,7 +63,7 @@ int main(int argc, char *argv[])
 	ErrorStack::Initialize();
 
 	// Initialize engine and run.
-	bool success = engine->Initialize() && engine->Run();
+	success = engine->Initialize() && engine->Run();
 
 	// How did we do?
 	if (!success) {
@@ -52,6 +77,7 @@ int main(int argc, char *argv[])
 	}
 
 	engine->Shutdown();
+	*/
 	return success;
 }
 

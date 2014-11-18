@@ -1,9 +1,10 @@
 #pragma once
 
+#include "jcommon_define.h"
 #include <new>
 
 // Static class for managing memory.
-class MemoryManager
+class CommonLibrary MemoryManager
 {
 
 public:

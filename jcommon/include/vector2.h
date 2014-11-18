@@ -1,9 +1,9 @@
 #pragma once
 
-#include "define.h"
+#include "jcommon_define.h"
 
 // Two dimensional vector class.
-class LibraryExport Vector2
+class CommonLibrary Vector2
 {
 
 public:

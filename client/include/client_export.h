@@ -1,6 +1,6 @@
 #pragma once
 
-#include "define.h"
+#include "jcommon_define.h"
 #include "game_module_interface.h"
 
 // TODO: Combine server and client export once they're actually separate modules.

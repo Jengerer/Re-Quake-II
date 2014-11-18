@@ -1,12 +1,13 @@
 #pragma once
 
+#include "jcommon_define.h"
 #include "renderer/attribute.h"
 
 namespace Renderer
 {
 
 	// Schema for mapping material input attributes to a buffer.
-	class BufferLayout
+	class CommonLibrary BufferLayout
 	{
 
 	public:

@@ -1,163 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="engine">
-      <UniqueIdentifier>{818a289e-5b95-4b6a-9673-c3b173113824}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game_manager">
-      <UniqueIdentifier>{081cf71d-18a5-4f77-be95-1278b74dcbd4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game_manager\include">
-      <UniqueIdentifier>{aa17187b-a2a2-4cc8-8bc5-2b788d16448b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\include">
-      <UniqueIdentifier>{04cfec0d-6c44-4dff-b22a-626f004df688}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="common">
-      <UniqueIdentifier>{dacc5fb6-90c1-4396-9bf0-2b23d4a03c38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="common\include">
-      <UniqueIdentifier>{1a31ab83-097f-45c6-ac38-9c629f599d7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="common\src">
-      <UniqueIdentifier>{d5a7ee15-3838-456f-a298-e8396dba566e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\src">
-      <UniqueIdentifier>{5c0d7467-a3af-4f9d-9b78-1e823653d9b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="opengl_renderer">
-      <UniqueIdentifier>{d31f41e5-e7d6-4047-bc18-eae08c683d04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="opengl_renderer\include">
-      <UniqueIdentifier>{0d7b6beb-30a2-43fb-b72f-c9f24de7b889}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="opengl_renderer\src">
-      <UniqueIdentifier>{4f5bf486-e9b2-447d-b45a-3ed1f5135f5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game_manager\include\interfaces">
-      <UniqueIdentifier>{e8ca7fb2-f917-48c5-92bb-6214c337a6bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game">
-      <UniqueIdentifier>{8336659f-2e1b-4498-affd-284e222234f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game\common">
-      <UniqueIdentifier>{c7d27341-2389-4eb5-9f78-e083de5ad27e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game\common\include">
-      <UniqueIdentifier>{e1543dd9-4962-472d-800a-8d2caa4853e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game\client">
-      <UniqueIdentifier>{9f35ee5c-bb60-4439-9d19-91d955254485}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game\client\include">
-      <UniqueIdentifier>{e7f7710a-f9c9-4a5e-ae83-51023361d14b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game\client\src">
-      <UniqueIdentifier>{bd560bf5-1d7b-4cf0-8415-6e21240fe441}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game\common\src">
-      <UniqueIdentifier>{4661b457-d763-436a-8899-2fba3be2ce09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="shaders">
-      <UniqueIdentifier>{c5a16e9e-7fc3-4fe5-8b5f-010a277d2024}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="resources">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="game_manager\src">
-      <UniqueIdentifier>{fde04068-fd9d-4521-b6e9-71f7d58f65ae}</UniqueIdentifier>
+    <Filter Include="source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="engine\include\shared">
-      <UniqueIdentifier>{2d1182b2-4a3c-4211-be96-4f3e12a5ccf2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="common\include\renderer">
-      <UniqueIdentifier>{9e3777f4-8368-41a1-8830-7f39862ced1e}</UniqueIdentifier>
+    <Filter Include="include">
+      <UniqueIdentifier>{fe47f449-5084-4f63-96cf-485b44fb0726}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\renderer\attribute.cpp">
-      <Filter>common\src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\renderer\buffer_layout.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\renderer\material_layout.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\window.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\sdl_window.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\keyboard_manager.cpp">
-      <Filter>game_manager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\file.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\engine.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-    <ClCompile Include="source\engine_export.cpp">
-      <Filter>engine\src</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\game_manager_interface.h">
-      <Filter>game_manager\include\interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="include\window_shared.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\window.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\sdl_window.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\keyboard_shared.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\keyboard_manager.h">
-      <Filter>game_manager\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\input_listener.h">
-      <Filter>common\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine_interface.h">
-      <Filter>engine\include\shared</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine_listener.h">
-      <Filter>engine\include\shared</Filter>
+      <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\engine.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\file.h">
-      <Filter>engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine_utilities.h">
-      <Filter>engine\include\shared</Filter>
+      <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\engine_export.h">
-      <Filter>engine\include</Filter>
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\file.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sdl_window.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine_interface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine_listener.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine_utilities.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="engine.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="engine.vert">
-      <Filter>shaders</Filter>
-    </None>
+    <ClCompile Include="source\engine.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\engine_export.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sdl_window.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

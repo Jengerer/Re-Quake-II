@@ -80,35 +80,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\engine.cpp" />
-    <ClCompile Include="source\engine_export.cpp" />
-    <ClCompile Include="source\file.cpp" />
-    <ClCompile Include="source\keyboard_manager.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="source\renderer\attribute.cpp" />
-    <ClCompile Include="source\sdl_window.cpp" />
-    <ClCompile Include="source\renderer\buffer_layout.cpp" />
-    <ClCompile Include="source\renderer\material_layout.cpp" />
-    <ClCompile Include="source\window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="include\engine.h" />
     <ClInclude Include="include\engine_export.h" />
     <ClInclude Include="include\engine_interface.h" />
-    <ClInclude Include="include\game_manager_interface.h" />
     <ClInclude Include="include\engine_utilities.h" />
     <ClInclude Include="include\file.h" />
     <ClInclude Include="include\engine_listener.h" />
-    <ClInclude Include="include\input_listener.h" />
-    <ClInclude Include="include\keyboard_shared.h" />
-    <ClInclude Include="include\keyboard_manager.h" />
     <ClInclude Include="include\sdl_window.h" />
     <ClInclude Include="include\window.h" />
     <ClInclude Include="include\window_shared.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="engine.frag" />
-    <None Include="engine.vert" />
+    <ClCompile Include="source\engine.cpp" />
+    <ClCompile Include="source\engine_export.cpp" />
+    <ClCompile Include="source\sdl_window.cpp" />
+    <ClCompile Include="source\window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

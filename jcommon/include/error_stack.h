@@ -1,5 +1,7 @@
 #pragma once
 
+#include "jcommon_define.h"
+
 // Error stack node.
 class ErrorStackNode
 {
@@ -21,7 +23,7 @@ private:
 };
 
 // Static class for reporting errors.
-class ErrorStack
+class CommonLibrary ErrorStack
 {
 
 public:

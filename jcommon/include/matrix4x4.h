@@ -1,12 +1,12 @@
 #pragma once
 
-#include "define.h"
+#include "jcommon_define.h"
 #include "vector3.h"
 #include "vector4.h"
 
 // Class for representing a 4x4 matrix.
 // Any operations for which this class cannot be an operand are explicitly stated.
-class LibraryExport Matrix4x4
+class CommonLibrary Matrix4x4
 {
 
 public:
