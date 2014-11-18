@@ -27,40 +27,30 @@ namespace OpenGL
 	}
 
 	// Initialize from index data.
-	void IndexBuffer::Load
-		(const void *indices,
+	void IndexBuffer::Load(
+		const void *indices,
 		unsigned int bufferSize,
-		unsigned int indexCount,
 		Renderer::DataType indexType)
 	{
 		// Set new index count and type.
-		this->count = indexCount;
 		this->type = TranslateIndexType(indexType);
 
 		// Pass new data to buffer.
-		Activate();
+		Bind();
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize, indices, GL_STATIC_DRAW);
-		Deactivate();
+		Unbind();
 	}
 
 	// Bind indices as the element reference.
-	void IndexBuffer::Activate()
+	void IndexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle);
 	}
 
 	// Unbind indices from element reference.
-	void IndexBuffer::Deactivate()
+	void IndexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	// Make a draw call using this element indices.
-	// Assumes buffer was previously bound.
-	void IndexBuffer::Draw(Renderer::PrimitiveType type)
-	{
-		GLenum primitive = Common::TranslatePrimitiveType(type);
-		glDrawElements(primitive, count, type, nullptr);
 	}
 
 	// Release OpenGL buffer.

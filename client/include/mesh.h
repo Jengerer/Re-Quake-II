@@ -62,26 +62,5 @@ bool Mesh<VertexType>::Initialize(int vertexCount)
 	return true;
 }
 
-// Allocate space for vertices.
-template <typename VertexType>
-int Mesh<VertexType>::GetVertexCount() const
-{
-	return vertexCount;
-}
-
-// Get mutable vertex references.
-template <typename VertexType>
-VertexType *Mesh<VertexType>::GetVertexBuffer()
-{
-	return vertices;
-}
-
-// Get immutable vertex references.
-template <typename VertexType>
-const VertexType *Mesh<VertexType>::GetVertexBuffer() const
-{
-	return vertices;
-}
-
 // Common vertex defines.
 typedef Mesh<TexturedVertex> TexturedMesh;

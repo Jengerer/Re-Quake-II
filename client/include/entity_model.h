@@ -1,11 +1,13 @@
 #pragma once
 
+#include "allocatable.h"
 #include "mesh.h"
-#include "renderer_shared.h"
-#include "renderer_resources.h"
+#include "renderer/renderer_interface.h"
+#include "renderer/shared.h"
+#include "renderer/resources_interface.h"
 
 // Entity model segment that's rendered as triangle strip or fan.
-class EntityModelSegment
+class EntityModelSegment : public Allocatable
 {
 
 public:
@@ -14,28 +16,30 @@ public:
 	~EntityModelSegment();
 
 	// Initialize segment for vertices.
-	bool Initialize(int indexCount, Renderer::GeometryType type);
+	bool Initialize(int indexCount, Renderer::PrimitiveType type);
 	inline int *GetIndexData() { return indices; }
 
 	// Loading and cleaning renderer resources.
-	bool LoadRendererResources(Renderer::Resources *resources);
-	void FreeRendererResources(Renderer::Resources *resources);
-	inline const Renderer::IndexBuffer *GetIndexBuffer() const { return indices; }
+	bool LoadResources(Renderer::Resources *resources);
+
+	// Make a draw call for this segment.
+	void Draw(Renderer::Interface *renderer);
 
 private:
 
 	// Index data buffer.
 	int *indices;
 	int indexCount;
+	unsigned int arraySize;
 
 	// Renderer parameters for this segment.
 	Renderer::IndexBuffer *indexBuffer;
-	Renderer::GeometryType type;
+	Renderer::PrimitiveType type;
 
 };
 
 // Entity model frame.
-class EntityModelFrame
+class EntityModelFrame : public Allocatable
 {
 
 private:
@@ -48,6 +52,7 @@ public:
 	EntityModelFrame();
 	~EntityModelFrame();
 
+	// Set the reference for the vertex data.
 	void SetVertices(const TexturedVertex *vertices, int vertexCount);
 
 	// Handle renderer resources.
@@ -59,17 +64,6 @@ public:
 
 	// Set frame name.
 	void SetFrameName(const char frameName[FrameNameLength]);
-
-public:
-
-	// Prepare model-generic renderer resources.
-	static void SetBufferSchema(Renderer::BufferSchema *vertexSchema);
-	static void FreeBufferSchema(Renderer::Resources *resources);
-
-private:
-
-	// Buffer schema for the model.
-	static Renderer::BufferSchema *vertexSchema;
 
 private:
 
@@ -100,12 +94,18 @@ public:
 		int vertexCount);
 
 	// Get buffer of frames.
-	inline EntityModelFrame *GetFrames();
+	inline EntityModelFrame *GetFrames() { return frames; }
 	inline int GetFrameCount() const { return frameCount; }
 
 	// Get buffer of segments.
-	inline EntityModelSegment *GetSegments();
+	inline EntityModelSegment *GetSegments() { return segments; }
 	inline int GetSegmentCount() const { return segmentCount; }
+
+public:
+
+	// Get material layout for models.
+	static void SetMaterialLayout(Renderer::MaterialLayout *layout);
+	static void FreeMaterialLayout();
 
 private:
 
@@ -117,6 +117,11 @@ private:
 	TexturedMesh vertices;
 	EntityModelFrame *frames;
 	int frameCount;
+
+private:
+
+	// Model-generic material layout.
+	static Renderer::MaterialLayout *layout;
 
 };
 

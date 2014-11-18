@@ -73,6 +73,40 @@ namespace OpenGL
 		glLayout->Deactivate();
 	}
 
+	// Set index buffer for rendering.
+	void Implementation::SetIndexBuffer(Renderer::IndexBuffer *indexBuffer)
+	{
+		IndexBuffer *glIndices = static_cast<IndexBuffer*>(indexBuffer);
+		glIndices->Bind();
+
+		// Set index type.
+		indexType = glIndices->GetIndexType();
+	}
+
+	// Unset index buffer from rendering.
+	void Implementation::UnsetIndexBuffer(Renderer::IndexBuffer *indexBuffer)
+	{
+		IndexBuffer *glIndices = static_cast<IndexBuffer*>(indexBuffer);
+		glIndices->Unbind();
+
+		// Unset index type.
+		indexType = 0;
+	}
+
+	// Draw non-indexed primitive.
+	void Implementation::Draw(Renderer::PrimitiveType type, unsigned int count)
+	{
+		GLenum primitive = Common::TranslatePrimitiveType(type);
+		glDrawArrays(primitive, 0, count);
+	}
+
+	// Draw indexed primitive.
+	void Implementation::DrawIndexed(Renderer::PrimitiveType type, unsigned int indexCount)
+	{
+		GLenum primitive = Common::TranslatePrimitiveType(type);
+		glDrawElements(primitive, indexCount, indexType, nullptr);
+	}
+
 	// Get singleton instance of renderer.
 	Implementation *Implementation::GetInstance()
 	{

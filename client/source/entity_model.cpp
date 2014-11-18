@@ -11,40 +11,47 @@ EntityModelSegment::EntityModelSegment()
 
 EntityModelSegment::~EntityModelSegment()
 {
+	// Free renderer resource.
+	if (indexBuffer != nullptr) {
+		indexBuffer->Destroy();
+	}
+
+	// Free index buffer.
 	if (indices != nullptr) {
-		MemoryManager::DestroyArray(indices);
+		MemoryManager::Free(indices);
 	}
 }
 
 // Initialize segment for index count.
-bool EntityModelSegment::Initialize(int indexCount, Renderer::GeometryType type)
+bool EntityModelSegment::Initialize(int indexCount, Renderer::PrimitiveType type)
 {
 	// Allocate space for buffer.
-	if (!MemoryManager::AllocateArray(&indices, indexCount)) {
+	unsigned int arraySize = sizeof(int) * indexCount;
+	indices = reinterpret_cast<int*>(MemoryManager::Allocate(arraySize));
+	if (indices == nullptr) {
 		return false;
 	}
+	this->arraySize = arraySize;
 	this->indexCount = indexCount;
+	this->type = type;
 	return true;
 }
 
 // Prepare the index buffer resource for this segment.
-bool EntityModelSegment::LoadRendererResources(Renderer::Resources *resources)
+bool EntityModelSegment::LoadResources(Renderer::Resources *resources)
 {
 	// Create an index buffer with this data.
 	int bufferSize = sizeof(int) * indexCount;
-	Renderer::IndexBuffer *indexBuffer = resources->CreateIndexBuffer(indices, bufferSize, indexCount);
+	Renderer::IndexBuffer *indexBuffer = resources->CreateIndexBuffer();
 	if (indexBuffer == nullptr) {
 		ErrorStack::Log("Failed to create index buffer for segment.");
 		return false;
 	}
 	this->indexBuffer = indexBuffer;
-	return true;
-}
 
-// Free the index buffer resource.
-void EntityModelSegment::FreeRendererResources(Renderer::Resources *resources)
-{
-	resources->DestroyIndexBuffer(indexBuffer);
+	// Load the data into the buffer.
+	indexBuffer->Load(indices, arraySize, indexCount, Renderer::IntType);
+	return true;
 }
 
 // Model-generic buffer schema.

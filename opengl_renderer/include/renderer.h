@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "index_buffer.h"
 #include "renderer/renderer_interface.h"
 
 namespace OpenGL
@@ -33,6 +34,18 @@ namespace OpenGL
 		// Deactivate a material layout.
 		virtual void UnsetMaterialLayout(Renderer::MaterialLayout *layout);
 
+		// Set index buffer for rendering.
+		virtual void SetIndexBuffer(Renderer::IndexBuffer *indexBuffer);
+
+		// Unset index buffer from rendering.
+		virtual void UnsetIndexBuffer(Renderer::IndexBuffer *indexBuffer);
+
+		// Draw non-indexed primitive.
+		virtual void Draw(Renderer::PrimitiveType type, unsigned int count);
+
+		// Draw indexed primitive.
+		virtual void DrawIndexed(Renderer::PrimitiveType type, unsigned int indexCount);
+
 	public:
 
 		// Singleton retriever.
@@ -43,6 +56,11 @@ namespace OpenGL
 		// Private constructor/destructor for singleton.
 		Implementation();
 		~Implementation();
+
+	private:
+
+		// Index type for bound index buffer.
+		GLenum indexType;
 
 	private:
 

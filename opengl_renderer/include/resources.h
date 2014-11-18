@@ -20,10 +20,15 @@ namespace OpenGL
 		virtual Renderer::Material *CreateMaterial(const char *vertexFile, const char *pixelFile);
 
 		// Generate a buffer for vertex data.
-		virtual Renderer::Buffer *CreateBuffer();
+		virtual Renderer::Buffer *CreateBuffer(
+			const void *data,
+			unsigned int bufferSize);
 
 		// Generate an index buffer for referencing vertex data.
-		virtual Renderer::IndexBuffer *CreateIndexBuffer();
+		virtual Renderer::IndexBuffer *CreateIndexBuffer(
+			const void *indices,
+			unsigned int bufferSize,
+			Renderer::DataType indexType);
 
 	public:
 

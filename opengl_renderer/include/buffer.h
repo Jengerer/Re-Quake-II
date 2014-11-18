@@ -21,7 +21,7 @@ namespace OpenGL
 		virtual void Destroy();
 
 		// Set the buffer data.
-		virtual void Load(const void *data, unsigned int size);
+		void Load(const void *data, unsigned int size);
 
 		// Bind the buffer for rendering.
 		void Bind() const;

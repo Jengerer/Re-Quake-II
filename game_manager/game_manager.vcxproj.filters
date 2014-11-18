@@ -1,26 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="include\game_manager_export.h" />
-    <ClInclude Include="include\game_manager_utilities.h" />
-    <ClInclude Include="include\game_module.h" />
-    <ClInclude Include="include\game_manager_listener.h" />
-    <ClInclude Include="include\game_manager.h" />
-    <ClInclude Include="include\plane.h" />
-    <ClInclude Include="include\md2_file.h" />
-    <ClInclude Include="include\game_module_interface.h" />
-    <ClInclude Include="include\game_manager_shared.h" />
+    <ClInclude Include="include\game_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game_manager_export.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game_manager_listener.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game_manager_shared.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game_manager_utilities.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game_module.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game_module_interface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\plane.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\plane.cpp" />
-    <ClCompile Include="source\md2_file.cpp" />
-    <ClCompile Include="source\game_manager_export.cpp" />
-    <ClCompile Include="source\game_manager.cpp" />
-    <ClCompile Include="source\game_module.cpp" />
+    <ClCompile Include="source\game_manager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game_manager_export.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game_module.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\plane.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
       <UniqueIdentifier>{8092d56f-1e0c-4528-ae37-d93ed58d2ffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{09923d17-8f4c-420c-aff8-4a84b37146c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

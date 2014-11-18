@@ -48,7 +48,9 @@ namespace OpenGL
 	}
 
 	// Generate a buffer from a set of data.
-	Renderer::Buffer *Resources::CreateBuffer()
+	Renderer::Buffer *Resources::CreateBuffer(
+		const void *data,
+		unsigned int bufferSize)
 	{
 		// Allocate space for the OpenGL object.
 		Buffer *buffer = new Buffer();
@@ -62,11 +64,15 @@ namespace OpenGL
 			buffer->Destroy();
 			return nullptr;
 		}
+		buffer->Load(data, bufferSize);
 		return buffer;
 	}
 
 	// Create an index buffer to reference vertex data.
-	Renderer::IndexBuffer *Resources::CreateIndexBuffer()
+	Renderer::IndexBuffer *Resources::CreateIndexBuffer(
+		const void *indices,
+		unsigned int bufferSize,
+		Renderer::DataType indexType)
 	{
 		// Allocate space for the OpenGL object.
 		IndexBuffer *buffer = new IndexBuffer();
@@ -80,6 +86,7 @@ namespace OpenGL
 			buffer->Destroy();
 			return nullptr;
 		}
+		buffer->Load(indices, bufferSize, indexType);
 		return buffer;
 	}
 

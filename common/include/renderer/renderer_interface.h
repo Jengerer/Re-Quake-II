@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shared.h"
+#include "renderer/index_buffer_interface.h"
 #include "renderer/material_interface.h"
 #include "renderer/material_layout_interface.h"
 
@@ -33,6 +34,18 @@ namespace Renderer
 
 		// Deactivate a material layout.
 		virtual void UnsetMaterialLayout(MaterialLayout *layout) = 0;
+
+		// Set the index buffer to render with.
+		virtual void SetIndexBuffer(IndexBuffer *indexBuffer) = 0;
+
+		// Unset the index buffer from rendering.
+		virtual void UnsetIndexBuffer(IndexBuffer *indexBuffer) = 0;
+
+		// Draw primitive without indices.
+		virtual void Draw(PrimitiveType type, unsigned int count) = 0;
+
+		// Draw primitive with indices.
+		virtual void DrawIndexed(PrimitiveType type, unsigned int indexCount) = 0;
 
 	};
 

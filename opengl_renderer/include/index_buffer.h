@@ -25,18 +25,16 @@ namespace OpenGL
 		void Load(
 			const void *indices,
 			unsigned int bufferSize,
-			unsigned int indexCount,
 			Renderer::DataType indexType);
 
 		// Bind the index buffer to be used for element data.
-		virtual void Activate();
+		void Bind() const;
 
 		// Unbind the buffer from rendering.
-		virtual void Deactivate();
+		void Unbind() const;
 
-		// Make a draw call for this index data.
-		// Assumes buffer was previously bound.
-		virtual void Draw(Renderer::PrimitiveType type);
+		// Get index type for this buffer.
+		inline GLenum GetIndexType() const { return type; }
 
 	private:
 
@@ -52,7 +50,6 @@ namespace OpenGL
 
 		GLuint handle;
 		GLenum type;
-		GLint count;
 
 	};
 
