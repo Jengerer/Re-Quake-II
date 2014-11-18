@@ -64,11 +64,12 @@ void MD2File::LoadFrames()
 	// Keep a reference for the vertices.
 	TexturedMesh *outMesh = out->GetMesh();
 	TexturedVertex *outVertex = outMesh->GetVertexBuffer();
-	int vertexCount = header->vertexCount;
+	const int VertexCount = header->vertexCount;
+	const int BufferSize = VertexCount * sizeof(TexturedVertex);
 
 	// Get space between frames.
 	const int32_t FrameCount = header->frameCount;
-	const int32_t FrameStride = sizeof(MD2Frame) + (vertexCount * sizeof(MD2Vertex));
+	const int32_t FrameStride = sizeof(MD2Frame) + (VertexCount * sizeof(MD2Vertex));
 	const int32_t FrameStart = header->framesOffset;
 	const int32_t FrameEnd = FrameStart + (FrameCount * FrameStride);
 
@@ -86,13 +87,13 @@ void MD2File::LoadFrames()
 		Vector3 offset = frame->offset;
 
 		// Start the frame vertices at current vertex.
-		outFrame->SetVertices(outVertex, vertexCount);
+		outFrame->SetVertices(outVertex, BufferSize);
 
 		// Copy frame name over.
 		outFrame->SetFrameName(frame->name);
 
 		// Copy vertices.
-		for (int j = 0; j < FrameCount; ++j, ++vertex, ++outVertex) {
+		for (int j = 0; j < VertexCount; ++j, ++vertex, ++outVertex) {
 			outVertex->position.x = (static_cast<float>(vertex->x) * scale.x) + offset.x;
 			outVertex->position.y = (static_cast<float>(vertex->y) * scale.y) + offset.y;
 			outVertex->position.z = (static_cast<float>(vertex->y) * scale.z) + offset.z;
@@ -105,7 +106,6 @@ bool MD2File::LoadCommands()
 {
 	// Get segments we're fillin gout.
 	EntityModelSegment *outSegment = out->GetSegments();
-	const int SegmentCount = out->GetSegmentCount();
 
 	// Go through each command segment.
 	int32_t vertexCount;

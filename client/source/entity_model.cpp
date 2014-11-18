@@ -126,6 +126,7 @@ bool EntityModel::Initialize(
 		ErrorStack::Log("Failed to allocate %d frame objects for model.", frameCount);
 		return false;
 	}
+	this->frameCount = frameCount;
 
 	// Allocate segments array.
 	segments = new EntityModelSegment[segmentCount];
@@ -133,5 +134,6 @@ bool EntityModel::Initialize(
 		ErrorStack::Log("Failed to allocate %d segment objects for model.", segmentCount);
 		return false;
 	}
+	this->segmentCount = segmentCount;
 	return true;
 }
