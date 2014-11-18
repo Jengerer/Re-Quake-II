@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jengine", "jengine.vcxproj", "{D092F127-0814-4682-AB88-F036A4E1ABD9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine.vcxproj", "{D092F127-0814-4682-AB88-F036A4E1ABD9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jcommon", "jcommon\jcommon.vcxproj", "{5CB050B3-F94B-4486-B5F7-E591F838A4C8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "common\common.vcxproj", "{5CB050B3-F94B-4486-B5F7-E591F838A4C8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opengl_renderer", "opengl_renderer\opengl_renderer.vcxproj", "{83D99828-9FCB-423E-96C8-F094E2B20742}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jgame", "jgame\jgame.vcxproj", "{293F5E9F-9D6E-427C-94B0-0C749E859D53}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game_manager", "game_manager\game_manager.vcxproj", "{293F5E9F-9D6E-427C-94B0-0C749E859D53}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcxproj", "{4F4F5C11-4409-4B98-AE1B-5115764CA39E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcxproj", "{EDA44B5F-EFD9-4806-B70F-1B01142BC630}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "application", "application\application.vcxproj", "{E833C778-3697-4242-96AA-CCA28C4927EC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quake2", "quake2\quake2.vcxproj", "{E833C778-3697-4242-96AA-CCA28C4927EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

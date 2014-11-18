@@ -1,7 +1,7 @@
 #pragma once
 
-#include "shared_defines.h"
+#include "engine_define.h"
 #include "engine_interface.h"
 
 // Request engine to populate structure for engine application interface.
-LibraryExport Engine::Interface *GetEngineInterface();
+EngineLibrary Engine::Interface *GetEngineInterface();

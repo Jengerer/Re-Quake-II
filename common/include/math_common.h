@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jcommon_define.h"
+#include "common_define.h"
 
 // Common math functions.
 class CommonLibrary MathCommon

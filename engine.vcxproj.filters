@@ -41,6 +41,9 @@
     <ClInclude Include="include\engine_utilities.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\engine_define.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\engine.cpp">

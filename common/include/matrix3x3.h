@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jcommon_define.h"
+#include "common_define.h"
 
 // Class for representing a 3x3 matrix.
 class CommonLibrary Matrix3x3

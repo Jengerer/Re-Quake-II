@@ -7,7 +7,6 @@
     <ClInclude Include="include\game_manager_listener.h" />
     <ClInclude Include="include\game_manager.h" />
     <ClInclude Include="include\plane.h" />
-    <ClInclude Include="include\entity_model.h" />
     <ClInclude Include="include\md2_file.h" />
     <ClInclude Include="include\game_module_interface.h" />
     <ClInclude Include="include\game_manager_shared.h" />
@@ -15,9 +14,13 @@
   <ItemGroup>
     <ClCompile Include="source\plane.cpp" />
     <ClCompile Include="source\md2_file.cpp" />
-    <ClCompile Include="source\entity_model.cpp" />
     <ClCompile Include="source\game_manager_export.cpp" />
     <ClCompile Include="source\game_manager.cpp" />
     <ClCompile Include="source\game_module.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{8092d56f-1e0c-4528-ae37-d93ed58d2ffc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

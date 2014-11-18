@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jcommon_define.h"
+#include "common_define.h"
 #include "vector3.h"
 #include "vector4.h"
 

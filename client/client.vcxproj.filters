@@ -35,6 +35,9 @@
     <ClInclude Include="include\camera.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\entity_model.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\client_export.cpp">
@@ -50,6 +53,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\camera.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\entity_model.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer.h"
-#include "renderer_resources.h"
+#include "renderer/renderer_interface.h"
+#include "renderer/resources_interface.h"
 #include "window_shared.h"
 
 namespace Engine

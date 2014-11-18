@@ -53,7 +53,7 @@ namespace Engine
 	{
 		// Shut down listener first so he can clean renderer components.
 		listener->OnShutdown();
-		renderer->Shutdown();
+		renderer->Destroy();
 		MemoryManager::Shutdown();
 	}
 

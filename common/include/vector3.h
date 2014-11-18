@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jcommon_define.h"
+#include "common_define.h"
 
 // Class representing a three dimensional vector/point or angle, in which the
 // components are rotations about the corresponding axis (in the order X, Y, Z).

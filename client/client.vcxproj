@@ -79,6 +79,7 @@
     <ClInclude Include="include\bsp_map.h" />
     <ClInclude Include="include\bsp_map_parser.h" />
     <ClInclude Include="include\camera.h" />
+    <ClInclude Include="include\entity_model.h" />
     <ClInclude Include="include\image.h" />
     <ClInclude Include="include\image_loader.h" />
     <ClInclude Include="include\client_export.h" />
@@ -87,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\camera.cpp" />
+    <ClCompile Include="source\entity_model.cpp" />
     <ClCompile Include="source\image.cpp" />
     <ClCompile Include="source\image_loader.cpp" />
     <ClCompile Include="source\client_export.cpp" />

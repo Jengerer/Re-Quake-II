@@ -1,8 +1,8 @@
 #pragma once
 
 #include "sdl_window.h"
-#include "renderer.h"
-#include "renderer_resources.h"
+#include "renderer/renderer_interface.h"
+#include "renderer/resources_interface.h"
 #include "engine_interface.h"
 #include "engine_listener.h"
 #include "engine_utilities.h"

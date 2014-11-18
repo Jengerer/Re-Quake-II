@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jcommon_define.h"
+#include "common_define.h"
 
 // Two dimensional vector class.
 class CommonLibrary Vector2

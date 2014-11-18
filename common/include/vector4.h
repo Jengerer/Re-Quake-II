@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jcommon_define.h"
+#include "common_define.h"
 #include "vector3.h"
 
 // Class representing a three dimensional vector/point or angle, in which the

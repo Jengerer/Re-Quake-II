@@ -69,7 +69,7 @@
     <ClInclude Include="include\renderer\variable_interface.h">
       <Filter>include\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="include\jcommon_define.h">
+    <ClInclude Include="include\common_define.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
