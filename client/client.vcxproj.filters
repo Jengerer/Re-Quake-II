@@ -41,6 +41,9 @@
     <ClInclude Include="include\md2_file.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\client_define.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\client_export.cpp">

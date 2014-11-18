@@ -1,6 +1,8 @@
 #pragma once
 
-#include "renderer_shared.h"
+#include "renderer/material_interface.h"
+#include "renderer/shared.h"
+#include "renderer/variable_interface.h"
 #include "game_manager_listener.h"
 #include "game_manager_utilities.h"
 #include "game_module.h"
@@ -14,7 +16,7 @@ public:
 	Client();
 
 	// Game manager listener functions.
-	virtual bool OnInitialized(GameManager::Utilities *utilities);
+	virtual bool OnInitialized();
 	virtual void OnShutdown();
 	virtual bool OnTickBegin();
 	virtual bool OnTick();
@@ -33,15 +35,12 @@ private:
 private:
 
 	// Shader parameters.
-	Renderer::Shader *modelShader;
-	Renderer::Shader *textureShader;
-	Renderer::Program *modelProgram;
-	Renderer::ShaderSchema *modelSchema;
+	Renderer::Material *model;
 
 	// Uniform variables for rendering.
-	Renderer::Uniform *object;
-	Renderer::Uniform *view;
-	Renderer::Uniform *projection;
+	Renderer::Variable *object;
+	Renderer::Variable *view;
+	Renderer::Variable *projection;
 
 	// Singleton instance.
 	static Client instance;

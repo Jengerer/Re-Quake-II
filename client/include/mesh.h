@@ -53,8 +53,9 @@ Mesh<VertexType>::~Mesh()
 template <typename VertexType>
 bool Mesh<VertexType>::Initialize(int vertexCount)
 {
-	VertexType *vertices;
-	if (!MemoryManager::AllocateArray(&vertices, vertexCount)) {
+	unsigned int bufferSize = sizeof(VertexType) * vertexCount;
+	VertexType *vertices = reinterpret_cast<VertexType*>(MemoryManager::Allocate(bufferSize));
+	if (vertices == nullptr) {
 		return false;
 	}
 	this->vertices = vertices;

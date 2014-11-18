@@ -42,59 +42,45 @@ bool EntityModelSegment::LoadResources(Renderer::Resources *resources)
 {
 	// Create an index buffer with this data.
 	int bufferSize = sizeof(int) * indexCount;
-	Renderer::IndexBuffer *indexBuffer = resources->CreateIndexBuffer();
+	Renderer::IndexBuffer *indexBuffer = resources->CreateIndexBuffer(indices, bufferSize, Renderer::IntType);
 	if (indexBuffer == nullptr) {
 		ErrorStack::Log("Failed to create index buffer for segment.");
 		return false;
 	}
 	this->indexBuffer = indexBuffer;
-
-	// Load the data into the buffer.
-	indexBuffer->Load(indices, arraySize, indexCount, Renderer::IntType);
 	return true;
 }
 
-// Model-generic buffer schema.
-Renderer::BufferSchema *EntityModelFrame::vertexSchema = nullptr;
-
-EntityModelFrame::EntityModelFrame() : vertexBuffer(nullptr)
+EntityModelFrame::EntityModelFrame() : vertices(nullptr), bufferSize(0), vertexBuffer(nullptr)
 {
 }
 
 EntityModelFrame::~EntityModelFrame()
 {
+	// Destroy renderer buffer object.
+	if (vertexBuffer != nullptr) {
+		vertexBuffer->Destroy();
+	}
 }
 
-// Initialize model frame.
-bool EntityModelFrame::Initialize(int vertexCount)
+// Set the vertex array for this frame.
+void EntityModelFrame::SetVertices(const TexturedVertex *vertices, int bufferSize)
 {
-	// Allocate mesh.
-	if (!mesh.Initialize(vertexCount)) {
-		ErrorStack::Log("Failed to initialize mesh for frame vertices.");
-		return false;
-	}
-	return true;
+	this->vertices = vertices;
+	this->bufferSize = bufferSize;
 }
 
 // Create a renderer reference from the vertex data.
-bool EntityModelFrame::LoadRendererResources(Renderer::Resources *resources)
+bool EntityModelFrame::LoadResources(Renderer::Resources *resources)
 {
 	// Pass vertex data to renderer resource loader.
-	Renderer::Buffer *vertexBuffer = resources->CreateBuffer(
-		mesh.GetVertexBuffer(),
-		mesh.GetVertexBufferSize());
+	Renderer::Buffer *vertexBuffer = resources->CreateBuffer(vertices, bufferSize);
 	if (vertexBuffer == nullptr) {
 		ErrorStack::Log("Failed to create vertex buffer for frame.");
 		return false;
 	}
 	this->vertexBuffer = vertexBuffer;
 	return true;
-}
-
-// Free vertex buffer for this frame.
-void EntityModelFrame::FreeRendererResources(Renderer::Resources *resources)
-{
-	resources->DestroyBuffer(vertexBuffer);
 }
 
 // Copy frame name.
@@ -104,26 +90,20 @@ void EntityModelFrame::SetFrameName(const char frameName[FrameNameLength])
 	strncpy(this->frameName, frameName, FrameNameLength);
 }
 
-// Set the buffer schema used by all models.
-void EntityModelFrame::SetBufferSchema(Renderer::BufferSchema *vertexSchema)
-{
-	EntityModelFrame::vertexSchema = vertexSchema;
-}
-
-// Free the buffer schema used by all models.
-void EntityModelFrame::FreeBufferSchema(Renderer::Resources *resources)
-{
-	resources->DestroyBufferSchema(vertexSchema);
-}
-
 EntityModel::EntityModel() : frames(nullptr), frameCount(0)
 {
 }
 
 EntityModel::~EntityModel()
 {
+	// Delete segment objects.
+	if (segments != nullptr) {
+		delete[] segments;
+	}
+
+	// Delete frame objects.
 	if (frames != nullptr) {
-		MemoryManager::DestroyArray(frames);
+		delete[] frames;
 	}
 }
 
@@ -137,14 +117,20 @@ bool EntityModel::Initialize(
 	const int TotalVertices = frameCount * vertexCount;
 	if (!vertices.Initialize(TotalVertices)) {
 		ErrorStack::Log("Failed to allocate %d vertices for model.", TotalVertices);
+		return false;
 	}
 
-	// Allocate frame objects and give them their vertices.
-
+	// Allocate frame objects.
+	frames = new EntityModelFrame[frameCount];
+	if (frames == nullptr) {
+		ErrorStack::Log("Failed to allocate %d frame objects for model.", frameCount);
+		return false;
+	}
 
 	// Allocate segments array.
-	if (!MemoryManager::AllocateArray(&segments, segmentCount)) {
-		ErrorStack::Log("Failed to allocate ")
+	segments = new EntityModelSegment[segmentCount];
+	if (segments == nullptr) {
+		ErrorStack::Log("Failed to allocate %d segment objects for model.", segmentCount);
 		return false;
 	}
 	return true;

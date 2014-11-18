@@ -25,6 +25,9 @@
     <ClInclude Include="include\plane.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\game_manager_define.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\game_manager.cpp">
@@ -38,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="source\plane.cpp">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\game_manager_utilities.cpp">
+      <Filter>include</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

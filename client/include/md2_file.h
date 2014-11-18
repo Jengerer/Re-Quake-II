@@ -94,7 +94,7 @@ private:
 	void LoadFrames();
 	
 	// Load commands into entity model.
-	void LoadCommands();
+	bool LoadCommands();
 
 private:
 

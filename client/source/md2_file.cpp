@@ -34,6 +34,11 @@ bool MD2File::Load(const char *filename)
 		return false;
 	}
 
+	// Load the segments.
+	if (!LoadCommands()) {
+		return false;
+	}
+
 	// Load the frames into the model.
 	LoadFrames();
 	return true;
@@ -56,11 +61,16 @@ bool MD2File::VerifyHeader()
 // Load the frame data.
 void MD2File::LoadFrames()
 {
+	// Keep a reference for the vertices.
+	TexturedMesh *outMesh = out->GetMesh();
+	TexturedVertex *outVertex = outMesh->GetVertexBuffer();
+	int vertexCount = outMesh->GetVertexCount();
+
 	// Get space between frames.
 	const int32_t FrameCount = header->frameCount;
-	const int32_t FrameStride = sizeof(MD2Frame) + (header->vertexCount * sizeof(MD2Vertex));
+	const int32_t FrameStride = sizeof(MD2Frame) + (vertexCount * sizeof(MD2Vertex));
 	const int32_t FrameStart = header->framesOffset;
-	const int32_t FrameEnd = FrameStart + (header->frameCount * FrameStride);
+	const int32_t FrameEnd = FrameStart + (FrameCount * FrameStride);
 
 	// Get frames we're filling out.
 	EntityModelFrame *outFrame = out->GetFrames();
@@ -75,12 +85,13 @@ void MD2File::LoadFrames()
 		Vector3 scale = frame->scale;
 		Vector3 offset = frame->offset;
 
+		// Start the frame vertices at current vertex.
+		outFrame->SetVertices(outVertex, vertexCount);
+
 		// Copy frame name over.
 		outFrame->SetFrameName(frame->name);
 
 		// Copy vertices.
-		TexturedMesh *mesh = outFrame->GetMesh();
-		TexturedVertex *outVertex = mesh->GetVertexBuffer();
 		for (int j = 0; j < FrameCount; ++j, ++vertex, ++outVertex) {
 			outVertex->position.x = (static_cast<float>(vertex->x) * scale.x) + offset.x;
 			outVertex->position.y = (static_cast<float>(vertex->y) * scale.y) + offset.y;
@@ -90,19 +101,20 @@ void MD2File::LoadFrames()
 }
 
 // Load segments and their indices.
-void MD2File::LoadCommands()
+bool MD2File::LoadCommands()
 {
+	// Get segments we're fillin gout.
+	EntityModelSegment *outSegment = out->GetSegments();
 	const int SegmentCount = out->GetSegmentCount();
-	for (int i = 0;	i < SegmentCount; ++i) {
+
 	// Go through each command segment.
 	int32_t vertexCount;
-	Renderer::GeometryType commandType;
+	Renderer::PrimitiveType commandType;
 	const MD2Command *currentCommand = commands;
 
 	// Go through each command segment.
 	// When number of vertices to draw is 0, we're done.
-	EntityModelSegment *currentSegment = outFrame->GetSegments();
-	for (currentCommand = commands; (vertexCount = (currentCommand++)->vertexCount) != 0; ++currentSegment) {
+	for (currentCommand = commands; (vertexCount = (currentCommand++)->vertexCount) != 0; ++outSegment) {
 		// If it's negative, we're drawing a fan.
 		if (vertexCount < 0) {
 			commandType = Renderer::TriangleFan;
@@ -111,12 +123,13 @@ void MD2File::LoadCommands()
 		else {
 			commandType = Renderer::TriangleStrip;
 		}
-		new (currentSegment) Mod
-		currentSegment->SetModelType(modelType);
 
-		// Get output vertex buffer.
-		TexturedMesh *currentMesh = currentSegment->GetMesh();
-		TexturedVertex *currentVertex = currentMesh->GetVertexBuffer();
+		// Allocate indices.
+		if (!outSegment->Initialize(vertexCount, commandType)) {
+			ErrorStack::Log("Failed to initialize model segment.");
+			return false;
+		}
+		int *outIndex = outSegment->GetIndexData();
 
 		// Get starting packet.
 		const MD2CommandPacket *packet = reinterpret_cast<const MD2CommandPacket*>(currentCommand);
@@ -124,9 +137,10 @@ void MD2File::LoadCommands()
 		// Skip appropriate number of packets for next command.
 		currentCommand += vertexCount * PacketIntegerCount;
 
-		// Go through each packet in this command.
-		for (; vertexCount > 0; --vertexCount, ++packet, ++currentVertex) {
-			const MD2Vertex *packetVertex = &vertices[packet->vertexIndex];
-
+		// Copy indices to index buffer.
+		for (; vertexCount > 0; --vertexCount, ++packet, ++outIndex) {
+			*outIndex = packet->vertexIndex;
+		}
 	}
+	return true;
 }

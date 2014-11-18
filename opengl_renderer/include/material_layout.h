@@ -42,7 +42,6 @@ namespace OpenGL
 	private:
 
 		// Array of OpenGL buffers for each layout.
-		const Buffer **buffers;
 		BufferLayout *bufferLayouts;
 		int bufferCount;
 		

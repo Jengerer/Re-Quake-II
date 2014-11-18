@@ -7,17 +7,11 @@
 // Rendering parameters.
 const int PerspectiveShaderAttributeCount = 2;
 const char *VertexShaderFile = "engine.vert";
-const char *FragmentShaderFile = "engine.frag";
+const char *PixelShaderFile = "engine.frag";
 const float NearDistanceZ = 1.0f;
 const float FarDistanceZ = 1024.0f;
 const float AspectRatio = 4.0f / 3.0f;
 const float FieldOfView = 90.0f;
-
-// Renderer shader schemas.
-const Renderer::Attribute ModelAttributes[PerspectiveShaderAttributeCount] = {
-	Renderer::Attribute(VertexShaderFile, Renderer::Vector3Type),
-	Renderer::Attribute(FragmentShaderFile, Renderer::Vector2Type)
-};
 
 // Private functions.
 static void client_load_resources(void);
@@ -25,10 +19,7 @@ static void client_free_resources(void);
 static void client_initialize_shaders(void);
 
 Client::Client()
-	: modelShader(nullptr),
-	textureShader(nullptr),
-	modelProgram(nullptr),
-	modelSchema(nullptr),
+	: model(nullptr),
 	object(nullptr),
 	view(nullptr),
 	projection(nullptr)
@@ -36,9 +27,8 @@ Client::Client()
 }
 
 // Initialize client.
-bool Client::OnInitialized(GameManager::Utilities *utilities)
+bool Client::OnInitialized()
 {
-	SetGameManagerUtilities(utilities);
 	if (!LoadResources()) {
 		return false;
 	}
@@ -66,8 +56,8 @@ bool Client::OnTick()
 // Run end client frame.
 bool Client::OnTickEnd()
 {
-	utilities->ClearScene();
-	utilities->PresentFrame();
+	GameManager::Utilities::renderer->ClearScene();
+	GameManager::Utilities::instance->PresentFrame();
 	return true;
 }
 
@@ -84,15 +74,12 @@ bool Client::LoadResources(void)
 		return false;
 	}
 
-	// Set up the program for retrieving the uniforms.
-	utilities->SetProgram(modelProgram);
-
 	// Get the location to the transform and projection matrix.
-	object = utilities->GetUniform(modelProgram, "object");
+	object = model->GetVariable("object");
 	if (object == nullptr) {
 		return false;
 	}
-	projection = utilities->GetUniform(modelProgram, "projection");
+	projection = model->GetVariable("projection");
 	if (projection == nullptr) {
 		return false;
 	}
@@ -100,10 +87,7 @@ bool Client::LoadResources(void)
 	// Generate projection matrix.
 	Matrix4x4 projectionMatrix;
 	projectionMatrix.PerspectiveProjection(AspectRatio, FieldOfView, NearDistanceZ, FarDistanceZ);
-	utilities->SetUniform(projection, &projectionMatrix);
-
-	// Unset program.
-	utilities->UnsetProgram(modelProgram);
+	projection->Set(&projectionMatrix);
 
 	// Load model.
 	EntityModel model;
@@ -117,40 +101,29 @@ bool Client::LoadResources(void)
 // Free base resources for client.
 void Client::FreeResources(void)
 {
-	// Free uniforms.
-	utilities->DestroyUniform(object);
-	utilities->DestroyUniform(view);
-	utilities->DestroyUniform(projection);
+	// Destroy variables.
+	if (projection != nullptr) {
+		projection->Destroy();
+	}
+	if (view != nullptr) {
+		view->Destroy();
+	}
+	if (object != nullptr) {
+		object->Destroy();
+	}
 
-	// Destroy schema.
-	utilities->DestroyShaderSchema(modelSchema);
-
-	// Destroy program and shaders.
-	utilities->DestroyProgram(modelProgram);
-	utilities->DestroyShader(modelShader);
-	utilities->DestroyShader(textureShader);
+	// Destroy materials.
+	if (model != nullptr) {
+		model->Destroy();
+	}
 }
 
 // Initialize the game's shaders for rendering.
 bool Client::InitializeShaders(void)
 {
 	// Set up program.
-	modelShader = utilities->CreateShader(VertexShaderFile, Renderer::VertexShader);
-	if (modelShader == nullptr) {
-		return false;
-	}
-	textureShader = utilities->CreateShader(FragmentShaderFile, Renderer::FragmentShader);
-	if (textureShader == nullptr) {
-		return false;
-	}
-	modelProgram = utilities->CreateProgram(modelShader, textureShader);
-	if (modelProgram == nullptr) {
-		return false;
-	}
-
-	// Get the renderer schema for the program.
-	modelSchema = utilities->CreateShaderSchema(modelProgram, ModelAttributes, PerspectiveShaderAttributeCount);
-	if (modelSchema == nullptr) {
+	model = GameManager::Utilities::resources->CreateMaterial(VertexShaderFile, PixelShaderFile);
+	if (model == nullptr) {
 		return false;
 	}
 	return true;

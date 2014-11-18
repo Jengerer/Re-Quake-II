@@ -43,24 +43,9 @@ namespace GameManager
 		virtual InputEventResult OnKeyPress(KeyCode key);
 		virtual InputEventResult OnKeyRelease(KeyCode key);
 
-		// Game manager utilities for modules.
+		// Game manager utilities.
 		virtual float GetTime() const;
-		virtual void ClearScene();
 		virtual void PresentFrame();
-		virtual Renderer::Shader *CreateShader(const char *filename, Renderer::ShaderType type);
-		virtual void DestroyShader(Renderer::Shader *shader);
-		virtual Renderer::Program *CreateProgram(const Renderer::Shader *vertexShader, const Renderer::Shader *fragmentShader);
-		virtual void DestroyProgram(Renderer::Program *program);
-		virtual void SetProgram(const Renderer::Program *program);
-		virtual void UnsetProgram(const Renderer::Program *program);
-		virtual Renderer::ShaderSchema *CreateShaderSchema(
-			const Renderer::Program *program,
-			const Renderer::Attribute *attributes,
-			int attributeCount);
-		virtual void DestroyShaderSchema(Renderer::ShaderSchema *schema);
-		virtual Renderer::Uniform *GetUniform(const Renderer::Program *program, const char *name);
-		virtual void DestroyUniform(Renderer::Uniform *uniform);
-		virtual void SetUniform(const Renderer::Uniform *uniform, const Matrix4x4 *matrix);
 
 		// Singleton retriever.
 		static Implementation *GetInstance();

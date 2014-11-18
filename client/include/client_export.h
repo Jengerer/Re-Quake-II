@@ -1,8 +1,7 @@
 #pragma once
 
-#include "jcommon_define.h"
+#include "client_define.h"
 #include "game_module_interface.h"
 
-// TODO: Combine server and client export once they're actually separate modules.
-// Request the game module to fill out the game manager listener structure.
-LibraryExport GameManager::ModuleInterface *GetClientInterface();
+// Get the interface for interacting with the client library.
+ClientLibrary GameManager::ModuleInterface *GetClientInterface();

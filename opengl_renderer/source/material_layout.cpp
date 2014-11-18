@@ -7,7 +7,7 @@
 namespace OpenGL
 {
 
-	MaterialLayout::MaterialLayout() : buffers(0), bufferLayouts(0), bufferCount(0)
+	MaterialLayout::MaterialLayout() : bufferLayouts(0), bufferCount(0)
 	{
 	}
 
@@ -18,67 +18,48 @@ namespace OpenGL
 		this->bufferCount = bufferCount;
 	}
 
-	// Set the buffer layouts for this material layout.
+	// Initialize the layout.
 	bool MaterialLayout::Initialize()
 	{
-		// Allocate an array for the GL buffer pointers.
-		size_t arraySize = bufferCount * sizeof(const Buffer*);
-		const Buffer **buffers = reinterpret_cast<const Buffer**>(MemoryManager::Allocate(arraySize));
-		if (buffers == nullptr) {
-			ErrorStack::Log("Failed to allocate material buffers array.");
-			return false;
-		}
-		this->buffers = buffers;
 		return true;
 	}
 
 	// Destroy this layout.
 	void MaterialLayout::Destroy()
 	{
-		MemoryManager::Free(buffers);
 	}
 
 	// Bind a buffer to a layout slot.
 	void MaterialLayout::BindBuffer(int bufferIndex, const Renderer::Buffer *buffer)
 	{
-		buffers[bufferIndex] = static_cast<const Buffer*>(buffer);
+		// Bind the buffer and activate the matching layout.
+		const Buffer *glBuffer = static_cast<const Buffer*>(buffer);
+		glBuffer->Bind();
+		bufferLayouts[bufferIndex].Activate();
+		glBuffer->Unbind();
 	}
 
 	// Activate this material layout.
 	void MaterialLayout::Activate()
 	{
-		// Activate each buffer and the matching layout.
-		const Buffer **buffers = this->buffers;
-		BufferLayout *bufferLayouts = this->bufferLayouts;
-		int bufferCount = this->bufferCount;
-		for (int i = 0; i < bufferCount; ++i, ++buffers, ++bufferLayouts) {
-			const Buffer *currentBuffer = *buffers;
-			currentBuffer->Bind();
-			bufferLayouts->Activate();
-		}
+		// No need to do anything, all buffers are bound.
 	}
 
 	// Deactivate this material layout.
 	void MaterialLayout::Deactivate()
 	{
-		// Deactivate each buffer and the matching layout.
-		const Buffer **buffers = this->buffers;
+		// Deactivate all layouts.
 		BufferLayout *bufferLayouts = this->bufferLayouts;
 		int bufferCount = this->bufferCount;
-		for (int i = 0; i < bufferCount; ++i, ++buffers, ++bufferLayouts) {
-			const Buffer *currentBuffer = *buffers;
+		for (int i = 0; i < bufferCount; ++i, ++bufferLayouts) {
 			bufferLayouts->Deactivate();
-			currentBuffer->Unbind();
 		}
 	}
 
 	// Private destructor; must be killed through Destroy().
 	MaterialLayout::~MaterialLayout()
 	{
-		// Delete the arrays.
-		if (buffers != nullptr) {
-			MemoryManager::Free(buffers);
-		}
+		// Delete the buffer layouts.
 		if (bufferLayouts != nullptr) {
 			delete[] bufferLayouts;
 		}

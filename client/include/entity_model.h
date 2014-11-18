@@ -56,10 +56,9 @@ public:
 	void SetVertices(const TexturedVertex *vertices, int vertexCount);
 
 	// Handle renderer resources.
-	bool LoadVertices(const TexturedVertex *vertices,
-		int vertexCount,
-		Renderer::Resources *resources);
-	void Precache(Renderer::Resources *resources);
+	bool LoadResources(Renderer::Resources *resources);
+
+	// Get the vertex buffer for this frame.
 	inline Renderer::Buffer *GetVertexBuffer() { return vertexBuffer; }
 
 	// Set frame name.
@@ -71,7 +70,7 @@ private:
 
 	// Vertex data for this frame.
 	const TexturedVertex *vertices;
-	int vertexCount;
+	int bufferSize;
 
 	// Renderer resource for this frame.
 	Renderer::Buffer *vertexBuffer;
@@ -101,6 +100,9 @@ public:
 	inline EntityModelSegment *GetSegments() { return segments; }
 	inline int GetSegmentCount() const { return segmentCount; }
 
+	// Get mesh of vertices.
+	inline TexturedMesh *GetMesh() { return &vertices; }
+
 public:
 
 	// Get material layout for models.
@@ -124,27 +126,3 @@ private:
 	static Renderer::MaterialLayout *layout;
 
 };
-
-// Get vertex buffer for segment.
-TexturedMesh *EntityModelSegment::GetMesh()
-{
-	return &mesh;
-}
-
-// Get segment model.
-const Renderer::Model *EntityModelSegment::GetModel() const
-{
-	return model;
-}
-
-// Get segment buffer for frame.
-EntityModelSegment *EntityModelFrame::GetSegments()
-{
-	return segments;
-}
-
-// Get frame buffer for model.
-EntityModelFrame *EntityModel::GetFrames()
-{
-	return frames;
-}

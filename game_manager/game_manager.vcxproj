@@ -44,6 +44,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
+    <IncludePath>.\include;..\include;..\common\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>..\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -55,11 +57,12 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;JGAME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GameManagerLibraryExport;WIN32;_DEBUG;_WINDOWS;_USRDLL;JGAME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>common_debug.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,6 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\game_manager.h" />
+    <ClInclude Include="include\game_manager_define.h" />
     <ClInclude Include="include\game_manager_export.h" />
     <ClInclude Include="include\game_manager_listener.h" />
     <ClInclude Include="include\game_manager_shared.h" />
@@ -92,6 +96,7 @@
   <ItemGroup>
     <ClCompile Include="source\game_manager.cpp" />
     <ClCompile Include="source\game_manager_export.cpp" />
+    <ClCompile Include="source\game_manager_utilities.cpp" />
     <ClCompile Include="source\game_module.cpp" />
     <ClCompile Include="source\plane.cpp" />
   </ItemGroup>
