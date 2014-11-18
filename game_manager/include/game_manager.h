@@ -46,6 +46,8 @@ namespace GameManager
 		// Game manager utilities.
 		virtual float GetTime() const;
 		virtual void PresentFrame();
+		virtual Renderer::Interface *GetRenderer();
+		virtual Renderer::Resources *GetRendererResources();
 
 		// Singleton retriever.
 		static Implementation *GetInstance();

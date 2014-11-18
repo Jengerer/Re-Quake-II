@@ -42,9 +42,6 @@
     <ClCompile Include="source\plane.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\game_manager_utilities.cpp">
-      <Filter>include</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

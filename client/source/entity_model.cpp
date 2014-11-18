@@ -90,7 +90,7 @@ void EntityModelFrame::SetFrameName(const char frameName[FrameNameLength])
 	strncpy(this->frameName, frameName, FrameNameLength);
 }
 
-EntityModel::EntityModel() : frames(nullptr), frameCount(0)
+EntityModel::EntityModel() : frames(nullptr), frameCount(0), segments(nullptr), segmentCount(0)
 {
 }
 

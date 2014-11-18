@@ -25,16 +25,11 @@ namespace GameManager
 		// Swap buffer and present frame.
 		virtual void PresentFrame() = 0;
 
-	public:
+		// Get renderer reference.
+		virtual Renderer::Interface *GetRenderer() = 0;
 
-		// Implementing utilities singleton.
-		static Utilities *instance;
-
-		// Renderer interface.
-		static Renderer::Interface *renderer;
-
-		// Renderer resource interface.
-		static Renderer::Resources *resources;
+		// Get renderer resources reference.
+		virtual Renderer::Resources *GetRendererResources() = 0;
 
 	};
 

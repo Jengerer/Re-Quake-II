@@ -13,13 +13,9 @@ const float FarDistanceZ = 1024.0f;
 const float AspectRatio = 4.0f / 3.0f;
 const float FieldOfView = 90.0f;
 
-// Private functions.
-static void client_load_resources(void);
-static void client_free_resources(void);
-static void client_initialize_shaders(void);
-
 Client::Client()
-	: model(nullptr),
+	: utilities(nullptr),
+	model(nullptr),
 	object(nullptr),
 	view(nullptr),
 	projection(nullptr)
@@ -27,8 +23,9 @@ Client::Client()
 }
 
 // Initialize client.
-bool Client::OnInitialized()
+bool Client::OnInitialized(GameManager::Utilities *utilities)
 {
+	this->utilities = utilities;
 	if (!LoadResources()) {
 		return false;
 	}
@@ -56,8 +53,8 @@ bool Client::OnTick()
 // Run end client frame.
 bool Client::OnTickEnd()
 {
-	GameManager::Utilities::renderer->ClearScene();
-	GameManager::Utilities::instance->PresentFrame();
+	utilities->GetRenderer()->ClearScene();
+	utilities->PresentFrame();
 	return true;
 }
 
@@ -122,7 +119,7 @@ void Client::FreeResources(void)
 bool Client::InitializeShaders(void)
 {
 	// Set up program.
-	model = GameManager::Utilities::resources->CreateMaterial(VertexShaderFile, PixelShaderFile);
+	model = utilities->GetRendererResources()->CreateMaterial(VertexShaderFile, PixelShaderFile);
 	if (model == nullptr) {
 		return false;
 	}

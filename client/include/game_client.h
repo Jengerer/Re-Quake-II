@@ -16,7 +16,7 @@ public:
 	Client();
 
 	// Game manager listener functions.
-	virtual bool OnInitialized();
+	virtual bool OnInitialized(GameManager::Utilities *utilities);
 	virtual void OnShutdown();
 	virtual bool OnTickBegin();
 	virtual bool OnTick();
@@ -33,6 +33,9 @@ private:
 	bool InitializeShaders();
 
 private:
+
+	// Reference for game manager utilities.
+	GameManager::Utilities *utilities;
 
 	// Shader parameters.
 	Renderer::Material *model;

@@ -64,7 +64,7 @@ void MD2File::LoadFrames()
 	// Keep a reference for the vertices.
 	TexturedMesh *outMesh = out->GetMesh();
 	TexturedVertex *outVertex = outMesh->GetVertexBuffer();
-	int vertexCount = outMesh->GetVertexCount();
+	int vertexCount = header->vertexCount;
 
 	// Get space between frames.
 	const int32_t FrameCount = header->frameCount;

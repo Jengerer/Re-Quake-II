@@ -1,4 +1,8 @@
+#include "client_export.h"
+#include "engine_export.h"
 #include "error_stack.h"
+#include "game_manager_export.h"
+#include "opengl_export.h"
 #include "renderer/attribute.h"
 #include "renderer/buffer_layout.h"
 #include <stdio.h>
@@ -34,8 +38,6 @@ int main(int argc, char *argv[])
 
 	bool success;
 
-
-	/*
 	// Get engine implementation.
 	Engine::Interface *engine = GetEngineInterface();
 
@@ -77,7 +79,6 @@ int main(int argc, char *argv[])
 	}
 
 	engine->Shutdown();
-	*/
 	return success;
 }
 

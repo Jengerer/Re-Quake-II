@@ -48,11 +48,6 @@ namespace GameManager
 		// Save the upper utilities interface.
 		this->engineUtilities = engineUtilities;
 
-		// Set the singleton interfaces.
-		Utilities::instance = this;
-		Utilities::renderer = engineUtilities->GetRenderer();
-		Utilities::resources = engineUtilities->GetRendererResources();
-
 		// Set up renderer and create window.
 		WindowFlags flags;
 		flags.raw = 0;
@@ -61,7 +56,7 @@ namespace GameManager
 		}
 
 		// Pass to client to set up.
-		if (!clientListener->OnInitialized()) {
+		if (!clientListener->OnInitialized(this)) {
 			return false;
 		}
 		return true;
@@ -113,6 +108,18 @@ namespace GameManager
 	void Implementation::PresentFrame()
 	{
 		engineUtilities->SwapBuffers();
+	}
+
+	// Get renderer interface reference.
+	Renderer::Interface *Implementation::GetRenderer()
+	{
+		return engineUtilities->GetRenderer();
+	}
+
+	// Get renderer resources interface reference.
+	Renderer::Resources *Implementation::GetRendererResources()
+	{
+		return engineUtilities->GetRendererResources();
 	}
 
 	// Get singleton instance.

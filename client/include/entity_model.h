@@ -111,14 +111,14 @@ public:
 
 private:
 
-	// Array of model segments (and their index buffers).
-	EntityModelSegment *segments;
-	int segmentCount;
-
 	// Frames of the model's animations (and their vertex buffers).
 	TexturedMesh vertices;
 	EntityModelFrame *frames;
 	int frameCount;
+
+	// Array of model segments (and their index buffers).
+	EntityModelSegment *segments;
+	int segmentCount;
 
 private:
 

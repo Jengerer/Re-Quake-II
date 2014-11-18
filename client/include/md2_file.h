@@ -113,6 +113,4 @@ private:
 	const MD2Header *header;
 	const MD2Command *commands;
 
-	// 
-
 };

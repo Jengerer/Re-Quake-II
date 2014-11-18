@@ -96,7 +96,6 @@
   <ItemGroup>
     <ClCompile Include="source\game_manager.cpp" />
     <ClCompile Include="source\game_manager_export.cpp" />
-    <ClCompile Include="source\game_manager_utilities.cpp" />
     <ClCompile Include="source\game_module.cpp" />
     <ClCompile Include="source\plane.cpp" />
   </ItemGroup>
