@@ -32,5 +32,5 @@ void *MemoryManager::Allocate(unsigned int size)
 void MemoryManager::Free(void* buffer)
 {
 	activeAllocations -= 1;
-	free(buffer);
+	delete[] reinterpret_cast<char*>(buffer);
 }

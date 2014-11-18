@@ -1,5 +1,6 @@
 #pragma once
 
+#include "allocatable.h"
 #include "common.h"
 #include "renderer/index_buffer_interface.h"
 
@@ -7,7 +8,7 @@ namespace OpenGL
 {
 
 	// Class representing an index buffer.
-	class IndexBuffer : public Renderer::IndexBuffer
+	class IndexBuffer : public Renderer::IndexBuffer, public Allocatable
 	{
 
 	public:

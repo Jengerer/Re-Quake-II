@@ -1,11 +1,11 @@
 #pragma once
 
-#include "shared_defines.h"
-#include "renderer.h"
-#include "renderer_resources.h"
+#include "opengl_define.h"
+#include "renderer/renderer_interface.h"
+#include "renderer/resources_interface.h"
 
 // Function to retrieve base renderer functions.
-LibraryExport Renderer::Interface *GetRendererInterface();
+OpenGLLibrary Renderer::Interface *GetRendererInterface();
 
 // Function to retrieve renderer shader utilties.
-LibraryExport Renderer::Resources *GetRendererResources();
+OpenGLLibrary Renderer::Resources *GetRendererResources();

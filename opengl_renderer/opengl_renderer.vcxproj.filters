@@ -1,28 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="include\opengl_renderer.h" />
-    <ClInclude Include="include\opengl_resources.h" />
-    <ClInclude Include="include\buffer.h" />
-    <ClInclude Include="include\common.h" />
-    <ClInclude Include="include\opengl_export.h" />
-    <ClInclude Include="include\index_buffer.h" />
-    <ClInclude Include="include\material.h" />
-    <ClInclude Include="include\attribute.h" />
-    <ClInclude Include="include\variable.h" />
-    <ClInclude Include="include\buffer_layout.h" />
-    <ClInclude Include="include\material_layout.h" />
+    <ClInclude Include="include\attribute.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\buffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\buffer_layout.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\index_buffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\material.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\material_layout.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\opengl_export.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\variable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\opengl_define.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\resources.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\opengl_export.cpp" />
-    <ClCompile Include="source\opengl_renderer.cpp" />
-    <ClCompile Include="source\opengl_resources.cpp" />
-    <ClCompile Include="source\attribute.cpp" />
-    <ClCompile Include="source\buffer.cpp" />
-    <ClCompile Include="source\variable.cpp" />
-    <ClCompile Include="source\buffer_layout.cpp" />
-    <ClCompile Include="source\material.cpp" />
-    <ClCompile Include="source\material_layout.cpp" />
-    <ClCompile Include="source\index_buffer.cpp" />
+    <ClCompile Include="source\attribute.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\buffer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\buffer_layout.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\index_buffer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\material.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\material_layout.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\opengl_export.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\variable.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resources.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\renderer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\common.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{1906cb04-f37a-45f3-abeb-254330bebaa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{8de643b9-1b5a-432e-a110-346c027d4d28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

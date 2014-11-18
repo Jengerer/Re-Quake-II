@@ -24,7 +24,7 @@ namespace OpenGL
 	// Destroy the buffer.
 	void Buffer::Destroy()
 	{
-		MemoryManager::Destroy(this);
+		delete this;
 	}
 
 	// Load data into the buffer.

@@ -23,7 +23,7 @@
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -43,11 +43,14 @@
     <IncludePath>.\include;.\common\include;$(SDK_LIB_DIR)\libpng;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>.\common\lib;$(SDK_LIB_DIR)\libpng\projects\vstudio\Debug;$(SDK_LIB_DIR)\glew\lib\Release\Win32;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>.\common\lib;$(SDK_LIB_DIR)\libpng\projects\vstudio\Debug;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\</OutDir>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SDK_LIB_DIR)\glew\include;$(SDK_LIB_DIR)\sdl2\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SDK_LIB_DIR)\glew\lib\Release\Win32;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <OutDir>$(SolutionDir)lib\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -60,7 +63,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>common_debug.lib;libpng16.lib;opengl32.lib;glew32.lib;SDL2main.lib;SDL2.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>common_debug.lib;libpng16.lib;SDL2main.lib;SDL2.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -71,6 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>EngineLibraryExport;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -85,7 +89,6 @@
     <ClInclude Include="include\engine_export.h" />
     <ClInclude Include="include\engine_interface.h" />
     <ClInclude Include="include\engine_utilities.h" />
-    <ClInclude Include="include\file.h" />
     <ClInclude Include="include\engine_listener.h" />
     <ClInclude Include="include\engine_define.h" />
     <ClInclude Include="include\sdl_window.h" />

@@ -11,8 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\allocatable.h" />
     <ClInclude Include="include\common_define.h" />
     <ClInclude Include="include\error_stack.h" />
+    <ClInclude Include="include\file.h" />
     <ClInclude Include="include\math_common.h" />
     <ClInclude Include="include\matrix3x3.h" />
     <ClInclude Include="include\matrix4x4.h" />
@@ -32,6 +34,8 @@
     <ClInclude Include="include\vector4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\file.cpp" />
+    <ClCompile Include="source\allocatable.cpp" />
     <ClCompile Include="source\error_stack.cpp" />
     <ClCompile Include="source\math_common.cpp" />
     <ClCompile Include="source\matrix3x3.cpp" />
@@ -74,12 +78,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)lib\</OutDir>
+    <OutDir>$(SolutionDir)lib\</OutDir>
     <IncludePath>.\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)lib\</OutDir>
+    <OutDir>$(SolutionDir)lib\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

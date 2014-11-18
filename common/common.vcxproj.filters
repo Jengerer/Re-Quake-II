@@ -72,6 +72,12 @@
     <ClInclude Include="include\common_define.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\allocatable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\file.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\error_stack.cpp">
@@ -103,6 +109,12 @@
     </ClCompile>
     <ClCompile Include="source\renderer\buffer_layout.cpp">
       <Filter>source\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\allocatable.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\file.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

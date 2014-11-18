@@ -23,13 +23,6 @@ namespace Renderer
 			const BufferLayout *bufferLayouts,
 			int bufferCount) = 0;
 
-		// Set this material as the one to render with.
-		// This function must be called after all the buffers are bound.
-		virtual void Activate() = 0;
-
-		// Unset this material as the one to render with.
-		virtual void Deactivate() = 0;
-
 	};
 
 }

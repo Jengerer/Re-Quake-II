@@ -1,9 +1,9 @@
 #pragma once
 
+#include "common.h"
 #include "matrix3x3.h"
 #include "matrix4x4.h"
-#include "common.h"
-#include "renderer/resources.h"
+#include "renderer/resources_interface.h"
 #include "vector3.h"
 #include "vector4.h"
 
@@ -17,7 +17,7 @@ namespace OpenGL
 	public:
 
 		// Load a material defined by a vertex/pixel shader.
-		virtual Renderer::Material *CreateMaterial(const char *name, const Renderer::MaterialLayout *layout);
+		virtual Renderer::Material *CreateMaterial(const char *vertexFile, const char *pixelFile);
 
 		// Generate a buffer for vertex data.
 		virtual Renderer::Buffer *CreateBuffer();

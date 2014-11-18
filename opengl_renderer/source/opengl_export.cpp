@@ -1,6 +1,6 @@
 #include "opengl_export.h"
-#include "opengl_renderer.h"
-#include "opengl_resources.h"
+#include "renderer.h"
+#include "resources.h"
 
 // Get renderer interface reference.
 Renderer::Interface *GetRendererInterface()

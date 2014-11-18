@@ -1,5 +1,6 @@
 #pragma once
 
+#include "allocatable.h"
 #include "buffer.h"
 #include "buffer_layout.h"
 #include "renderer/material_layout_interface.h"
@@ -8,7 +9,7 @@ namespace OpenGL
 {
 
 	// Object for representing multiple buffer layouts in a material.
-	class MaterialLayout : public Renderer::MaterialLayout
+	class MaterialLayout : public Renderer::MaterialLayout, public Allocatable
 	{
 
 	public:
@@ -28,10 +29,10 @@ namespace OpenGL
 		virtual void BindBuffer(int bufferIndex, const Renderer::Buffer *buffer);
 
 		// Activate this layout for rendering.
-		virtual void Activate();
+		void Activate();
 
 		// Deactivate this layout from rendering.
-		virtual void Deactivate();
+		void Deactivate();
 
 	private:
 

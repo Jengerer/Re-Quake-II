@@ -58,8 +58,8 @@ namespace OpenGL
 		glLinkProgram(handle);
 		glGetProgramiv(handle, GL_INFO_LOG_LENGTH, &logLength);
 		if (logLength != 0) {
-			GLchar *log;
-			if (MemoryManager::AllocateArray(&log, logLength)) {
+			GLchar *log = reinterpret_cast<GLchar*>(MemoryManager::Allocate(logLength));
+			if (log != nullptr) {
 				glGetProgramInfoLog(handle, logLength, &logLength, log);
 				// TODO: print to warning handler.
 				MemoryManager::Free(log);
@@ -77,7 +77,7 @@ namespace OpenGL
 	// Destroy the material.
 	void Material::Destroy()
 	{
-		MemoryManager::Destroy(this);
+		delete this;
 	}
 
 	// Get a reference to a variable in this material.
@@ -90,12 +90,11 @@ namespace OpenGL
 		}
 
 		// Create variable object.
-		Variable *variable;
-		if (!MemoryManager::Allocate(&variable)) {
+		Variable *variable = new Variable(location);
+		if (variable == nullptr) {
 			ErrorStack::Log("Failed to allocate variable object.");
 			return nullptr;
 		}
-		new (variable) Variable(location);
 		return static_cast<Renderer::Variable*>(variable);
 	}
 
@@ -105,23 +104,22 @@ namespace OpenGL
 		int bufferCount)
 	{
 		// Create the material layout object.
-		MaterialLayout *layout;
-		if (!MemoryManager::Allocate(&layout)) {
+		MaterialLayout *layout = new MaterialLayout();
+		if (layout == nullptr) {
 			ErrorStack::Log("Failed to allocate material layout object.");
 			return nullptr;
 		}
-		new (layout) MaterialLayout();
 		
 		// Convert the buffer layouts to OpenGL ones.
-		BufferLayout *outLayout;
-		if (!MemoryManager::AllocateArray(&outLayout, bufferCount)) {
-			MemoryManager::Destroy(layout);
+		BufferLayout *outLayout = new BufferLayout[bufferCount];
+		if (outLayout == nullptr) {
+			layout->Destroy();
 			ErrorStack::Log("Failed to allocate buffer layout objects.");
 			return nullptr;
 		}
 		layout->SetBufferLayouts(outLayout, bufferCount);
 		if (!layout->Initialize()) {
-			MemoryManager::Destroy(layout);
+			layout->Destroy();
 			return nullptr;
 		}
 
@@ -129,9 +127,9 @@ namespace OpenGL
 		for (int i = 0; i < bufferCount; ++i, ++outLayout, ++bufferLayouts) {
 			// Create attribute array for this buffer.
 			int attributeCount = bufferLayouts->GetAttributeCount();
-			Attribute *attributes;
-			if (!MemoryManager::AllocateArray(&attributes, attributeCount)) {
-				MemoryManager::Destroy(layout);
+			Attribute *attributes = new Attribute[attributeCount];
+			if (attributes == nullptr) {
+				layout->Destroy();
 				ErrorStack::Log("Failed to allocate attribute array.");
 				return nullptr;
 			}
@@ -147,7 +145,7 @@ namespace OpenGL
 				// Get the location of the attribute.
 				GLint location = glGetAttribLocation(handle, name);
 				if (location != -1) {
-					MemoryManager::Destroy(layout);
+					layout->Destroy();
 					ErrorStack::Log("Failed to get location of attribute '%s'.", name);
 					return nullptr;
 				}
@@ -191,14 +189,14 @@ namespace OpenGL
 		glCompileShader(shader);
 
 		// Check for any complaints.
-		GLchar *log;
 		GLint logLength;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
 		if (logLength > 1) {
-			if (MemoryManager::AllocateArray(&log, logLength)) {
+			GLchar *log = reinterpret_cast<GLchar*>(MemoryManager::Allocate(logLength));
+			if (log == nullptr) {
 				glGetShaderInfoLog(shader, logLength, &logLength, log);
 				// TODO: Print the warning/error.
-				MemoryManager::DestroyArray(log);
+				MemoryManager::Free(log);
 			}
 		}
 

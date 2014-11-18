@@ -1,9 +1,10 @@
 #pragma once
 
+#include "allocatable.h"
 #include "common_define.h"
 
 // Error stack node.
-class ErrorStackNode
+class ErrorStackNode : public Allocatable
 {
 
 public:

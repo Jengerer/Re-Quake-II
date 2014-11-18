@@ -1,5 +1,6 @@
 #pragma once
 
+#include "allocatable.h"
 #include "attribute.h"
 #include "common.h"
 
@@ -7,7 +8,7 @@ namespace OpenGL
 {
 
 	// Structure for representing an OpenGL buffer layout.
-	class BufferLayout
+	class BufferLayout : public Allocatable
 	{
 
 	public:

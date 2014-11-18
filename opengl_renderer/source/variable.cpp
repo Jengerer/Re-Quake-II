@@ -11,7 +11,7 @@ namespace OpenGL
 	// Destroy variable reference.
 	void Variable::Destroy()
 	{
-		MemoryManager::Destroy(this);
+		delete this;
 	}
 
 	// Set value as float.

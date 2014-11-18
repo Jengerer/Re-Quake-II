@@ -1,9 +1,9 @@
 #pragma once
 
-#include "engine_define.h"
+#include "common_define.h"
 
 // Class for handling file and loading it to a buffer.
-class EngineLibrary File
+class CommonLibrary File
 {
 
 public:

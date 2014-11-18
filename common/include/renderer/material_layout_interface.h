@@ -18,12 +18,6 @@ namespace Renderer
 		// Bind a buffer to a specific layout.
 		virtual void BindBuffer(int bufferIndex, const Buffer *buffer) = 0;
 
-		// Activate this layout to be used with rendering.
-		virtual void Activate() = 0;
-
-		// Deactivate this layout from rendering.
-		virtual void Deactivate() = 0;
-
 	};
 
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "allocatable.h"
 #include "common.h"
 #include "renderer/material_interface.h"
 
@@ -7,7 +8,7 @@ namespace OpenGL
 {
 
 	// Full OpenGL shader program.
-	class Material : public Renderer::Material
+	class Material : public Renderer::Material, public Allocatable
 	{
 
 	public:
@@ -33,10 +34,10 @@ namespace OpenGL
 			int bufferCount);
 
 		// Set this program as active.
-		virtual void Activate();
+		void Activate();
 
 		// Unset this program from rendering.
-		virtual void Deactivate();
+		void Deactivate();
 
 	private:
 

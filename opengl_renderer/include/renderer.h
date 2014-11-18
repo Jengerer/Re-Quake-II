@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer/renderer_interface.h"
 #include "common.h"
+#include "renderer/renderer_interface.h"
 
 namespace OpenGL
 {
@@ -16,10 +16,24 @@ namespace OpenGL
 		virtual bool Initialize();
 
 		// Shut down the renderer.
-		virtual void Shutdown();
+		virtual void Destroy();
 
 		// Clear scene for a new frame.
 		virtual void ClearScene();
+
+		// Set the material to render with.
+		virtual void SetMaterial(Renderer::Material *material);
+
+		// Unset material from rendering.
+		virtual void UnsetMaterial(Renderer::Material *material);
+
+		// Activate a material layout.
+		virtual void SetMaterialLayout(Renderer::MaterialLayout *layout);
+
+		// Deactivate a material layout.
+		virtual void UnsetMaterialLayout(Renderer::MaterialLayout *layout);
+
+	public:
 
 		// Singleton retriever.
 		static Implementation *GetInstance();

@@ -22,8 +22,9 @@ namespace OpenGL
 	bool MaterialLayout::Initialize()
 	{
 		// Allocate an array for the GL buffer pointers.
-		const Buffer **buffers;
-		if (!MemoryManager::AllocateArray(&buffers, bufferCount)) {
+		size_t arraySize = bufferCount * sizeof(const Buffer*);
+		const Buffer **buffers = reinterpret_cast<const Buffer**>(MemoryManager::Allocate(arraySize));
+		if (buffers == nullptr) {
 			ErrorStack::Log("Failed to allocate material buffers array.");
 			return false;
 		}
@@ -34,7 +35,7 @@ namespace OpenGL
 	// Destroy this layout.
 	void MaterialLayout::Destroy()
 	{
-		MemoryManager::Destroy(this);
+		MemoryManager::Free(buffers);
 	}
 
 	// Bind a buffer to a layout slot.
@@ -76,10 +77,10 @@ namespace OpenGL
 	{
 		// Delete the arrays.
 		if (buffers != nullptr) {
-			MemoryManager::DestroyArray(buffers);
+			MemoryManager::Free(buffers);
 		}
 		if (bufferLayouts != nullptr) {
-			MemoryManager::DestroyArray(bufferLayouts);
+			delete[] bufferLayouts;
 		}
 	}
 

@@ -58,16 +58,13 @@ void ErrorStack::Log(const char *format, ...)
 	buffer[length] = '\0';
 
 	// Allocate a stack node.
-	ErrorStackNode *node;
-	if (!MemoryManager::Allocate(&node)) {}
-	node = reinterpret_cast<ErrorStackNode*>(MemoryManager::Allocate(sizeof(ErrorStackNode)));
+	ErrorStackNode *node = new ErrorStackNode(buffer, head);
 	if (node == NULL) {
 		MemoryManager::Free(buffer);
 		return;
 	}
 
 	// Set this as new head.
-	new (node) ErrorStackNode(buffer, head);
 	head = node;
 }
 
@@ -86,7 +83,7 @@ void ErrorStack::Clear()
 	ErrorStackNode *node = head;
 	while (node != nullptr) {
 		ErrorStackNode *next = node->GetNext();
-		MemoryManager::Destroy(node);
+		delete node;
 		node = next;
 	}
 }

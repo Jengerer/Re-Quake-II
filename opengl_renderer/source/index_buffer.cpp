@@ -23,7 +23,7 @@ namespace OpenGL
 	// Destroy this index buffer.
 	void IndexBuffer::Destroy()
 	{
-		MemoryManager::Destroy(this);
+		delete this;
 	}
 
 	// Initialize from index data.

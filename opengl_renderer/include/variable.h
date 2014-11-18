@@ -1,13 +1,14 @@
 #pragma once
 
+#include "allocatable.h"
 #include "common.h"
-#include "renderer/variable.h"
+#include "renderer/variable_interface.h"
 
 namespace OpenGL
 {
 
 	// Object representing a uniform variable in an OpenGL program.
-	class Variable : public Renderer::Variable
+	class Variable : public Renderer::Variable, public Allocatable
 	{
 
 	public:

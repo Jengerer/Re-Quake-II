@@ -19,7 +19,7 @@ namespace Renderer
 	public:
 
 		// Load a material defined by a vertex/pixel shader.
-		virtual Material *CreateMaterial(const char *name, const Renderer::MaterialLayout *layout) = 0;
+		virtual Material *CreateMaterial(const char *vertexFile, const char *pixelFile) = 0;
 
 		// Generate a buffer for vertex data.
 		virtual Buffer *CreateBuffer() = 0;

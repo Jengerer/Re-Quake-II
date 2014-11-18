@@ -15,7 +15,7 @@ namespace OpenGL
 	{
 		// Destroy attributes if there are any.
 		if (attributes != nullptr) {
-			MemoryManager::DestroyArray(attributes);
+			delete[] attributes;
 		}
 	}
 

@@ -23,9 +23,6 @@
     <ClInclude Include="include\engine_export.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\file.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\sdl_window.h">
       <Filter>include</Filter>
     </ClInclude>
