@@ -3,13 +3,6 @@
 #include "vector3.h"
 #include "vector2.h"
 
-// Mesh vertex structure.
-struct TexturedVertex
-{
-	Vector3 position;
-	Vector2 texture;
-};
-
 // Class for representing a mesh of vertices.
 template <typename VertexType>
 class Mesh
@@ -62,6 +55,3 @@ bool Mesh<VertexType>::Initialize(int vertexCount)
 	this->vertexCount = vertexCount;
 	return true;
 }
-
-// Common vertex defines.
-typedef Mesh<TexturedVertex> TexturedMesh;

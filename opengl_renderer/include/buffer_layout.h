@@ -19,6 +19,9 @@ namespace OpenGL
 		// Set the attributes array for this layout.
 		void SetAttributes(Attribute *attributes, int attributeCount);
 
+		// Set the total size of the attributes.
+		inline void SetStride(int stride) { this->stride = stride; }
+
 		// Enable this schema for the current buffer.
 		void Activate() const;
 
@@ -29,6 +32,7 @@ namespace OpenGL
 
 		Attribute *attributes;
 		int attributeCount;
+		int stride;
 
 	};
 

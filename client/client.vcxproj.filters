@@ -44,6 +44,9 @@
     <ClInclude Include="include\client_define.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\quake_normals.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\client_export.cpp">
@@ -65,6 +68,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\md2_file.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\quake_normals.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

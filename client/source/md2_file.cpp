@@ -1,5 +1,6 @@
 #include "error_stack.h"
 #include "md2_file.h"
+#include "quake_normals.h"
 
 MD2File::MD2File(EntityModel *out)
 	: out(out),
@@ -29,8 +30,7 @@ bool MD2File::Load(const char *filename)
 	commands = reinterpret_cast<const MD2Command*>(file.GetBuffer() + header->commandsOffset);
 
 	// Initialize the model.
-	if (!out->Initialize(header->frameCount, header->commandCount, header->vertexCount)) {
-		ErrorStack::Log("Failed to initialize model for loading: %s", filename);
+	if (!out->Initialize(header->frameCount, header->vertexCount)) {
 		return false;
 	}
 
@@ -57,15 +57,16 @@ bool MD2File::VerifyHeader()
 	}
 	return true;
 }
+#include <stdio.h>
 
 // Load the frame data.
 void MD2File::LoadFrames()
 {
 	// Keep a reference for the vertices.
-	TexturedMesh *outMesh = out->GetMesh();
-	TexturedVertex *outVertex = outMesh->GetVertexBuffer();
+	EntityModelMesh *outMesh = out->GetMesh();
+	EntityModelVertex *outVertex = outMesh->GetVertexBuffer();
 	const int VertexCount = header->vertexCount;
-	const int BufferSize = VertexCount * sizeof(TexturedVertex);
+	const int BufferSize = VertexCount * sizeof(EntityModelVertex);
 
 	// Get space between frames.
 	const int32_t FrameCount = header->frameCount;
@@ -94,9 +95,14 @@ void MD2File::LoadFrames()
 
 		// Copy vertices.
 		for (int j = 0; j < VertexCount; ++j, ++vertex, ++outVertex) {
+			// Quake II used Z as up, swap them so Y is up.
 			outVertex->position.x = (static_cast<float>(vertex->x) * scale.x) + offset.x;
-			outVertex->position.y = (static_cast<float>(vertex->y) * scale.y) + offset.y;
-			outVertex->position.z = (static_cast<float>(vertex->y) * scale.z) + offset.z;
+			outVertex->position.y = (static_cast<float>(vertex->z) * scale.z) + offset.z;
+			outVertex->position.z = (static_cast<float>(vertex->y) * scale.y) + offset.y;
+
+			// Get normal by index.
+			const Vector3 *normal = &QuakeNormals[vertex->normalIndex];
+			outVertex->normal.Copy(normal);
 		}
 	}
 }
@@ -104,13 +110,29 @@ void MD2File::LoadFrames()
 // Load segments and their indices.
 bool MD2File::LoadCommands()
 {
-	// Get segments we're fillin gout.
-	EntityModelSegment *outSegment = out->GetSegments();
-
 	// Go through each command segment.
 	int32_t vertexCount;
 	Renderer::PrimitiveType commandType;
 	const MD2Command *currentCommand = commands;
+
+	// First count the number of primitives.
+	// When number of vertices to draw is 0, we're done.
+	int segmentCount = 0;
+	for (currentCommand = commands; (vertexCount = (currentCommand++)->vertexCount) != 0; ++segmentCount) {
+		if (vertexCount < 0) {
+			vertexCount = -vertexCount;
+		}
+		currentCommand += (vertexCount * PacketIntegerCount);
+	}
+
+	// Initialize the model for the index/command count.
+	// Index count is (number of commands) - (number of segments) - (1 for the zero-vertex end command).
+	int indexCount = header->commandCount - (segmentCount + 1);
+	if (!out->InitializeSegments(indexCount, segmentCount)) {
+		return false;
+	}
+	unsigned int *outIndex = out->GetIndexData();
+	EntityModelSegment *outSegment = out->GetSegments();
 
 	// Go through each command segment.
 	// When number of vertices to draw is 0, we're done.
@@ -124,12 +146,8 @@ bool MD2File::LoadCommands()
 			commandType = Renderer::TriangleStrip;
 		}
 
-		// Allocate indices.
-		if (!outSegment->Initialize(vertexCount, commandType)) {
-			ErrorStack::Log("Failed to initialize model segment.");
-			return false;
-		}
-		int *outIndex = outSegment->GetIndexData();
+		// Set the buffer that this segment will use.
+		outSegment->SetParameters(outIndex, vertexCount, commandType);
 
 		// Get starting packet.
 		const MD2CommandPacket *packet = reinterpret_cast<const MD2CommandPacket*>(currentCommand);
@@ -139,7 +157,7 @@ bool MD2File::LoadCommands()
 
 		// Copy indices to index buffer.
 		for (; vertexCount > 0; --vertexCount, ++packet, ++outIndex) {
-			*outIndex = packet->vertexIndex;
+			*outIndex = static_cast<unsigned int>(packet->vertexIndex);
 		}
 	}
 	return true;

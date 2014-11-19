@@ -1,5 +1,6 @@
 #pragma once
 
+#include "entity_model.h"
 #include "renderer/material_interface.h"
 #include "renderer/shared.h"
 #include "renderer/variable_interface.h"
@@ -38,12 +39,15 @@ private:
 	GameManager::Utilities *utilities;
 
 	// Shader parameters.
-	Renderer::Material *model;
+	Renderer::Material *modelMaterial;
 
 	// Uniform variables for rendering.
 	Renderer::Variable *object;
 	Renderer::Variable *view;
 	Renderer::Variable *projection;
+
+	// Model to render.
+	EntityModel model;
 
 	// Singleton instance.
 	static Client instance;

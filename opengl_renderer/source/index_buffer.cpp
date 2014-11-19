@@ -27,7 +27,7 @@ namespace OpenGL
 	}
 
 	// Initialize from index data.
-	void IndexBuffer::Load(
+	bool IndexBuffer::Load(
 		const void *indices,
 		unsigned int bufferSize,
 		Renderer::DataType indexType)
@@ -38,7 +38,13 @@ namespace OpenGL
 		// Pass new data to buffer.
 		Bind();
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize, indices, GL_STATIC_DRAW);
+		if (glGetError() != GL_NO_ERROR) {
+			Unbind();
+			ErrorStack::Log("Failed to load %u bytes of data to buffer.", bufferSize);
+			return false;
+		}
 		Unbind();
+		return true;
 	}
 
 	// Bind indices as the element reference.
@@ -66,20 +72,14 @@ namespace OpenGL
 	GLenum IndexBuffer::TranslateIndexType(Renderer::DataType indexType)
 	{
 		switch (indexType) {
-		case Renderer::ByteType:
-			return GL_BYTE;
 		case Renderer::UnsignedByteType:
 			return GL_UNSIGNED_BYTE;
-		case Renderer::ShortType:
-			return GL_SHORT;
 		case Renderer::UnsignedShortType:
 			return GL_UNSIGNED_SHORT;
-		case Renderer::IntType:
-			return GL_INT;
 		case Renderer::UnsignedIntType:
 			return GL_UNSIGNED_INT;
 		default:
-			ErrorStack::Log("Expected integral type for index data type.");
+			ErrorStack::Log("Expected unsigned integral type for index data type.");
 			return 0;
 		}
 	}

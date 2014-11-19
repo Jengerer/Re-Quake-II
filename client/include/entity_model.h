@@ -6,6 +6,14 @@
 #include "renderer/shared.h"
 #include "renderer/resources_interface.h"
 
+// Entity model vertex type.
+struct EntityModelVertex
+{
+	Vector3 position;
+	Vector3 normal;
+};
+typedef Mesh<EntityModelVertex> EntityModelMesh;
+
 // Entity model segment that's rendered as triangle strip or fan.
 class EntityModelSegment : public Allocatable
 {
@@ -15,9 +23,8 @@ public:
 	EntityModelSegment();
 	~EntityModelSegment();
 
-	// Initialize segment for vertices.
-	bool Initialize(int indexCount, Renderer::PrimitiveType type);
-	inline int *GetIndexData() { return indices; }
+	// Set up entity model segment.
+	void SetParameters(const unsigned int *indices, int indexCount, Renderer::PrimitiveType type);
 
 	// Loading and cleaning renderer resources.
 	bool LoadResources(Renderer::Resources *resources);
@@ -28,9 +35,8 @@ public:
 private:
 
 	// Index data buffer.
-	int *indices;
+	const unsigned int *indices;
 	int indexCount;
-	unsigned int arraySize;
 
 	// Renderer parameters for this segment.
 	Renderer::IndexBuffer *indexBuffer;
@@ -53,7 +59,7 @@ public:
 	~EntityModelFrame();
 
 	// Set the reference for the vertex data.
-	void SetVertices(const TexturedVertex *vertices, int vertexCount);
+	void SetVertices(const EntityModelVertex *vertices, int vertexCount);
 
 	// Handle renderer resources.
 	bool LoadResources(Renderer::Resources *resources);
@@ -69,7 +75,7 @@ private:
 	char frameName[FrameNameLength];
 
 	// Vertex data for this frame.
-	const TexturedVertex *vertices;
+	const EntityModelVertex *vertices;
 	int bufferSize;
 
 	// Renderer resource for this frame.
@@ -86,37 +92,45 @@ public:
 	EntityModel();
 	~EntityModel();
 
-	// Allocate objects for the frames.
-	bool Initialize(
-		int frameCount,
-		int segmentCount,
-		int vertexCount);
+	// Allocate vertices and the frames.
+	bool Initialize(int frameCount, int vertexCount);
+
+	// Allocate objects for the segments.
+	bool InitializeSegments(int indexCount, int segmentCount);
+
+	// Load the renderer resources.
+	bool LoadResources(Renderer::Resources *resources);
+
+	// Pass the model for rendering.
+	void Draw(Renderer::Interface *renderer);
 
 	// Get buffer of frames.
 	inline EntityModelFrame *GetFrames() { return frames; }
 	inline int GetFrameCount() const { return frameCount; }
 
 	// Get buffer of segments.
+	inline unsigned int *GetIndexData() const { return indices; }
 	inline EntityModelSegment *GetSegments() { return segments; }
 	inline int GetSegmentCount() const { return segmentCount; }
 
 	// Get mesh of vertices.
-	inline TexturedMesh *GetMesh() { return &vertices; }
+	inline EntityModelMesh *GetMesh() { return &mesh; }
 
 public:
 
 	// Get material layout for models.
-	static void SetMaterialLayout(Renderer::MaterialLayout *layout);
-	static void FreeMaterialLayout();
+	static bool LoadStaticResources(Renderer::Resources *resources, Renderer::Material *modelMaterial);
+	static void FreeStaticResources();
 
 private:
 
 	// Frames of the model's animations (and their vertex buffers).
-	TexturedMesh vertices;
+	EntityModelMesh mesh;
 	EntityModelFrame *frames;
 	int frameCount;
 
 	// Array of model segments (and their index buffers).
+	unsigned int *indices;
 	EntityModelSegment *segments;
 	int segmentCount;
 

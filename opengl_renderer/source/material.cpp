@@ -3,6 +3,7 @@
 #include "material.h"
 #include "material_layout.h"
 #include "variable.h"
+#include <stdio.h>
 
 namespace OpenGL
 {
@@ -57,11 +58,12 @@ namespace OpenGL
 		GLint logLength;
 		glLinkProgram(handle);
 		glGetProgramiv(handle, GL_INFO_LOG_LENGTH, &logLength);
-		if (logLength != 0) {
+		if (logLength > 1) {
 			GLchar *log = reinterpret_cast<GLchar*>(MemoryManager::Allocate(logLength));
 			if (log != nullptr) {
 				glGetProgramInfoLog(handle, logLength, &logLength, log);
 				// TODO: print to warning handler.
+				printf("Shader link output: %s\n", log);
 				MemoryManager::Free(log);
 			}
 		}
@@ -137,6 +139,7 @@ namespace OpenGL
 
 			// Now fill in the parameters for each attribute.
 			GLchar *offset = 0;
+			int bufferStride = 0;
 			for (int j = 0; j < attributeCount; ++j, ++attributes) {
 				const Renderer::Attribute *current = bufferLayouts->GetAttribute(j);
 				const GLchar *name = static_cast<const GLchar*>(current->GetName());
@@ -144,15 +147,18 @@ namespace OpenGL
 
 				// Get the location of the attribute.
 				GLint location = glGetAttribLocation(handle, name);
-				if (location != -1) {
+				if (location == -1) {
 					layout->Destroy();
 					ErrorStack::Log("Failed to get location of attribute '%s'.", name);
 					return nullptr;
 				}
 
 				// Assign the parameters.
-				offset = attributes->SetParameters(location, offset, dataType);
+				int attributeSize = attributes->SetParameters(location, offset, dataType);
+				bufferStride += attributeSize;
+				offset += attributeSize;
 			}
+			outLayout->SetStride(bufferStride);
 		}
 		return layout;
 	}
@@ -193,9 +199,10 @@ namespace OpenGL
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
 		if (logLength > 1) {
 			GLchar *log = reinterpret_cast<GLchar*>(MemoryManager::Allocate(logLength));
-			if (log == nullptr) {
+			if (log != nullptr) {
 				glGetShaderInfoLog(shader, logLength, &logLength, log);
-				// TODO: Print the warning/error.
+				// TODO: Print to warning manager.
+				printf("Shader compile output: %s\n", log);
 				MemoryManager::Free(log);
 			}
 		}
@@ -204,6 +211,7 @@ namespace OpenGL
 		GLint compileStatus;
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
 		if (compileStatus == GL_FALSE) {
+			ErrorStack::Log("Failed to compile shader.");
 			return false;
 		}
 		return true;

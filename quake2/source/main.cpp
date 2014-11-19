@@ -8,29 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Sample Quake II buffer layout.
-const int StartFrameAttributeCount = 2;
-const int EndFrameAttributeCount = StartFrameAttributeCount;
-const int TextureAttributeCount = 1;
-const Renderer::Attribute startFrameAttributes[StartFrameAttributeCount] =
-{
-	Renderer::Attribute("position0", Renderer::PositionType, Renderer::Vector3Type),
-	Renderer::Attribute("normal0", Renderer::NormalType, Renderer::Vector3Type)
-};
-const Renderer::Attribute endFrameAttributes[EndFrameAttributeCount] = {
-	Renderer::Attribute("position1", Renderer::PositionType, Renderer::Vector3Type),
-	Renderer::Attribute("normal1", Renderer::NormalType, Renderer::Vector3Type)
-};
-const Renderer::Attribute textureAttributes[TextureAttributeCount] = {
-	Renderer::Attribute("uv", Renderer::TextureCoordinateType, Renderer::Vector2Type)
-};
-const int QuakeBufferCount = 3;
-const Renderer::BufferLayout QuakeBufferLayouts[QuakeBufferCount] = {
-	Renderer::BufferLayout(startFrameAttributes, StartFrameAttributeCount),
-	Renderer::BufferLayout(endFrameAttributes, EndFrameAttributeCount),
-	Renderer::BufferLayout(textureAttributes, TextureAttributeCount)
-};
-
 int main(int argc, char *argv[])
 {
 	(void)argc;

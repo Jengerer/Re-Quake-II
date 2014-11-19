@@ -15,7 +15,7 @@ const float FieldOfView = 90.0f;
 
 Client::Client()
 	: utilities(nullptr),
-	model(nullptr),
+	modelMaterial(nullptr),
 	object(nullptr),
 	view(nullptr),
 	projection(nullptr)
@@ -53,7 +53,23 @@ bool Client::OnTick()
 // Run end client frame.
 bool Client::OnTickEnd()
 {
-	utilities->GetRenderer()->ClearScene();
+	static float angle = 0.f;
+	Renderer::Interface *renderer = utilities->GetRenderer();
+	renderer->ClearScene();
+	renderer->SetMaterial(modelMaterial);
+	// Generate object matrix.
+	Matrix4x4 objectMatrix;
+	Matrix4x4 rotate;
+	Matrix4x4 obj;
+	Vector3 translation(0.f, -50.f, -150.f);
+	objectMatrix.Translation(&translation);
+	rotate.RotationY(angle);
+	obj.Product(&objectMatrix, &rotate);
+	angle += 1.f;
+	object->Set(&obj);
+	
+	model.Draw(renderer);
+	renderer->UnsetMaterial(modelMaterial);
 	utilities->PresentFrame();
 	return true;
 }
@@ -67,29 +83,45 @@ Client *Client::GetInstance()
 // Load all base resources required by client.
 bool Client::LoadResources(void)
 {
+	// Prepare shaders.
 	if (!InitializeShaders()) {
 		return false;
 	}
 
 	// Get the location to the transform and projection matrix.
-	object = model->GetVariable("object");
+	object = modelMaterial->GetVariable("object");
 	if (object == nullptr) {
 		return false;
 	}
-	projection = model->GetVariable("projection");
+	projection = modelMaterial->GetVariable("projection");
 	if (projection == nullptr) {
 		return false;
 	}
 	
+	// Activate the material for setting variables.
+	Renderer::Interface *renderer = utilities->GetRenderer();
+	renderer->SetMaterial(modelMaterial);
+
 	// Generate projection matrix.
 	Matrix4x4 projectionMatrix;
 	projectionMatrix.PerspectiveProjection(AspectRatio, FieldOfView, NearDistanceZ, FarDistanceZ);
 	projection->Set(&projectionMatrix);
 
+	// Unset material.
+	renderer->UnsetMaterial(modelMaterial);
+
+	// Load static model resources.
+	Renderer::Resources *resources = utilities->GetRendererResources();
+	if (!EntityModel::LoadStaticResources(resources, modelMaterial)) {
+		return false;
+	}
+
 	// Load model.
-	EntityModel model;
 	MD2File file(&model);
 	if (!file.Load("tris.md2")) {
+		return false;
+	}
+	if (!model.LoadResources(resources)) {
 		return false;
 	}
 	return true;
@@ -110,17 +142,20 @@ void Client::FreeResources(void)
 	}
 
 	// Destroy materials.
-	if (model != nullptr) {
-		model->Destroy();
+	if (modelMaterial != nullptr) {
+		modelMaterial->Destroy();
 	}
+
+	// Destroy static materials.
+	EntityModel::FreeStaticResources();
 }
 
 // Initialize the game's shaders for rendering.
 bool Client::InitializeShaders(void)
 {
 	// Set up program.
-	model = utilities->GetRendererResources()->CreateMaterial(VertexShaderFile, PixelShaderFile);
-	if (model == nullptr) {
+	modelMaterial = utilities->GetRendererResources()->CreateMaterial(VertexShaderFile, PixelShaderFile);
+	if (modelMaterial == nullptr) {
 		return false;
 	}
 	return true;

@@ -198,11 +198,11 @@ void Matrix4x4::RotationZ(float angle)
 	matrixArray[1][3] = 0.0f;
 	matrixArray[2][0] = 0.0f;
 	matrixArray[2][1] = 0.0f;
-	matrixArray[2][2] = (zFar + zNear) * inverseFarNearDiff;
+	matrixArray[2][2] = -(zFar + zNear) * inverseFarNearDiff;
 	matrixArray[2][3] = -(doubleZNear * zFar) * inverseFarNearDiff;
 	matrixArray[3][0] = 0.0f;
 	matrixArray[3][1] = 0.0f;
-	matrixArray[3][2] = 1.0f;
+	matrixArray[3][2] = -1.0f;
 	matrixArray[3][3] = 0.0f;
  }
 
@@ -216,7 +216,7 @@ void Matrix4x4::PerspectiveProjection(
 	float xMax, yMax;
 
 	// Calculate common values.
-	yMax = zNear * MathCommon::Tangent(fieldOfView);
+	yMax = zNear * MathCommon::Tangent(0.5f * fieldOfView);
 	xMax = yMax * aspectRatio;
 
 	// Fill out matrix.

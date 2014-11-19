@@ -22,7 +22,7 @@ namespace OpenGL
 		virtual void Destroy();
 
 		// Initialize from a set of index data.
-		void Load(
+		bool Load(
 			const void *indices,
 			unsigned int bufferSize,
 			Renderer::DataType indexType);

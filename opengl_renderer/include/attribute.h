@@ -14,11 +14,11 @@ namespace OpenGL
 		Attribute();
 
 		// Set attribute parameters.
-		// Returns the offset after this attribute.
-		GLchar *SetParameters(GLint location, GLchar *offset, Renderer::DataType type);
+		// Returns the size of this attribute.
+		int SetParameters(GLint location, GLchar *offset, Renderer::DataType type);
 
 		// Enable this shader attribute for rendering.
-		void Activate() const;
+		void Activate(int stride) const;
 
 		// Disable this shader attribute from rendering.
 		void Deactivate() const;

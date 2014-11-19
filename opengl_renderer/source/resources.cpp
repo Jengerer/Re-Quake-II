@@ -64,7 +64,10 @@ namespace OpenGL
 			buffer->Destroy();
 			return nullptr;
 		}
-		buffer->Load(data, bufferSize);
+		if (!buffer->Load(data, bufferSize)) {
+			buffer->Destroy();
+			return nullptr;
+		}
 		return buffer;
 	}
 
@@ -86,7 +89,10 @@ namespace OpenGL
 			buffer->Destroy();
 			return nullptr;
 		}
-		buffer->Load(indices, bufferSize, indexType);
+		if (!buffer->Load(indices, bufferSize, indexType)) {
+			buffer->Destroy();
+			return nullptr;
+		}
 		return buffer;
 	}
 

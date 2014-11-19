@@ -28,11 +28,17 @@ namespace OpenGL
 	}
 
 	// Load data into the buffer.
-	void Buffer::Load(const void *data, unsigned int size)
+	bool Buffer::Load(const void *data, unsigned int size)
 	{
 		Bind();
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		if (glGetError() != GL_NO_ERROR) {
+			Unbind();
+			ErrorStack::Log("Failed to load %u bytes of data to buffer.", size);
+			return false;
+		}
 		Unbind();
+		return true;
 	}
 
 	// Bind the buffer for drawing or loading data.

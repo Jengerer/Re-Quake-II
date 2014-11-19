@@ -6,7 +6,7 @@ namespace OpenGL
 {
 
 	// Shader schema constructor.
-	BufferLayout::BufferLayout() : attributes(nullptr), attributeCount(0)
+	BufferLayout::BufferLayout() : attributes(nullptr), attributeCount(0), stride(0)
 	{
 	}
 
@@ -32,7 +32,7 @@ namespace OpenGL
 		// Activate each vertex attribute.
 		const Attribute *attribute = attributes;
 		for (int i = 0; i < attributeCount; ++i, ++attribute) {
-			attribute->Activate();
+			attribute->Activate(stride);
 		}
 	}
 

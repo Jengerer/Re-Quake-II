@@ -66,7 +66,7 @@ float MathCommon::Cosine(float angle)
 float MathCommon::Tangent(float angle)
 {
 	angle = DegreesToRadians(angle);
-	return cosf(angle);
+	return tanf(angle);
 }
 
 // Arc tangent function.

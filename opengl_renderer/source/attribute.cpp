@@ -15,7 +15,7 @@ namespace OpenGL
 	}
 
 	// Set the parameters for this attribute.
-	GLchar *Attribute::SetParameters(
+	int Attribute::SetParameters(
 		GLint location,
 		GLchar *offset,
 		Renderer::DataType type)
@@ -26,11 +26,11 @@ namespace OpenGL
 		elementCount = GetElementCount(type);
 
 		// Increment offset by this attribute size.
-		return offset + (elementCount * GetElementSize(type));
+		return (elementCount * GetElementSize(type));
 	}
 
 	// Activate this shader attribute for rendering.
-	void Attribute::Activate() const
+	void Attribute::Activate(int stride) const
 	{
 		glEnableVertexAttribArray(location);
 		glVertexAttribPointer(
@@ -38,7 +38,7 @@ namespace OpenGL
 			elementCount,
 			elementType,
 			GL_FALSE,
-			0,
+			static_cast<GLsizei>(stride),
 			offset);
 	}
 
@@ -62,17 +62,12 @@ namespace OpenGL
 		case Renderer::UnsignedIntType:
 			return sizeof(int);
 		case Renderer::FloatType:
-			return sizeof(float);
 		case Renderer::Vector2Type:
-			return sizeof(Vector2);
 		case Renderer::Vector3Type:
-			return sizeof(Vector3);
 		case Renderer::Vector4Type:
-			return sizeof(Vector4);
 		case Renderer::Matrix3x3Type:
-			return sizeof(Matrix3x3);
 		case Renderer::Matrix4x4Type:
-			return sizeof(Matrix4x4);
+			return sizeof(float);
 		default:
 			ErrorStack::Log("Unknown type declared for renderer data type.");
 			return 0;
