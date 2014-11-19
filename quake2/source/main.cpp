@@ -2,18 +2,22 @@
 #include "engine_export.h"
 #include "error_stack.h"
 #include "game_manager_export.h"
+#include "memory_manager.h"
 #include "opengl_export.h"
 #include "renderer/attribute.h"
 #include "renderer/buffer_layout.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
 	(void)argc;
 	(void)argv;
-
 	bool success;
+
+	// Allocation debugging.
+	MemoryManager::SetBreakAllocation(6);
 
 	// Get engine implementation.
 	Engine::Interface *engine = GetEngineInterface();

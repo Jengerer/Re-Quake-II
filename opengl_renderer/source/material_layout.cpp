@@ -27,6 +27,7 @@ namespace OpenGL
 	// Destroy this layout.
 	void MaterialLayout::Destroy()
 	{
+		delete this;
 	}
 
 	// Bind a buffer to a layout slot.

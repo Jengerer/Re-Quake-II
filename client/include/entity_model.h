@@ -98,6 +98,9 @@ public:
 	// Allocate objects for the segments.
 	bool InitializeSegments(int indexCount, int segmentCount);
 
+	// Shut down entity model.
+	void Destroy();
+
 	// Load the renderer resources.
 	bool LoadResources(Renderer::Resources *resources);
 

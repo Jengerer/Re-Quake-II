@@ -15,6 +15,7 @@ public:
 
 	// Initialize for number of vertices.
 	bool Initialize(int vertexCount);
+	void Destroy();
 	inline int GetVertexCount() const { return vertexCount; }
 	inline int GetVertexBufferSize() const { return GetVertexCount * sizeof(VertexType); }
 	inline VertexType *GetVertexBuffer() { return vertices; }
@@ -37,9 +38,7 @@ Mesh<VertexType>::Mesh()
 template <typename VertexType>
 Mesh<VertexType>::~Mesh()
 {
-	if (vertices != nullptr) {
-		MemoryManager::Free(vertices);
-	}
+	Destroy();
 }
 
 // Allocate space for vertices.
@@ -54,4 +53,14 @@ bool Mesh<VertexType>::Initialize(int vertexCount)
 	this->vertices = vertices;
 	this->vertexCount = vertexCount;
 	return true;
+}
+
+// Clear vertex array.
+template <typename VertexType>
+void Mesh<VertexType>::Destroy()
+{
+	if (vertices != nullptr) {
+		MemoryManager::Free(vertices);
+		vertices = nullptr;
+	}
 }

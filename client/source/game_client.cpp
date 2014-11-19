@@ -146,6 +146,9 @@ void Client::FreeResources(void)
 		modelMaterial->Destroy();
 	}
 
+	// Destroy model.
+	model.Destroy();
+
 	// Destroy static materials.
 	EntityModel::FreeStaticResources();
 }

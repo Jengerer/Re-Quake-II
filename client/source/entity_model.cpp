@@ -127,20 +127,7 @@ EntityModel::EntityModel()
 
 EntityModel::~EntityModel()
 {
-	// Delete frame objects.
-	if (frames != nullptr) {
-		delete[] frames;
-	}
-
-	// Free index buffer.
-	if (indices != nullptr) {
-		MemoryManager::Free(indices);
-	}
-
-	// Delete segment objects.
-	if (segments != nullptr) {
-		delete[] segments;
-	}
+	Destroy();
 }
 
 // Initialize entity model vertices and frames.
@@ -183,6 +170,31 @@ bool EntityModel::InitializeSegments(int indexCount, int segmentCount)
 	}
 	this->segmentCount = segmentCount;
 	return true;
+}
+
+// Free all model resources.
+void EntityModel::Destroy()
+{
+	// Delete frame objects.
+	if (frames != nullptr) {
+		delete[] frames;
+		frames = nullptr;
+	}
+
+	// Free index buffer.
+	if (indices != nullptr) {
+		MemoryManager::Free(indices);
+		indices = nullptr;
+	}
+
+	// Delete segment objects.
+	if (segments != nullptr) {
+		delete[] segments;
+		segments = nullptr;
+	}
+
+	// Destroy mesh vertices.
+	mesh.Destroy();
 }
 
 // Load the mesh in the renderer.
