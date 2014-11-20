@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	bool success;
 
 	// Allocation debugging.
-	// MemoryManager::SetBreakAllocation(6);
+	// MemoryManager::SetBreakAllocation(3);
 
 	// Get engine implementation.
 	Engine::Interface *engine = GetEngineInterface();
