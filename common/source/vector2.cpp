@@ -1,26 +1,28 @@
 #include "vector2.h"
 #include "math_common.h"
 
-// Vector default constructor does not set any elements.
 Vector2::Vector2()
+{
+	// No initialization.
+}
+
+Vector2::Vector2(float x, float y) : x(x), y(y)
 {
 }
 
-// Vector constructor with default component values.
-Vector2::Vector2(float x, float y) : x(x), y(y)
+Vector2::Vector2(const Vector2 &other) : x(other.x), y(other.y)
 {
+}
+
+void Vector2::operator=(const Vector2 &other)
+{
+	Set(other.x, other.y);
 }
 
 // Set all components to zero.
 void Vector2::Clear()
 {
 	Set(0.0f, 0.0f);
-}
-
-// Copy components from other vector.
-void Vector2::Copy(const Vector2 *vector)
-{
-	Set(vector->x, vector->y);
 }
 
 // Set individual components.

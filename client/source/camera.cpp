@@ -5,16 +5,16 @@ Camera::Camera()
 }
 
 // Update camera world position.
-void Camera::SetPosition(const Vector3 *position)
+void Camera::SetPosition(const Vector3 &position)
 {
-	this->position.Copy(position);
+	this->position = position;
 }
 
 
 // Update camera angles.
-void Camera::SetAngles(const Vector3 *angles)
+void Camera::SetAngles(const Vector3 &angles)
 {
-	this->angles.Copy(angles);
+	this->angles = angles;
 }
 
 // Generate world to camera view transform.

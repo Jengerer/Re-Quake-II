@@ -1,5 +1,5 @@
 #include "game_manager.h"
-#include "engine_interface.h"
+#include <engine_interface.h>
 
 // TODO: Erase these once we get settings.
 const char *GameTitle = "Game Test";

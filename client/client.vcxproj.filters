@@ -29,22 +29,19 @@
     <ClInclude Include="include\bsp_map.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\bsp_map_parser.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\camera.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\entity_model.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\md2_file.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\client_define.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\quake_normals.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\md2_parser.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -67,10 +64,10 @@
     <ClCompile Include="source\entity_model.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\md2_file.cpp">
+    <ClCompile Include="source\quake_normals.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\quake_normals.cpp">
+    <ClCompile Include="source\md2_parser.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

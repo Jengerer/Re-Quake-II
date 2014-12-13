@@ -1,11 +1,11 @@
 #pragma once
 
 #include "common.h"
-#include "matrix3x3.h"
-#include "matrix4x4.h"
-#include "renderer/resources_interface.h"
-#include "vector3.h"
-#include "vector4.h"
+#include <matrix3x3.h>
+#include <matrix4x4.h>
+#include <renderer/resources_interface.h>
+#include <vector3.h>
+#include <vector4.h>
 
 namespace OpenGL
 {

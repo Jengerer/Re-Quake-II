@@ -1,6 +1,6 @@
-#include "error_stack.h"
 #include "index_buffer.h"
-#include "memory_manager.h"
+#include <error_stack.h>
+#include <memory_manager.h>
 
 namespace OpenGL
 {

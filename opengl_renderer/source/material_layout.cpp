@@ -1,8 +1,8 @@
 #pragma once
 
-#include "error_stack.h"
 #include "material_layout.h"
-#include "memory_manager.h"
+#include <error_stack.h>
+#include <memory_manager.h>
 
 namespace OpenGL
 {

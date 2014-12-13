@@ -1,6 +1,6 @@
 #include "entity_model.h"
-#include "error_stack.h"
-#include "memory_manager.h"
+#include <error_stack.h>
+#include <memory_manager.h>
 #include <string.h>
 
 // Quake II material layout.
@@ -153,7 +153,6 @@ bool EntityModel::Initialize(int frameCount, int vertexCount)
 // Initialize the entity model indices.
 bool EntityModel::InitializeSegments(int indexCount, int segmentCount)
 {
-	// Allocate index array.
 	int bufferSize = indexCount * sizeof(int);
 	unsigned int *indices = reinterpret_cast<unsigned int*>(MemoryManager::Allocate(bufferSize));
 	if (indices == nullptr) {
@@ -162,7 +161,6 @@ bool EntityModel::InitializeSegments(int indexCount, int segmentCount)
 	}
 	this->indices = indices;
 
-	// Allocate segments array.
 	segments = new EntityModelSegment[segmentCount];
 	if (segments == nullptr) {
 		ErrorStack::Log("Failed to allocate %d segment objects for model.", segmentCount);
@@ -175,32 +173,20 @@ bool EntityModel::InitializeSegments(int indexCount, int segmentCount)
 // Free all model resources.
 void EntityModel::Destroy()
 {
-	// Delete frame objects.
-	if (frames != nullptr) {
-		delete[] frames;
-		frames = nullptr;
-	}
-
-	// Free index buffer.
+	delete[] frames;
+	frames = nullptr;
+	delete[] segments;
+	segments = nullptr;
 	if (indices != nullptr) {
 		MemoryManager::Free(indices);
 		indices = nullptr;
 	}
-
-	// Delete segment objects.
-	if (segments != nullptr) {
-		delete[] segments;
-		segments = nullptr;
-	}
-
-	// Destroy mesh vertices.
 	mesh.Destroy();
 }
 
 // Load the mesh in the renderer.
 bool EntityModel::LoadResources(Renderer::Resources *resources)
 {
-	// Get index buffers for the segments.
 	int count = segmentCount;
 	EntityModelSegment *segment = segments;
 	for (int i = 0; i < count; ++i, ++segment) {
@@ -209,7 +195,6 @@ bool EntityModel::LoadResources(Renderer::Resources *resources)
 		}
 	}
 
-	// Load the frames.
 	count = frameCount;
 	EntityModelFrame *frame = frames;
 	for (int i = 0; i < count; ++i, ++frame) {
@@ -223,26 +208,22 @@ bool EntityModel::LoadResources(Renderer::Resources *resources)
 // Draw the mesh.
 void EntityModel::Draw(Renderer::Interface *renderer)
 {
-	// Bind the frame and layout.
 	Renderer::Buffer *buffer = frames[0].GetVertexBuffer();
 	layout->BindBuffer(StartFrameBufferIndex, buffer);
 	renderer->SetMaterialLayout(layout);
 
-	// Draw all segments.
 	int count = segmentCount;
 	EntityModelSegment *segment = segments;
 	for (int i = 0; i < count; ++i, ++segment) {
 		segment->Draw(renderer);
 	}
 
-	// Clear layout.
 	renderer->UnsetMaterialLayout(layout);
 }
 
 // Prepare the entity for rendering.
 bool EntityModel::LoadStaticResources(Renderer::Resources *resources, Renderer::Material *modelMaterial)
 {
-	// Get the material layout.
 	Renderer::MaterialLayout *layout = modelMaterial->GetLayout(QuakeBufferLayouts, QuakeBufferCount);
 	if (layout == nullptr) {
 		return false;
@@ -254,7 +235,6 @@ bool EntityModel::LoadStaticResources(Renderer::Resources *resources, Renderer::
 // Free static resources.
 void EntityModel::FreeStaticResources()
 {
-	// Free layout if we have one.
 	if (layout != nullptr) {
 		layout->Destroy();
 	}

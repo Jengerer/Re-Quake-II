@@ -2,7 +2,7 @@
 
 #include "common.h"
 #include "index_buffer.h"
-#include "renderer/renderer_interface.h"
+#include <renderer/renderer_interface.h>
 
 namespace OpenGL
 {

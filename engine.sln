@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quake2", "quake2\quake2.vcxproj", "{E833C778-3697-4242-96AA-CCA28C4927EC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quake2_common", "quake2_common\quake2_common.vcxproj", "{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -51,6 +53,10 @@ Global
 		{E833C778-3697-4242-96AA-CCA28C4927EC}.Debug|Win32.Build.0 = Debug|Win32
 		{E833C778-3697-4242-96AA-CCA28C4927EC}.Release|Win32.ActiveCfg = Release|Win32
 		{E833C778-3697-4242-96AA-CCA28C4927EC}.Release|Win32.Build.0 = Release|Win32
+		{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}.Debug|Win32.Build.0 = Debug|Win32
+		{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}.Release|Win32.ActiveCfg = Release|Win32
+		{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

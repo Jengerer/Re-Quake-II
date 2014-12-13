@@ -1,8 +1,8 @@
-#include "error_stack.h"
-#include "memory_manager.h"
 #include "material.h"
 #include "material_layout.h"
 #include "variable.h"
+#include <error_stack.h>
+#include <memory_manager.h>
 #include <stdio.h>
 
 namespace OpenGL

@@ -10,10 +10,12 @@ public:
 
 	Vector2();
 	Vector2(float x, float y);
+	Vector2(const Vector2 &other);
+
+	void operator=(const Vector2 &other);
 	
 	// Set all components to zero.
 	void Clear();
-	void Copy(const Vector2 *vector);
 	void Set(float x, float y);
 	float GetSquareMagnitude() const;
 	float GetMagnitude() const;

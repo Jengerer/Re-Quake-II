@@ -11,10 +11,12 @@ public:
 
 	Vector3();
 	Vector3(float x, float y, float z);
+	Vector3(const Vector3 &other);
+
+	void operator=(const Vector3 &other);
 
 	// Set all components to zero.
 	void Clear();
-	void Copy(const Vector3 *vector);
 	void Set(float x, float y, float z);
 	float GetSquareMagnitude() const;
 	float GetMagnitude() const;

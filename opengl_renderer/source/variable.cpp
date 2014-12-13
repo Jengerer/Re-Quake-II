@@ -1,5 +1,5 @@
-#include "memory_manager.h"
 #include "variable.h"
+#include <memory_manager.h>
 
 namespace OpenGL
 {

@@ -1,14 +1,22 @@
 #include "vector4.h"
 #include "math_common.h"
 
-// Vector default constructor does not set any elements.
 Vector4::Vector4()
+{
+	// No initialization.
+}
+
+Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
 {
 }
 
-// Vector constructor with default component values.
-Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
+Vector4::Vector4(const Vector4 &other) : x(other.x), y(other.y), z(other.z), w(other.w)
 {
+}
+
+void Vector4::operator=(const Vector4 &other)
+{
+	Set(other.x, other.y, other.z, other.w);
 }
 
 // Set all components to zero.

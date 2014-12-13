@@ -1,5 +1,5 @@
 #include "window.h"
-#include "error_stack.h"
+#include <error_stack.h>
 
 Window::Window()
 {

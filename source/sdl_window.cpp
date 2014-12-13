@@ -1,5 +1,5 @@
 #include "sdl_window.h"
-#include "error_stack.h"
+#include <error_stack.h>
 #include <stdio.h>
 
 SDLWindow::SDLWindow()

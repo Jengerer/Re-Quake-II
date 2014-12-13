@@ -1,9 +1,9 @@
 #pragma once
 
-#include "allocatable.h"
 #include "buffer.h"
 #include "buffer_layout.h"
-#include "renderer/material_layout_interface.h"
+#include <allocatable.h>
+#include <renderer/material_layout_interface.h>
 
 namespace OpenGL
 {

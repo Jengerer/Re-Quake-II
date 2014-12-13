@@ -1,8 +1,8 @@
 #pragma once
 
-#include "renderer/renderer_interface.h"
-#include "renderer/resources_interface.h"
 #include "window_shared.h"
+#include <renderer/renderer_interface.h>
+#include <renderer/resources_interface.h>
 
 namespace Engine
 {

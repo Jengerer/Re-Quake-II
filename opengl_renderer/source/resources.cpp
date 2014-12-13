@@ -1,10 +1,10 @@
 #include "buffer.h"
-#include "error_stack.h"
-#include "file.h"
 #include "index_buffer.h"
-#include "memory_manager.h"
 #include "material.h"
 #include "resources.h"
+#include <error_stack.h>
+#include <file.h>
+#include <memory_manager.h>
 
 namespace OpenGL
 {

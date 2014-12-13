@@ -1,6 +1,6 @@
 #include "image.h"
-#include "memory_manager.h"
-#include "error_stack.h"
+#include <memory_manager.h>
+#include <error_stack.h>
 #include <string.h>
 
 // Empty image constructor.

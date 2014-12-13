@@ -1,8 +1,8 @@
 #pragma once
 
-#include "allocatable.h"
 #include "attribute.h"
 #include "common.h"
+#include <allocatable.h>
 
 namespace OpenGL
 {

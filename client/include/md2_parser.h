@@ -1,9 +1,9 @@
 #pragma once
 
 #include "entity_model.h"
-#include "file.h"
-#include "vector3.h"
+#include <file.h>
 #include <stdint.h>
+#include <vector3.h>
 
 // MD2 file header.
 struct MD2Header
@@ -16,7 +16,7 @@ struct MD2Header
 	int32_t skinWidth;
 	int32_t skinHeight;
 
-	// Byte size per frame.
+	// Byte size of vertices in each frame.
 	int32_t frameSize;
 
 	// Section sizes.
@@ -74,16 +74,17 @@ struct MD2CommandPacket
 const static int PacketIntegerCount = sizeof(MD2CommandPacket) / sizeof(int32_t);
 
 // Class for loading an entity model from an MD2 file.
-class MD2File
+class MD2Parser
 {
 
 public:
 
-	MD2File(EntityModel *out);
-	~MD2File();
+	MD2Parser();
+	~MD2Parser();
 
-	// Load from file.
-	bool Load(const char *filename);
+	// Parse a model from a file.
+	// Assumes the output model is new.
+	bool Load(const char *filename, EntityModel *out);
 
 private:
 
@@ -99,8 +100,8 @@ private:
 private:
 
 	// Header magic number and version.
-	static const int MagicNumber = ('2' << 24) + ('P' << 16) + ('D' << 8) + 'I';
-	static const int Version = 8;
+	static const int32_t MagicNumber = ('2' << 24) | ('P' << 16) | ('D' << 8) | 'I';
+	static const int32_t Version = 8;
 
 private:
 

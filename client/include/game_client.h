@@ -1,12 +1,12 @@
 #pragma once
 
 #include "entity_model.h"
-#include "renderer/material_interface.h"
-#include "renderer/shared.h"
-#include "renderer/variable_interface.h"
-#include "game_manager_listener.h"
-#include "game_manager_utilities.h"
-#include "game_module.h"
+#include <renderer/material_interface.h>
+#include <renderer/shared.h>
+#include <renderer/variable_interface.h>
+#include <game_manager_listener.h>
+#include <game_manager_utilities.h>
+#include <game_module.h>
 
 // Game module for client.
 class Client : public GameModule

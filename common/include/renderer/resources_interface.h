@@ -1,13 +1,9 @@
 #pragma once
 
-#include "matrix3x3.h"
-#include "matrix4x4.h"
 #include "renderer/buffer_interface.h"
 #include "renderer/index_buffer_interface.h"
 #include "renderer/material_interface.h"
 #include "renderer/shared.h"
-#include "vector3.h"
-#include "vector4.h"
 
 namespace Renderer
 {

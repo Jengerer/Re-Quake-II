@@ -1,20 +1,23 @@
 #include "error_stack.h"
-#include "md2_file.h"
+#include "md2_parser.h"
 #include "quake_normals.h"
 
-MD2File::MD2File(EntityModel *out)
-	: out(out),
+MD2Parser::MD2Parser()
+	: out(nullptr),
 	header(nullptr)
 {
 }
 
-MD2File::~MD2File()
+MD2Parser::~MD2Parser()
 {
 }
 
 // Load a model from a file.
-bool MD2File::Load(const char *filename)
+bool MD2Parser::Load(const char *filename, EntityModel *out)
 {
+	// Set output file.
+	this->out = out;
+
 	// Load the file into memory.
 	if (!file.Read(filename)) {
 		ErrorStack::Log("Failed to load model from file: %s", filename);
@@ -45,7 +48,7 @@ bool MD2File::Load(const char *filename)
 }
 
 // Verify header.
-bool MD2File::VerifyHeader()
+bool MD2Parser::VerifyHeader()
 {
 	if (header->magicNumber != MagicNumber) {
 		ErrorStack::Log("Bad format: mismatch on header magic number (%x != %x).", header->magicNumber, MagicNumber);
@@ -60,7 +63,7 @@ bool MD2File::VerifyHeader()
 #include <stdio.h>
 
 // Load the frame data.
-void MD2File::LoadFrames()
+void MD2Parser::LoadFrames()
 {
 	// Keep a reference for the vertices.
 	EntityModelMesh *outMesh = out->GetMesh();
@@ -76,39 +79,27 @@ void MD2File::LoadFrames()
 
 	// Get frames we're filling out.
 	EntityModelFrame *outFrame = out->GetFrames();
-
-	// Go through each frame.
 	for (int32_t i = FrameStart; i < FrameEnd; i += FrameStride, ++outFrame) {
-		// Get vertices for this frame.
 		const MD2Frame *frame = reinterpret_cast<const MD2Frame*>(file.GetBuffer() + i);
 		const MD2Vertex *vertex = reinterpret_cast<const MD2Vertex*>(frame + 1);
-
-		// Get frame offset and scale.
 		Vector3 scale = frame->scale;
 		Vector3 offset = frame->offset;
 
 		// Start the frame vertices at current vertex.
 		outFrame->SetVertices(outVertex, BufferSize);
-
-		// Copy frame name over.
 		outFrame->SetFrameName(frame->name);
-
-		// Copy vertices.
 		for (int j = 0; j < VertexCount; ++j, ++vertex, ++outVertex) {
 			// Quake II used Z as up, swap them so Y is up.
 			outVertex->position.x = (static_cast<float>(vertex->x) * scale.x) + offset.x;
 			outVertex->position.y = (static_cast<float>(vertex->z) * scale.z) + offset.z;
 			outVertex->position.z = (static_cast<float>(vertex->y) * scale.y) + offset.y;
-
-			// Get normal by index.
-			const Vector3 *normal = &QuakeNormals[vertex->normalIndex];
-			outVertex->normal.Copy(normal);
+			outVertex->normal = QuakeNormals[vertex->normalIndex];
 		}
 	}
 }
 
 // Load segments and their indices.
-bool MD2File::LoadCommands()
+bool MD2Parser::LoadCommands()
 {
 	// Go through each command segment.
 	int32_t vertexCount;
@@ -125,8 +116,7 @@ bool MD2File::LoadCommands()
 		currentCommand += (vertexCount * PacketIntegerCount);
 	}
 
-	// Initialize the model for the index/command count.
-	// Index count is (number of commands) - (number of segments) - (1 for the zero-vertex end command).
+	// Don't count the last segment (it's the zero command).
 	int indexCount = header->commandCount - (segmentCount + 1);
 	if (!out->InitializeSegments(indexCount, segmentCount)) {
 		return false;
@@ -146,16 +136,13 @@ bool MD2File::LoadCommands()
 			commandType = Renderer::TriangleStrip;
 		}
 
-		// Set the buffer that this segment will use.
 		outSegment->SetParameters(outIndex, vertexCount, commandType);
-
-		// Get starting packet.
-		const MD2CommandPacket *packet = reinterpret_cast<const MD2CommandPacket*>(currentCommand);
 
 		// Skip appropriate number of packets for next command.
 		currentCommand += vertexCount * PacketIntegerCount;
 
 		// Copy indices to index buffer.
+		const MD2CommandPacket *packet = reinterpret_cast<const MD2CommandPacket*>(currentCommand);
 		for (; vertexCount > 0; --vertexCount, ++packet, ++outIndex) {
 			*outIndex = static_cast<unsigned int>(packet->vertexIndex);
 		}

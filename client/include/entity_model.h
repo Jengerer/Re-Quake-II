@@ -1,10 +1,10 @@
 #pragma once
 
-#include "allocatable.h"
-#include "mesh.h"
-#include "renderer/renderer_interface.h"
-#include "renderer/shared.h"
-#include "renderer/resources_interface.h"
+#include <allocatable.h>
+#include <mesh.h>
+#include <renderer/renderer_interface.h>
+#include <renderer/shared.h>
+#include <renderer/resources_interface.h>
 
 // Entity model vertex type.
 struct EntityModelVertex

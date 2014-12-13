@@ -1,5 +1,5 @@
 #include "common.h"
-#include "error_stack.h"
+#include <error_stack.h>
 
 namespace OpenGL
 {

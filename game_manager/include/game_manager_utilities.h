@@ -2,13 +2,13 @@
 
 #include "game_manager_define.h"
 #include "game_manager_shared.h"
-#include "matrix3x3.h"
-#include "matrix4x4.h"
-#include "renderer/renderer_interface.h"
-#include "renderer/resources_interface.h"
-#include "renderer/shared.h"
-#include "vector3.h"
-#include "vector4.h"
+#include <matrix3x3.h>
+#include <matrix4x4.h>
+#include <renderer/renderer_interface.h>
+#include <renderer/resources_interface.h>
+#include <renderer/shared.h>
+#include <vector3.h>
+#include <vector4.h>
 
 namespace GameManager
 {

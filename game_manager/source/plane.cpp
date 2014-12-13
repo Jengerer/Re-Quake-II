@@ -1,12 +1,14 @@
 #include "plane.h"
 
-// Plane default constructor with no initialization.
 Plane::Plane()
+{
+	// No initialization.
+}
+
+Plane::Plane(const Vector3 &normal, float distance) : normal(normal), distance(distance)
 {
 }
 
-// Plane constructor by copied normal and distance.
-Plane::Plane(const Vector3 *normal, float distance) : distance(distance)
+Plane::Plane(const Plane &other) : normal(other.normal), distance(other.distance)
 {
-	this->normal.Copy(normal);
 }

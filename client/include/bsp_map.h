@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vector3.h"
 #include <stdint.h>
+#include <vector3.h>
 
 // Structure for 3D short vector.
 struct Vector3Short

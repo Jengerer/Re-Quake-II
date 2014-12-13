@@ -1,7 +1,7 @@
-#include "md2_file.h"
+#include "md2_parser.h"
 #include "game_client.h"
-#include "math_common.h"
-#include "memory_manager.h"
+#include <math_common.h>
+#include <memory_manager.h>
 #include <stdio.h>
 
 // Rendering parameters.
@@ -117,8 +117,8 @@ bool Client::LoadResources(void)
 	}
 
 	// Load model.
-	MD2File file(&model);
-	if (!file.Load("tris.md2")) {
+	MD2Parser file;
+	if (!file.Load("tris.md2", &model)) {
 		return false;
 	}
 	if (!model.LoadResources(resources)) {

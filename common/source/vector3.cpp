@@ -1,26 +1,28 @@
 #include "vector3.h"
 #include "math_common.h"
 
-// Vector default constructor does not set any elements.
 Vector3::Vector3()
+{
+	// No initialization.
+}
+
+Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z)
 {
 }
 
-// Vector constructor with default component values.
-Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z)
+Vector3::Vector3(const Vector3 &other) : x(other.x), y(other.y), z(other.z)
 {
+}
+
+void Vector3::operator=(const Vector3 &other)
+{
+	Set(other.x, other.y, other.z);
 }
 
 // Set all components to zero.
 void Vector3::Clear()
 {
 	Set(0.0f, 0.0f, 0.0f);
-}
-
-// Copy components from other vector.
-void Vector3::Copy(const Vector3 *vector)
-{
-	Set(vector->x, vector->y, vector->z);
 }
 
 // Set individual components.

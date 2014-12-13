@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vector3.h"
-#include "vector2.h"
+#include <vector3.h>
+#include <vector2.h>
 
 // Class for representing a mesh of vertices.
 template <typename VertexType>

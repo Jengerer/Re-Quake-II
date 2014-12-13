@@ -1,11 +1,11 @@
 #pragma once
 
 #include "sdl_window.h"
-#include "renderer/renderer_interface.h"
-#include "renderer/resources_interface.h"
 #include "engine_interface.h"
 #include "engine_listener.h"
 #include "engine_utilities.h"
+#include <renderer/renderer_interface.h>
+#include <renderer/resources_interface.h>
 
 namespace Engine
 {

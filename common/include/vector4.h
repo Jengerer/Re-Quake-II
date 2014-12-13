@@ -12,6 +12,9 @@ public:
 
 	Vector4();
 	Vector4(float x, float y, float z, float w);
+	Vector4(const Vector4 &other);
+
+	void operator=(const Vector4 &other);
 
 	// Set all components to zero.
 	void Clear();
