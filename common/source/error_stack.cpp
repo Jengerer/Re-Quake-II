@@ -75,6 +75,7 @@ void ErrorStack::Dump()
 	for (ErrorStackNode *node = head; node != nullptr; node = node->GetNext(), ++index) {
 		fprintf(stderr, "#%d: %s\n", index, node->GetMessage());
 	}
+	Clear();
 }
 
 // Clear all errors in the stack.
