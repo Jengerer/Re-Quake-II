@@ -135,14 +135,11 @@ bool MD2Parser::LoadCommands()
 		else {
 			commandType = Renderer::TriangleStrip;
 		}
-
 		outSegment->SetParameters(outIndex, vertexCount, commandType);
-
-		// Skip appropriate number of packets for next command.
-		currentCommand += vertexCount * PacketIntegerCount;
 
 		// Copy indices to index buffer.
 		const MD2CommandPacket *packet = reinterpret_cast<const MD2CommandPacket*>(currentCommand);
+		currentCommand += vertexCount * PacketIntegerCount;
 		for (; vertexCount > 0; --vertexCount, ++packet, ++outIndex) {
 			*outIndex = static_cast<unsigned int>(packet->vertexIndex);
 		}
