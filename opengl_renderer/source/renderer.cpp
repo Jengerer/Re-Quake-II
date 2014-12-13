@@ -30,6 +30,7 @@ namespace OpenGL
 
 		// Set up GL rendering parameters.
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 		// Enable depth testing.
 		glEnable(GL_DEPTH_TEST);

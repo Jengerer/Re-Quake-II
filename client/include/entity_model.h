@@ -107,16 +107,12 @@ public:
 	// Pass the model for rendering.
 	void Draw(Renderer::Interface *renderer);
 
-	// Get buffer of frames.
+	// Model buffer functions.
 	inline EntityModelFrame *GetFrames() { return frames; }
 	inline int GetFrameCount() const { return frameCount; }
-
-	// Get buffer of segments.
 	inline unsigned int *GetIndexData() const { return indices; }
 	inline EntityModelSegment *GetSegments() { return segments; }
 	inline int GetSegmentCount() const { return segmentCount; }
-
-	// Get mesh of vertices.
 	inline EntityModelMesh *GetMesh() { return &mesh; }
 
 public:

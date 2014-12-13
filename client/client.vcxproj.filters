@@ -23,9 +23,6 @@
     <ClInclude Include="include\image_loader.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\mesh.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\bsp_map.h">
       <Filter>include</Filter>
     </ClInclude>

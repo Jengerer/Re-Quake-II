@@ -23,7 +23,7 @@ private:
 
 #if defined(_DEBUG)
 	// Maximum allocations we can manage.
-	static const int MaximumAllocations = 4096;
+	static const int MaximumAllocations = 16384;
 #endif
 
 public:

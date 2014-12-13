@@ -3,11 +3,11 @@
 #include <memory_manager.h>
 #include <string.h>
 
-// Quake II material layout.
+// Quake II model material layout.
 const int StartFrameAttributeCount = 2;
 const int EndFrameAttributeCount = StartFrameAttributeCount;
 const int TextureAttributeCount = 1;
-const Renderer::Attribute startFrameAttributes[StartFrameAttributeCount] =
+const Renderer::Attribute StartFrameAttributes[StartFrameAttributeCount] =
 {
 	Renderer::Attribute("position0", Renderer::PositionType, Renderer::Vector3Type),
 	Renderer::Attribute("normal0", Renderer::NormalType, Renderer::Vector3Type)
@@ -25,7 +25,7 @@ const int TextureAttributeIndex = 2;
 const int QuakeBufferCount = 1;
 const Renderer::BufferLayout QuakeBufferLayouts[QuakeBufferCount] =
 {
-	Renderer::BufferLayout(startFrameAttributes, StartFrameAttributeCount),
+	Renderer::BufferLayout(StartFrameAttributes, StartFrameAttributeCount),
 	// Renderer::BufferLayout(endFrameAttributes, EndFrameAttributeCount),
 	// Renderer::BufferLayout(textureAttributes, TextureAttributeCount)
 };
@@ -224,15 +224,14 @@ void EntityModel::Draw(Renderer::Interface *renderer)
 // Prepare the entity for rendering.
 bool EntityModel::LoadStaticResources(Renderer::Resources *resources, Renderer::Material *modelMaterial)
 {
-	Renderer::MaterialLayout *layout = modelMaterial->GetLayout(QuakeBufferLayouts, QuakeBufferCount);
+	layout = modelMaterial->GetLayout(QuakeBufferLayouts, QuakeBufferCount);
 	if (layout == nullptr) {
 		return false;
 	}
-	EntityModel::layout = layout;
 	return true;
 }
 
-// Free static resources.
+// Free model-generic renderer resources.
 void EntityModel::FreeStaticResources()
 {
 	if (layout != nullptr) {

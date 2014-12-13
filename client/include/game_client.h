@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity_model.h"
+#include <bsp_map.h>
 #include <renderer/material_interface.h>
 #include <renderer/shared.h>
 #include <renderer/variable_interface.h>
@@ -40,14 +41,20 @@ private:
 
 	// Shader parameters.
 	Renderer::Material *modelMaterial;
+	Renderer::Material *mapMaterial;
 
 	// Uniform variables for rendering.
-	Renderer::Variable *object;
-	Renderer::Variable *view;
-	Renderer::Variable *projection;
+	Renderer::Variable *modelObject;
+	Renderer::Variable *modelView;
+	Renderer::Variable *modelProjection;
+	Renderer::Variable *mapObject;
+	Renderer::Variable *mapProjection;
 
-	// Model to render.
+	// Model and map to render.
 	EntityModel model;
+	BSP::Map map;
+
+private:
 
 	// Singleton instance.
 	static Client instance;

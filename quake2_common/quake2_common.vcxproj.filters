@@ -4,10 +4,30 @@
     <Filter Include="include">
       <UniqueIdentifier>{8c813e3e-52ae-4e65-8884-403103523ae8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{4076e65a-aebd-49cd-89a6-d9d728c5e480}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\bsp_parser.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\bsp_map.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\quake2_common_define.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\bsp_parser.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\bsp_map.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
