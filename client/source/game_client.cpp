@@ -71,7 +71,7 @@ bool Client::OnTickBegin()
 	// Move camera forward.
 	Vector3 forward;
 	camera.GetDirections(&forward, nullptr, nullptr);
-	forward.ScalarMultiple(&forward, 0.1f);
+	forward.ScalarMultiple(&forward, 1.f);
 	forward.Sum(camera.GetPosition(), &forward);
 	camera.SetPosition(forward);
 

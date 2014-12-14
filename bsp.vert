@@ -15,5 +15,5 @@ void main(void) {
 	gl_Position = projection *
 		view *
 		vec4(position, 1.f);
-	ps_normal = vec3(uv.x, lightMapUV.y, gl_Position.z / gl_Position.w);
+	ps_normal = vec3(uv.x, lightMapUV.y, gl_Position.w);
 }

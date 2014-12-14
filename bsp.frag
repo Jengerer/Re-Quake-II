@@ -7,6 +7,7 @@ out vec4 frag_colour;
 uniform sampler2D texture2d;
 
 void main(void) {
-	float depth = ps_normal.z * 0.5f + 0.5f; // Convert from [-1, 1] to [0, 1].
+	float toEnd = (4096.f - ps_normal.z) / (4096.f - 4.f);
+	float depth = max(pow(toEnd, 25.f), 0.01f);
 	frag_colour = vec4(depth, depth, depth, 1.f);
 }
