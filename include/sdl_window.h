@@ -17,24 +17,19 @@ public:
 	bool Initialize();
 
 	// Create/update window size/flags.
-	bool Create(const char *title, int width, int height, WindowFlags flags);
-	void ResizeWindow(int width, int height);
-	bool UpdateFlags(WindowFlags newFlags);
+	virtual bool Create(const char *title, int width, int height, WindowFlags flags);
+	virtual void ResizeWindow(int width, int height);
+	virtual bool UpdateFlags(WindowFlags newFlags);
 
-	// Handle events pending for this window.
-	WindowEventResult HandleEvents();
+	// Mouse functions.
+	virtual void GetMousePosition(int *x, int *y) const;
+	virtual void SetMousePosition(int x, int y);	
 
 	// Display the next frame.
-	void SwapBuffers();
+	virtual void SwapBuffers();
 
-	// Get window dimensions.
-	void GetSize(int *width, int *height) const;
-
-	// Get cursor position.
-	void GetMousePosition(int *x, int *y) const;
-
-	// Set cursor position.
-	void SetMousePosition(int x, int y);	
+	// Poll for and handle pending events.
+	WindowEventResult HandleEvents();
 
 private:
 

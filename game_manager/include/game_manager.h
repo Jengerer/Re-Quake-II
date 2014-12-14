@@ -45,6 +45,9 @@ namespace GameManager
 
 		// Game manager utilities.
 		virtual float GetTime() const;
+		virtual void GetWindowSize(int *width, int *height);
+		virtual void GetMousePosition(int *x, int *y);
+		virtual void SetMousePosition(int x, int y);
 		virtual void PresentFrame();
 		virtual Renderer::Interface *GetRenderer();
 		virtual Renderer::Resources *GetRendererResources();
@@ -56,6 +59,9 @@ namespace GameManager
 
 		// Singleton instance.
 		static Implementation instance;
+
+		// Window reference.
+		Window *window;
 
 		// Interface for retrieving assets from engine.
 		Engine::Utilities *engineUtilities;

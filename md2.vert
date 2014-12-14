@@ -19,7 +19,7 @@ uniform float time;
 void main(void) {
 	vec4 translated = object * vec4(position0, 1.f);
 	gl_Position = projection *
-		// view *
+		view *
 		object *
 		vec4(mix(position0, position1, time), 1.f);
 	ps_normal = mix(normal0, normal1, time);

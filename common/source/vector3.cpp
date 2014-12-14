@@ -1,6 +1,9 @@
 #include "vector3.h"
 #include "math_common.h"
 
+// Zero vector constant.
+Vector3 Vector3::Zero(0.f, 0.f, 0.f);
+
 Vector3::Vector3()
 {
 	// No initialization.
@@ -131,29 +134,23 @@ void Vector3::AnglesFromVector(const Vector3 *direction)
 // Turn this set of angles into direction vectors.
 void Vector3::AnglesToVectors(Vector3 *forward, Vector3 *right, Vector3 *up) const
 {
-	float xRadians, yRadians, zRadians;
 	float sinX, cosX;
 	float sinY, cosY;
 	float sinZ, cosZ;
 
-	// Convert angles.
-	xRadians = MathCommon::DegreesToRadians(x);
-	yRadians = MathCommon::DegreesToRadians(y);
-	zRadians = MathCommon::DegreesToRadians(z);
-
 	// Calculate common values.
-	sinX = MathCommon::Sine(xRadians);
-	cosX = MathCommon::Cosine(xRadians);
-	sinY = MathCommon::Sine(yRadians);
-	cosY = MathCommon::Cosine(yRadians);
-	sinZ = MathCommon::Sine(zRadians);
-	cosZ = MathCommon::Cosine(zRadians);
+	sinX = MathCommon::Sine(x);
+	cosX = MathCommon::Cosine(x);
+	sinY = MathCommon::Sine(y);
+	cosY = MathCommon::Cosine(y);
+	sinZ = MathCommon::Sine(z);
+	cosZ = MathCommon::Cosine(z);
 
 	// Fill out forward.
 	if (forward != nullptr) {
-		forward->x = cosX * sinY;
-		forward->y = -sinX;
-		forward->z = cosX * cosY;
+		forward->x = -cosX * sinY;
+		forward->y = sinX;
+		forward->z = -cosX * cosY;
 	}
 
 	// Fill out right.

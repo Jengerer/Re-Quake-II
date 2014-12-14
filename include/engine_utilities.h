@@ -1,6 +1,6 @@
 #pragma once
 
-#include "window_shared.h"
+#include "window.h"
 #include <renderer/renderer_interface.h>
 #include <renderer/resources_interface.h>
 
@@ -14,16 +14,7 @@ namespace Engine
 	public:
 
 		// Create a window with a given set of parameters.
-		virtual bool MakeWindow(const char *title, int width, int height, WindowFlags flags) = 0;
-
-		// Update the window's size.
-		virtual bool ResizeWindow(int width, int height) = 0;
-
-		// Update window flags.
-		virtual bool UpdateWindowFlags(WindowFlags flags) = 0;
-
-		// Swap the window frame buffer.
-		virtual void SwapBuffers() = 0;
+		virtual Window *MakeWindow(const char *title, int width, int height, WindowFlags flags) = 0;
 
 		// Get the renderer interface.
 		virtual Renderer::Interface *GetRenderer() = 0;

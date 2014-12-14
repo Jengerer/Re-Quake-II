@@ -1,5 +1,6 @@
 #pragma once
 
+#include "camera.h"
 #include "entity_model.h"
 #include <bsp_map.h>
 #include <renderer/material_interface.h>
@@ -47,10 +48,11 @@ private:
 	Renderer::Variable *modelObject;
 	Renderer::Variable *modelView;
 	Renderer::Variable *modelProjection;
-	Renderer::Variable *mapObject;
+	Renderer::Variable *mapView;
 	Renderer::Variable *mapProjection;
 
 	// Model and map to render.
+	Camera camera;
 	EntityModel model;
 	BSP::Map map;
 

@@ -13,7 +13,7 @@ uniform mat4 projection;
 // Pass vertex colour to next shader.
 void main(void) {
 	gl_Position = projection *
-		// view *
+		view *
 		vec4(position, 1.f);
-	ps_normal = vec3(uv.x, lightMapUV.y, gl_Position.z);
+	ps_normal = vec3(uv.x, lightMapUV.y, gl_Position.z / gl_Position.w);
 }

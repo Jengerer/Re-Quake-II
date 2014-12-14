@@ -30,10 +30,7 @@ namespace Engine
 		virtual bool Run();
 
 		// Engine utilities implementation.
-		virtual bool MakeWindow(const char *title, int width, int height, WindowFlags flags);
-		virtual bool ResizeWindow(int width, int height);
-		virtual bool UpdateWindowFlags(WindowFlags flags);
-		virtual void SwapBuffers();
+		virtual Window *MakeWindow(const char *title, int width, int height, WindowFlags flags);
 		virtual Renderer::Interface *GetRenderer();
 		virtual Renderer::Resources *GetRendererResources();
 

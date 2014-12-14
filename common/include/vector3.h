@@ -61,4 +61,9 @@ public:
 
 	float x, y, z;
 
+public:
+
+	// Useful vector constants.
+	static Vector3 Zero;
+
 };

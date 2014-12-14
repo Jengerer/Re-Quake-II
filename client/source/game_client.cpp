@@ -10,8 +10,8 @@ const char *ModelVertexShader = "md2.vert";
 const char *ModelFragmentShader = "md2.frag";
 const char *MapVertexShader = "bsp.vert";
 const char *MapFragmentShader = "bsp.frag";
-const float NearDistanceZ = 1.0f;
-const float FarDistanceZ = 1024.0f;
+const float NearDistanceZ = 4.0f;
+const float FarDistanceZ = 4096.0f;
 const float AspectRatio = 4.0f / 3.0f;
 const float FieldOfView = 90.0f;
 
@@ -23,6 +23,7 @@ Client::Client()
 	modelProjection(nullptr),
 	mapProjection(nullptr)
 {
+	camera.SetPosition(Vector3::Zero);
 }
 
 // Initialize client.
@@ -32,6 +33,13 @@ bool Client::OnInitialized(GameManager::Utilities *utilities)
 	if (!LoadResources()) {
 		return false;
 	}
+
+	// Reset mouse for the first time.
+	int centerX, centerY;
+	utilities->GetWindowSize(&centerX, &centerY);
+	centerX >>= 1;
+	centerY >>= 1;
+	utilities->SetMousePosition(centerX, centerY);
 	return true;
 }
 
@@ -44,6 +52,31 @@ void Client::OnShutdown()
 // Begin client frame.
 bool Client::OnTickBegin()
 {
+	// Get mouse movement.
+	int mouseX, mouseY;
+	int centerX, centerY;
+	utilities->GetMousePosition(&mouseX, &mouseY);
+	utilities->GetWindowSize(&centerX, &centerY);
+	centerX >>= 1;
+	centerY >>= 1;
+	float diffX = static_cast<float>(centerX - mouseX);
+	float diffY = static_cast<float>(centerY - mouseY);
+
+	// Turn camera.
+	// Mouse X movement is rotation around Y.
+	Vector3 turnAngles;
+	turnAngles.Set(diffY, diffX, 0.f);
+	camera.Turn(turnAngles);
+
+	// Move camera forward.
+	Vector3 forward;
+	camera.GetDirections(&forward, nullptr, nullptr);
+	forward.ScalarMultiple(&forward, 0.1f);
+	forward.Sum(camera.GetPosition(), &forward);
+	camera.SetPosition(forward);
+
+	// Reset cursor.
+	utilities->SetMousePosition(centerX, centerY);
 	return true;
 }
 
@@ -59,6 +92,11 @@ bool Client::OnTickEnd()
 	static float angle = 0.f;
 	Renderer::Interface *renderer = utilities->GetRenderer();
 	renderer->ClearScene();
+
+	// Generate view matrix.
+	Matrix4x4 view;
+	camera.GenerateViewTransform(&view);
+
 	// Generate object matrix.
 	Matrix4x4 objectMatrix;
 	Matrix4x4 rotate;
@@ -72,14 +110,16 @@ bool Client::OnTickEnd()
 	// Draw model.
 	renderer->SetMaterial(modelMaterial);
 	modelObject->Set(&obj);
+	modelView->Set(&view);
 	model.Draw(renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
 	// Draw map.
 	renderer->SetMaterial(mapMaterial);
+	mapView->Set(&view);
 	map.Draw(renderer);
 	renderer->UnsetMaterial(modelMaterial);
-	
+
 	utilities->PresentFrame();
 	return true;
 }
@@ -103,8 +143,16 @@ bool Client::LoadResources(void)
 	if (modelObject == nullptr) {
 		return false;
 	}
+	modelView = modelMaterial->GetVariable("view");
+	if (modelView == nullptr) {
+		return false;
+	}
 	modelProjection = modelMaterial->GetVariable("projection");
 	if (modelProjection == nullptr) {
+		return false;
+	}
+	mapView = mapMaterial->GetVariable("view");
+	if (mapView == nullptr) {
 		return false;
 	}
 	mapProjection = mapMaterial->GetVariable("projection");
@@ -115,7 +163,7 @@ bool Client::LoadResources(void)
 	// Generate projection matrix.
 	Matrix4x4 projectionMatrix;
 	projectionMatrix.PerspectiveProjection(AspectRatio, FieldOfView, NearDistanceZ, FarDistanceZ);
-	
+
 	// Activate the material for setting variables.
 	Renderer::Interface *renderer = utilities->GetRenderer();
 	renderer->SetMaterial(modelMaterial);
@@ -166,6 +214,9 @@ void Client::FreeResources(void)
 	}
 	if (modelObject != nullptr) {
 		modelObject->Destroy();
+	}
+	if (mapView != nullptr) {
+		mapView->Destroy();
 	}
 	if (mapProjection != nullptr) {
 		mapProjection->Destroy();

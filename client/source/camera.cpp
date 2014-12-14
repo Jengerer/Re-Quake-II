@@ -1,20 +1,32 @@
 #include "camera.h"
+#include <math_common.h>
+
+// Camera angle limits.
+const float CameraMinimumPitch = -89.f;
+const float CameraMaximumPitch = 89.f;
 
 Camera::Camera()
 {
+	angles.Clear();
 }
 
-// Update camera world position.
-void Camera::SetPosition(const Vector3 &position)
+// Get forward direction for camera.
+void Camera::GetDirections(Vector3 *forward, Vector3 *right, Vector3 *up)
 {
-	this->position = position;
+	angles.AnglesToVectors(forward, right, up);
 }
 
-
-// Update camera angles.
-void Camera::SetAngles(const Vector3 &angles)
+// Turn the angle by a set of angles.
+void Camera::Turn(const Vector3 &turnAngles)
 {
-	this->angles = angles;
+	angles.x = MathCommon::ClampAngle(angles.x + turnAngles.x);
+	if (angles.x > CameraMaximumPitch) {
+		angles.x = CameraMaximumPitch;
+	}
+	else if (angles.x < CameraMinimumPitch) {
+		angles.x = CameraMinimumPitch;
+	}
+	angles.y = MathCommon::ClampAngle(angles.y + turnAngles.y);
 }
 
 // Generate world to camera view transform.

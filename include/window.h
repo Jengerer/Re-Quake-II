@@ -18,18 +18,30 @@ class Window
 public:
 
 	Window();
+	virtual ~Window();
 
-	// Update the listener to pass input events to.
-	void SetInputListener(InputListener *listener);
+	// Window modification functions.
+	virtual void ResizeWindow(int width, int height);
+	virtual bool UpdateFlags(WindowFlags newFlags);
 
-	// Get display flags for this window.
-	inline WindowFlags GetFlags() const;
+	// Mouse functions.
+	virtual void GetMousePosition(int *x, int *y) const = 0;
+	virtual void SetMousePosition(int x, int y) = 0;
 
-	// Handle and dispatch keyboard press event.
+	// Switch to next frame buffer and present.
+	virtual void SwapBuffers() = 0;
+
+	// Keyboard device functions.
 	WindowEventResult HandleKeyPress(KeyCode key);
-
-	// Handle and dispatch keyboard release event.
 	WindowEventResult HandleKeyRelease(KeyCode key);
+
+	// Fill out current window size.
+	inline void GetSize(int *width, int *height) {
+		*width = this->width;
+		*height = this->height;
+	}
+	inline WindowFlags GetFlags() const { return flags; }
+	inline void SetInputListener(InputListener *listener) { this->listener = listener; }
 
 private:
 
@@ -38,12 +50,9 @@ private:
 
 protected:
 
+	int width;
+	int height;
 	WindowFlags flags;
 	InputListener *listener;
 
 };
-
-WindowFlags Window::GetFlags() const
-{
-	return flags;
-}

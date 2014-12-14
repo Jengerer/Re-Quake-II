@@ -7,10 +7,20 @@ Window::Window()
 	flags.raw = 0;
 }
 
-// Set interface for passing input events.
-void Window::SetInputListener(InputListener *listener)
+Window::~Window()
 {
-	this->listener = listener;
+}
+
+void Window::ResizeWindow(int width, int height)
+{
+	this->width = width;
+	this->height = height;
+}
+
+bool Window::UpdateFlags(WindowFlags newFlags)
+{
+	this->flags = newFlags;
+	return true;
 }
 
 // Pass keyboard event to the listener and convert result.

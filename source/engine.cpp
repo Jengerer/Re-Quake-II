@@ -84,37 +84,16 @@ namespace Engine
 
 	// Create a window and set up the renderer for it.
 	// Assumes this function is only called once, and then only update functions are called hereafter.
-	bool Implementation::MakeWindow(const char *title, int width, int height, WindowFlags flags)
+	// Returns the reference to the window on success, nullptr otherwise.
+	Window *Implementation::MakeWindow(const char *title, int width, int height, WindowFlags flags)
 	{
 		if (!window.Create(title, width, height, flags)) {
-			return false;
+			return nullptr;
 		}
 		if (!renderer->Initialize()) {
-			return false;
+			return nullptr;
 		}
-		return true;
-	}
-
-	// Resize the window.
-	bool Implementation::ResizeWindow(int width, int height)
-	{
-		window.ResizeWindow(width, height);
-		return true;
-	}
-
-	// Update window flags.
-	bool Implementation::UpdateWindowFlags(WindowFlags flags)
-	{
-		if (!window.UpdateFlags(flags)) {
-			return false;
-		}
-		return true;
-	}
-
-	// Swap frame buffer.
-	void Implementation::SwapBuffers()
-	{
-		window.SwapBuffers();
+		return static_cast<Window*>(&window);
 	}
 
 	// Get reference to renderer.

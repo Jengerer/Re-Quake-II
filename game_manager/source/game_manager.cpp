@@ -51,7 +51,8 @@ namespace GameManager
 		// Set up renderer and create window.
 		WindowFlags flags;
 		flags.raw = 0;
-		if (!engineUtilities->MakeWindow(GameTitle, GameWidth, GameHeight, flags)) {
+		window = engineUtilities->MakeWindow(GameTitle, GameWidth, GameHeight, flags);
+		if (window == nullptr) {
 			return false;
 		}
 
@@ -104,10 +105,28 @@ namespace GameManager
 		return 0.0f;
 	}
 
+	// Get window dimensions.
+	void Implementation::GetWindowSize(int *width, int *height)
+	{
+		window->GetSize(width, height);
+	}
+
+	// Get mouse position in window.
+	void Implementation::GetMousePosition(int *x, int *y)
+	{
+		window->GetMousePosition(x, y);
+	}
+
+	// Set mouse position.
+	void Implementation::SetMousePosition(int x, int y)
+	{
+		window->SetMousePosition(x, y);
+	}
+
 	// Swap buffers and show current render.
 	void Implementation::PresentFrame()
 	{
-		engineUtilities->SwapBuffers();
+		window->SwapBuffers();
 	}
 
 	// Get renderer interface reference.

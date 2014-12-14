@@ -22,6 +22,15 @@ namespace GameManager
 		// Request current game time.
 		virtual float GetTime() const = 0;
 
+		// Get window dimensions.
+		virtual void GetWindowSize(int *width, int *height) = 0;
+
+		// Get mouse position.
+		virtual void GetMousePosition(int *x, int *y) = 0;
+
+		// Set mouse position.
+		virtual void SetMousePosition(int x, int y) = 0;
+
 		// Swap buffer and present frame.
 		virtual void PresentFrame() = 0;
 

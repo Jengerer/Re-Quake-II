@@ -61,6 +61,8 @@ bool SDLWindow::Create(const char *title, int width, int height, WindowFlags fla
 	if (flags.bits.verticalSync) {
 		SDL_GL_SetSwapInterval(1);
 	}
+	Window::ResizeWindow(width, height);
+	Window::UpdateFlags(flags);
 	return true;
 }
 
@@ -69,6 +71,7 @@ void SDLWindow::ResizeWindow(int width, int height)
 {
 	// TODO: in full-screen does this work?
 	SDL_SetWindowSize(sdlWindow, width, height);
+	Window::ResizeWindow(width, height);
 }
 
 // Update window flags.
@@ -95,7 +98,25 @@ bool SDLWindow::UpdateFlags(WindowFlags newFlags)
 			return false;
 		}
 	}
-	return true;
+	return Window::UpdateFlags(newFlags);
+}
+
+// Get the mouse cursor position.
+void SDLWindow::GetMousePosition(int *x, int *y) const
+{
+	SDL_GetMouseState(x, y);
+}
+
+// Set mouse cursor position.
+void SDLWindow::SetMousePosition(int x, int y)
+{
+	SDL_WarpMouseInWindow(sdlWindow, x, y);
+}
+
+// Display the next frame in the window.
+void SDLWindow::SwapBuffers()
+{
+	SDL_GL_SwapWindow(sdlWindow);
 }
 
 // Handle window events.
@@ -115,30 +136,6 @@ WindowEventResult SDLWindow::HandleEvents()
 		}
 	}
 	return WindowEventSuccess;
-}
-
-// Display the next frame in the window.
-void SDLWindow::SwapBuffers()
-{
-	SDL_GL_SwapWindow(sdlWindow);
-}
-
-// Get the window size.
-void SDLWindow::GetSize(int *width, int *height) const
-{
-	SDL_GetWindowSize(sdlWindow, width, height);
-}
-
-// Get the mouse cursor position.
-void SDLWindow::GetMousePosition(int *x, int *y) const
-{
-	SDL_GetMouseState(x, y);
-}
-
-// Set mouse cursor position.
-void SDLWindow::SetMousePosition(int x, int y)
-{
-	SDL_WarpMouseInWindow(sdlWindow, x, y);
 }
 
 // Handle key press event for window.
