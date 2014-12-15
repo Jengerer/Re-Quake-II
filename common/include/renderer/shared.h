@@ -27,7 +27,6 @@ namespace Renderer
 		Triangles,
 		TriangleFan,
 		TriangleStrip,
-		Polygon,
 	};
 
 	// Material attribute type.

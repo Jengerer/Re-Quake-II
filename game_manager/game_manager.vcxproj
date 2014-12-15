@@ -91,13 +91,11 @@
     <ClInclude Include="include\game_manager_utilities.h" />
     <ClInclude Include="include\game_module.h" />
     <ClInclude Include="include\game_module_interface.h" />
-    <ClInclude Include="include\plane.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\game_manager.cpp" />
     <ClCompile Include="source\game_manager_export.cpp" />
     <ClCompile Include="source\game_module.cpp" />
-    <ClCompile Include="source\plane.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

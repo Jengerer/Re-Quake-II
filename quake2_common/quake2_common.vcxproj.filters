@@ -21,12 +21,18 @@
     <ClInclude Include="include\quake2_common_define.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\plane.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\bsp_parser.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\bsp_map.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\plane.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

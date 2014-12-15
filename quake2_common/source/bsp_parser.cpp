@@ -30,9 +30,27 @@ namespace BSP
 			}
 
 			// Load all map segments.
+			if (!LoadNodes()) {
+				return false;
+			}
 			if (!LoadFaces()) {
 				return false;
 			}
+			if (!LoadPlanes()) {
+				return false;
+			}
+			return true;
+		}
+
+		// Load the non-leaf nodes from the file into the map.
+		// Returns true on success, false otherwise.
+		bool Parser::LoadNodes()
+		{
+			const FileFormat::Lump *nodesLump = &header->lumps[NodesLump];
+			int32_t nodeCount = nodesLump->length / sizeof(FileFormat::Lump);
+			const FileFormat::Node *nodes =
+				reinterpret_cast<const FileFormat::Node*>(file.GetBuffer() + nodesLump->offset);
+			
 			return true;
 		}
 
@@ -40,23 +58,24 @@ namespace BSP
 		// Returns true on success, false otherwise.
 		bool Parser::LoadFaces()
 		{
-			// Prepare faces for filling.
-			const Lump *facesLump = &header->lumps[FacesLump];
+			const FileFormat::Lump *facesLump = &header->lumps[FacesLump];
 			int32_t faceCount = facesLump->length / sizeof(Face);
-			const BSP::FileFormat::Face *inputFace =
-				reinterpret_cast<const Face*>(file.GetBuffer() + facesLump->offset);
+			const FileFormat::Face *inputFace =
+				reinterpret_cast<const FileFormat::Face*>(file.GetBuffer() + facesLump->offset);
 			if (!out->InitializeFaces(faceCount)) {
 				return false;
 			}
 
 			// Get the surface edges table, edges array, and vertices.
-			const Lump *edgesLump = &header->lumps[EdgesLump];
-			const Edge *edges = reinterpret_cast<const Edge*>(file.GetBuffer() + edgesLump->offset);
-			const Lump *surfaceEdgesLump = &header->lumps[SurfaceEdgesTableLump];
-			const SurfaceEdge *surfaceEdges = 
-				reinterpret_cast<const SurfaceEdge*>(file.GetBuffer() + surfaceEdgesLump->offset);
-			const Lump *verticesLump = &header->lumps[VerticesLump];
-			const Vector3 *vertices = reinterpret_cast<const Vector3*>(file.GetBuffer() + verticesLump->offset);
+			const FileFormat::Lump *edgesLump = &header->lumps[EdgesLump];
+			const FileFormat::Lump *surfaceEdgesLump = &header->lumps[SurfaceEdgesTableLump];
+			const FileFormat::Lump *verticesLump = &header->lumps[VerticesLump];
+			const FileFormat::Edge *edges = 
+				reinterpret_cast<const FileFormat::Edge*>(file.GetBuffer() + edgesLump->offset);
+			const FileFormat::SurfaceEdge *surfaceEdges = 
+				reinterpret_cast<const FileFormat::SurfaceEdge*>(file.GetBuffer() + surfaceEdgesLump->offset);
+			const Vector3 *vertices =
+				reinterpret_cast<const Vector3*>(file.GetBuffer() + verticesLump->offset);
 
 			// Go through each face.
 			BSP::Face *outputFace = out->GetFaces();
@@ -69,12 +88,12 @@ namespace BSP
 				FaceVertex *outputVertex = outputMesh->GetVertexBuffer();
 
 				// Build polygon from face edges.
-				const SurfaceEdge *currentEdgeEntry = &surfaceEdges[inputFace->firstEdge];
+				const FileFormat::SurfaceEdge *currentEdgeEntry = &surfaceEdges[inputFace->firstEdge];
 				for (int16_t j = 0; j < edgeCount; ++j, ++currentEdgeEntry, ++outputVertex) {
 					int32_t edgeIndex = currentEdgeEntry->edgeIndex;
 
 					// If negative index, it's counter-clockwise order, so get end vertex.
-					const Edge *currentEdge;
+					const FileFormat::Edge *currentEdge;
 					const Vector3 *currentVertex;
 					if (edgeIndex < 0) {
 						currentEdge = &edges[-edgeIndex];
@@ -90,6 +109,25 @@ namespace BSP
 					outputVertex->position.y = currentVertex->z;
 					outputVertex->position.z = currentVertex->y;
 				}
+			}
+			return true;
+		}
+		
+		// Parse and copy the separating planes into the map.
+		bool Parser::LoadPlanes()
+		{
+			const FileFormat::Lump *planesLump = &header->lumps[PlanesLump];
+			int16_t planeCount = static_cast<int16_t>(planesLump->length / sizeof(FileFormat::Plane));
+			if (!out->InitializePlanes(planeCount)) {
+				return false;
+			}
+
+			Geometry::Plane *outPlane = out->GetPlanes();
+			const FileFormat::Plane *inputPlane =
+				reinterpret_cast<const FileFormat::Plane*>(file.GetBuffer() + planesLump->offset);
+			for (int16_t i = 0; i < planeCount; ++i, ++inputPlane, ++outPlane) {
+				outPlane->normal = inputPlane->normal;
+				outPlane->distance = inputPlane->distance;
 			}
 			return true;
 		}

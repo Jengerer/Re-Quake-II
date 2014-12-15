@@ -138,7 +138,9 @@ namespace BSP
 
 		private:
 
+			bool LoadNodes();
 			bool LoadFaces();
+			bool LoadPlanes();
 
 		private:
 

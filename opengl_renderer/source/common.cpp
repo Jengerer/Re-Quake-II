@@ -14,8 +14,6 @@ namespace OpenGL
 			return GL_TRIANGLE_STRIP;
 		case Renderer::TriangleFan:
 			return GL_TRIANGLE_FAN;
-		case Renderer::Polygon:
-			return GL_POLYGON;
 		default:
 			ErrorStack::Log("Invalid primitive type translated.");
 			return 0;

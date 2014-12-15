@@ -57,15 +57,16 @@ namespace BSP
 	{
 		const int vertexCount = mesh.GetVertexCount();
 		layout->BindBuffer(FaceBufferIndex, vertexBuffer);
-		renderer->Draw(Renderer::Polygon, vertexCount);
+		renderer->Draw(Renderer::TriangleFan, vertexCount);
 	}
 
 	// Map-generic renderer resource definitions.
 	Renderer::MaterialLayout *Map::layout = nullptr;
 
 	Map::Map()
-		: faces(nullptr),
-		faceCount(0)
+		: planes(nullptr),
+		nodes(nullptr),
+		faces(nullptr)
 	{
 	}
 
@@ -77,15 +78,41 @@ namespace BSP
 	// Delete map resources.
 	void Map::Destroy()
 	{
+		delete[] planes;
+		planes = nullptr;
+		delete[] nodes;
+		nodes = nullptr;
 		delete[] faces;
 		faces = nullptr;
 	}
 
-	bool Map::InitializeFaces(int faceCount)
+	bool Map::InitializePlanes(int32_t planeCount)
+	{
+		planes = new Geometry::Plane[planeCount];
+		if (planes == nullptr) {
+			ErrorStack::Log("Failed to allocate %d planes for map.", planeCount);
+			return false;
+		}
+		this->planeCount = planeCount;
+		return true;
+	}
+
+	bool Map::InitializeNodes(int32_t nodeCount)
+	{
+		nodes = new Node[nodeCount];
+		if (planes == nullptr) {
+			ErrorStack::Log("Failed to allocate %d nodes.", nodeCount);
+			return false;
+		}
+		this->nodeCount = nodeCount;
+		return true;
+	}
+
+	bool Map::InitializeFaces(int32_t faceCount)
 	{
 		faces = new Face[faceCount];
 		if (faces == nullptr) {
-			ErrorStack::Log("Unable to allocate %d faces for map.", faceCount);
+			ErrorStack::Log("Failed to allocate %d faces for map.", faceCount);
 			return false;
 		}
 		this->faceCount = faceCount;
@@ -96,8 +123,8 @@ namespace BSP
 	bool Map::LoadResources(Renderer::Resources *resources)
 	{
 		Face *currentFace = this->faces;
-		int faceCount = this->faceCount;
-		for (int i = 0; i < faceCount; ++i, ++currentFace) {
+		int32_t faceCount = this->faceCount;
+		for (int32_t i = 0; i < faceCount; ++i, ++currentFace) {
 			if (!currentFace->LoadResources(resources)) {
 				return false;
 			}
@@ -109,8 +136,8 @@ namespace BSP
 	void Map::Draw(Renderer::Interface *renderer)
 	{
 		Face *currentFace = this->faces;
-		int faceCount = this->faceCount;
-		for (int i = 0; i < faceCount; ++i, ++currentFace) {
+		int32_t faceCount = this->faceCount;
+		for (int32_t i = 0; i < faceCount; ++i, ++currentFace) {
 			currentFace->Draw(renderer, layout);
 		}
 	}

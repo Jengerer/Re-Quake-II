@@ -107,17 +107,18 @@ bool Client::OnTickEnd()
 	obj.Product(&objectMatrix, &rotate);
 	angle += 1.f;
 
-	// Draw model.
-	renderer->SetMaterial(modelMaterial);
-	modelObject->Set(&obj);
-	modelView->Set(&view);
-	model.Draw(renderer);
-	renderer->UnsetMaterial(modelMaterial);
-
 	// Draw map.
 	renderer->SetMaterial(mapMaterial);
 	mapView->Set(&view);
 	map.Draw(renderer);
+	renderer->UnsetMaterial(modelMaterial);
+
+	// Draw model.
+	renderer->SetMaterial(modelMaterial);
+	modelObject->Set(&obj);
+	view.Identity();
+	modelView->Set(&view);
+	model.Draw(renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
 	utilities->PresentFrame();
