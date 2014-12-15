@@ -124,6 +124,21 @@ namespace BSP
 			uint16_t brushCount;
 		};
 
+		// BSP brush structure.
+		struct Brush
+		{
+			int32_t firstSide;
+			int32_t sideCount;
+			int32_t contents;
+		};
+
+		// BSP side structure.
+		struct BrushSide
+		{
+			uint16_t planeIndex;
+			int16_t textureIndex;
+		};
+
 		// Object for parsing BSP.
 		class Quake2CommonLibrary Parser
 		{
@@ -145,6 +160,9 @@ namespace BSP
 			bool LoadPlanes();
 			bool LoadFaces();
 			bool LoadNodes();
+			bool LoadBrushSides();
+			bool LoadBrushes();
+			bool LoadLeaves();
 
 		private:
 
@@ -162,6 +180,12 @@ namespace BSP
 			int32_t nodeCount;
 			const FileFormat::Edge *edges;
 			const FileFormat::SurfaceEdge *surfaceEdges;
+			const FileFormat::Brush *brushes;
+			int32_t brushCount;
+			const FileFormat::BrushSide *brushSides;
+			int32_t brushSideCount;
+			const FileFormat::Leaf *leaves;
+			int32_t leafCount;
 
 		};
 

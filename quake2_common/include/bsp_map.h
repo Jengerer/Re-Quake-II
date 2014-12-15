@@ -92,6 +92,89 @@ namespace BSP
 
 	};
 
+	// Class representing a brush side.
+	class BrushSide : public Allocatable
+	{
+
+	public:
+
+		BrushSide();
+		~BrushSide();
+
+		void SetParameters(
+			const Geometry::Plane *plane,
+			int16_t textureIndex);
+
+		inline const Geometry::Plane *GetPlane() const { return plane; }
+		inline int16_t GetTextureIndex() const { return textureIndex; }
+
+	private:
+
+		const Geometry::Plane *plane;
+		int16_t textureIndex;
+
+	};
+
+	// Class representing a brush inside a leaf.
+	class Brush : public Allocatable
+	{
+
+	public:
+
+		Brush();
+		~Brush();
+
+		void SetParameters(
+			const BSP::BrushSide *firstSide,
+			int32_t sideCount,
+			int32_t contents);
+
+		inline const BSP::BrushSide *GetFirstSide() const { return firstSide; }
+		inline int32_t GetSideCount() const { return sideCount; }
+		inline int32_t GetContents() const { return contents; }
+
+	private:
+
+		const BSP::BrushSide *firstSide;
+		int32_t sideCount;
+		int32_t contents;
+
+	};
+
+	// Class representing a leaf node in a BSP.
+	class Leaf : public Allocatable
+	{
+
+	public:
+
+		Leaf();
+		~Leaf();
+
+		void SetParameters(
+			int32_t contents,
+			int16_t visibilityCluster,
+			int16_t areaIndex,
+			const Vector3 &minimums,
+			const Vector3 &maximums,
+			const BSP::Face *firstFace,
+			uint16_t faceCount,
+			const BSP::Brush *firstBrush,
+			uint16_t brushCount);
+
+	private:
+
+		int32_t contents;
+		int16_t visibilityCluster;
+		int16_t areaIndex;
+		Vector3 minimums;
+		Vector3 maximums;
+		const BSP::Face *firstFace;
+		uint16_t faceCount;
+		const BSP::Brush *firstBrush;
+		uint16_t brushCount;
+
+	};
+
 	// Class that wraps a BSP map.
 	class Quake2CommonLibrary Map
 	{
@@ -103,19 +186,22 @@ namespace BSP
 
 		// Prepare map segments to be filled out.
 		bool InitializePlanes(int32_t planeCount);
-		bool InitializeNodes(int32_t nodeCount);
 		bool InitializeFaces(int32_t faceCount);
+		bool InitializeNodes(int32_t nodeCount);
+		bool InitializeBrushSides(int32_t brushSideCount);
+		bool InitializeBrushes(int32_t brushCount);
+		bool InitializeLeaves(int32_t leafCount);
 
 		// Free all memory.
 		void Destroy();
 
 		// Map buffer functions.
 		inline Geometry::Plane *GetPlanes() { return planes; }
-		inline int32_t GetPlaneCount() const { return planeCount; }
-		inline Node *GetNodes() { return nodes; }
-		inline int32_t GetNodeCount() const { return nodeCount; }
-		inline Face *GetFaces() { return faces; }
-		inline int32_t GetFaceCount() const { return faceCount;  }
+		inline BSP::Node *GetNodes() { return nodes; }
+		inline BSP::Face *GetFaces() { return faces; }
+		inline BSP::BrushSide *GetBrushSides() { return brushSides; }
+		inline BSP::Brush *GetBrushes() { return brushes; }
+		inline BSP::Leaf *GetLeaves() { return leaves; }
 
 		// Load renderer resources for the map.
 		bool LoadResources(Renderer::Resources *resources);
@@ -133,11 +219,13 @@ namespace BSP
 
 		// Map component arrays/lengths.
 		Geometry::Plane *planes;
-		int32_t planeCount;
-		Node *nodes;
-		int32_t nodeCount;
-		Face *faces;
+		BSP::Node *nodes;
+		int32_t nodeCount; // TODO: if we loop through nodes as tree, This may not be needed either.
+		BSP::Face *faces;
 		int32_t faceCount;
+		BSP::BrushSide *brushSides;
+		BSP::Brush *brushes;
+		BSP::Leaf *leaves;
 
 	private:
 

@@ -28,20 +28,35 @@ namespace BSP
 				ErrorStack::Log("Invalid format retrieved, header mismatch.");
 				return false;
 			}
+			if (header->version != Version) {
+				ErrorStack::Log("Bad map version, expected %d and read %d.", Version, header->version);
+				return false;
+			}
 			if (!PrepareLumps()) {
 				return false;
 			}
 
 			// Load all map segments.
+			// Faces and nodes need planes loaded.
 			if (!LoadPlanes()) {
 				return false;
 			}
-			// Faces need planes, so load after.
+			// Nodes need faces loaded.
 			if (!LoadFaces()) {
 				return false;
 			}
-			// Nodes need faces and planes, so load after.
 			if (!LoadNodes()) {
+				return false;
+			}
+			// Brushes need sides loaded.
+			if (!LoadBrushSides()) {
+				return false;
+			}
+			// Leaves need brushes loaded.
+			if (!LoadBrushes()) {
+				return false;
+			}
+			if (!LoadLeaves()) {
 				return false;
 			}
 			return true;
@@ -88,6 +103,21 @@ namespace BSP
 					elementSize = sizeof(FileFormat::SurfaceEdge);
 					lumpReference = reinterpret_cast<const void**>(&surfaceEdges);
 					lumpSizeReference = nullptr;
+					break;
+				case BrushesLump:
+					elementSize = sizeof(FileFormat::Brush);
+					lumpReference = reinterpret_cast<const void**>(&brushes);
+					lumpSizeReference = &brushCount;
+					break;
+				case BrushSidesLump:
+					elementSize = sizeof(FileFormat::BrushSide);
+					lumpReference = reinterpret_cast<const void**>(&brushSides);
+					lumpSizeReference = &brushSideCount;
+					break;
+				case LeavesLump:
+					elementSize = sizeof(FileFormat::Leaf);
+					lumpReference = reinterpret_cast<const void**>(&leaves);
+					lumpSizeReference = &leafCount;
 					break;
 				default:
 					continue;
@@ -202,6 +232,81 @@ namespace BSP
 			for (int16_t i = 0; i < planeCount; ++i, ++inputPlane, ++outPlane) {
 				outPlane->normal = inputPlane->normal;
 				outPlane->distance = inputPlane->distance;
+			}
+			return true;
+		}
+
+		// Parse and copy brush sides.
+		bool Parser::LoadBrushSides()
+		{
+			int32_t brushSideCount = this->brushSideCount;
+			if (!out->InitializeBrushSides(brushSideCount)) {
+				return false;
+			}
+
+			const Geometry::Plane *mapPlanes = out->GetPlanes();
+			BSP::BrushSide *outputSide = out->GetBrushSides();
+			const FileFormat::BrushSide *inputSide = brushSides;
+			for (int32_t i = 0; i < brushSideCount; ++i, ++inputSide, ++outputSide) {
+				outputSide->SetParameters(
+					&mapPlanes[inputSide->planeIndex],
+					inputSide->textureIndex);
+			}
+			return true;
+		}
+
+		// Parse and copy brushes to map.
+		bool Parser::LoadBrushes()
+		{
+			int32_t brushCount = this->brushCount;
+			if (!out->InitializeBrushes(brushCount)) {
+				return false;
+			}
+		
+			const BSP::BrushSide *mapSides = out->GetBrushSides();
+			BSP::Brush *outputBrush = out->GetBrushes();
+			const FileFormat::Brush *inputBrush = brushes;
+			for (int32_t i = 0; i < brushCount; ++i) {
+				outputBrush->SetParameters(
+					&mapSides[inputBrush->firstSide],
+					inputBrush->sideCount,
+					inputBrush->contents);
+			}
+			return true;
+		}
+
+		// Parse and copy leaves to map.
+		bool Parser::LoadLeaves()
+		{
+			int32_t leafCount = this->leafCount;
+			if (!out->InitializeLeaves(leafCount)) {
+				return false;
+			}
+
+			const BSP::Face *mapFaces = out->GetFaces();
+			const BSP::Brush *mapBrushes = out->GetBrushes();
+			BSP::Leaf *outputLeaf = out->GetLeaves();
+			const FileFormat::Leaf *inputLeaf = leaves;
+			for (int32_t i = 0; i < leafCount; ++i) {
+				// Convert bounds to float vector.
+				Vector3 minimums;
+				Vector3 maximums;
+				minimums.x = static_cast<float>(inputLeaf->minimums.x);
+				minimums.y = static_cast<float>(inputLeaf->minimums.y);
+				minimums.z = static_cast<float>(inputLeaf->minimums.z);
+				maximums.x = static_cast<float>(inputLeaf->maximums.x);
+				maximums.y = static_cast<float>(inputLeaf->maximums.y);
+				maximums.z = static_cast<float>(inputLeaf->maximums.z);
+				outputLeaf->SetParameters(
+					inputLeaf->contents,
+					inputLeaf->visibilityCluster,
+					inputLeaf->areaIndex,
+					minimums,
+					maximums,
+					&mapFaces[inputLeaf->firstFace],
+					inputLeaf->faceCount,
+					&mapBrushes[inputLeaf->firstBrush],
+					inputLeaf->brushCount);
 			}
 			return true;
 		}

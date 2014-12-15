@@ -86,6 +86,70 @@ namespace BSP
 		this->faceCount = faceCount;
 	}
 
+	BrushSide::BrushSide()
+	{
+	}
+
+	BrushSide::~BrushSide()
+	{
+	}
+
+	void BrushSide::SetParameters(
+		const Geometry::Plane *plane,
+		int16_t textureIndex)
+	{
+		this->plane = plane;
+		this->textureIndex = textureIndex;
+	}
+
+	Brush::Brush()
+	{
+	}
+
+	Brush::~Brush()
+	{
+	}
+
+	void Brush::SetParameters(
+		const BSP::BrushSide *firstSide,
+		int32_t sideCount,
+		int32_t contents)
+	{
+		this->firstSide = firstSide;
+		this->sideCount = sideCount;
+		this->contents = contents;
+	}
+
+	Leaf::Leaf()
+	{
+	}
+
+	Leaf::~Leaf()
+	{
+	}
+
+	void Leaf::SetParameters(
+		int32_t contents,
+		int16_t visibilityCluster,
+		int16_t areaIndex,
+		const Vector3 &minimums,
+		const Vector3 &maximums,
+		const BSP::Face *firstFace,
+		uint16_t faceCount,
+		const BSP::Brush *firstBrush,
+		uint16_t brushCount)
+	{
+		this->contents = contents;
+		this->visibilityCluster = visibilityCluster;
+		this->areaIndex = areaIndex;
+		this->minimums = minimums;
+		this->maximums = maximums;
+		this->firstFace = firstFace;
+		this->faceCount = faceCount;
+		this->firstBrush = firstBrush;
+		this->brushCount = brushCount;
+	}
+
 	// Map-generic renderer resource definitions.
 	Renderer::MaterialLayout *Map::layout = nullptr;
 
@@ -119,13 +183,12 @@ namespace BSP
 			ErrorStack::Log("Failed to allocate %d planes for map.", planeCount);
 			return false;
 		}
-		this->planeCount = planeCount;
 		return true;
 	}
 
 	bool Map::InitializeNodes(int32_t nodeCount)
 	{
-		nodes = new Node[nodeCount];
+		nodes = new BSP::Node[nodeCount];
 		if (planes == nullptr) {
 			ErrorStack::Log("Failed to allocate %d nodes.", nodeCount);
 			return false;
@@ -136,12 +199,42 @@ namespace BSP
 
 	bool Map::InitializeFaces(int32_t faceCount)
 	{
-		faces = new Face[faceCount];
+		faces = new BSP::Face[faceCount];
 		if (faces == nullptr) {
 			ErrorStack::Log("Failed to allocate %d faces for map.", faceCount);
 			return false;
 		}
 		this->faceCount = faceCount;
+		return true;
+	}
+
+	bool Map::InitializeBrushSides(int32_t brushSideCount)
+	{
+		brushSides = new BSP::BrushSide[brushSideCount];
+		if (brushSides == nullptr) {
+			ErrorStack::Log("Failed to allocate %d brush sides for map.", brushSideCount);
+			return false;
+		}
+		return true;
+	}
+
+	bool Map::InitializeBrushes(int32_t brushCount)
+	{
+		brushes = new BSP::Brush[brushCount];
+		if (brushes == nullptr) {
+			ErrorStack::Log("Failed to allocate %d brushes for map.", brushes);
+			return false;
+		}
+		return true;
+	}
+
+	bool Map::InitializeLeaves(int32_t leafCount)
+	{
+		leaves = new BSP::Leaf[leafCount];
+		if (leaves == nullptr) {
+			ErrorStack::Log("Failed to allocate %d leaves for map.", leafCount);
+			return false;
+		}
 		return true;
 	}
 
