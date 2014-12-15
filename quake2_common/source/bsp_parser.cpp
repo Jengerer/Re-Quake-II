@@ -28,16 +28,81 @@ namespace BSP
 				ErrorStack::Log("Invalid format retrieved, header mismatch.");
 				return false;
 			}
-
-			// Load all map segments.
-			if (!LoadNodes()) {
+			if (!PrepareLumps()) {
 				return false;
 			}
+
+			// Load all map segments.
+			if (!LoadPlanes()) {
+				return false;
+			}
+			// Faces need planes, so load after.
 			if (!LoadFaces()) {
 				return false;
 			}
-			if (!LoadPlanes()) {
+			// Nodes need faces and planes, so load after.
+			if (!LoadNodes()) {
 				return false;
+			}
+			return true;
+		}
+
+		// Prepare the lump pointers/counts and verify that they're valid.
+		bool Parser::PrepareLumps()
+		{
+			// Go through each lump and validate its size against the element structure.
+			for (int32_t i = EntitiesLump; i != LumpCount; ++i) {
+				const FileFormat::Lump *lump = &header->lumps[i];
+
+				// Get the validation parameters.
+				int32_t elementSize; // The size of each element in the lump.
+				const void **lumpReference; // The pointer to fill out with the lump location.
+				int32_t *lumpSizeReference; // The integer, if any, to fill out with lump element size.
+				switch (i) {
+				case PlanesLump:
+					elementSize = sizeof(FileFormat::Plane);
+					lumpReference = reinterpret_cast<const void**>(&planes);
+					lumpSizeReference = &planeCount;
+					break;
+				case VerticesLump:
+					elementSize = sizeof(Vector3);
+					lumpReference = reinterpret_cast<const void**>(&vertices);
+					lumpSizeReference = nullptr;
+					break;
+				case NodesLump:
+					elementSize = sizeof(FileFormat::Node);
+					lumpReference = reinterpret_cast<const void**>(&nodes);
+					lumpSizeReference = &nodeCount;
+					break;
+				case FacesLump:
+					elementSize = sizeof(FileFormat::Face);
+					lumpReference = reinterpret_cast<const void**>(&faces);
+					lumpSizeReference = &faceCount;
+					break;
+				case EdgesLump:
+					elementSize = sizeof(FileFormat::Edge);
+					lumpReference = reinterpret_cast<const void**>(&edges);
+					lumpSizeReference = nullptr;
+					break;
+				case SurfaceEdgesTableLump:
+					elementSize = sizeof(FileFormat::SurfaceEdge);
+					lumpReference = reinterpret_cast<const void**>(&surfaceEdges);
+					lumpSizeReference = nullptr;
+					break;
+				default:
+					continue;
+				}
+
+				// Verify the lump based on parameters.
+				int32_t lumpSize = lump->length;
+				if ((lumpSize % elementSize) != 0) {
+					ErrorStack::Log("Bad map format: element size mismatch for lump %d.", i);
+					return false;
+				}
+				*lumpReference = file.GetBuffer() + lump->offset;
+				if (lumpSizeReference != nullptr) {
+					*lumpSizeReference = lumpSize / elementSize;
+				}
 			}
 			return true;
 		}
@@ -46,11 +111,35 @@ namespace BSP
 		// Returns true on success, false otherwise.
 		bool Parser::LoadNodes()
 		{
-			const FileFormat::Lump *nodesLump = &header->lumps[NodesLump];
-			int32_t nodeCount = nodesLump->length / sizeof(FileFormat::Lump);
-			const FileFormat::Node *nodes =
-				reinterpret_cast<const FileFormat::Node*>(file.GetBuffer() + nodesLump->offset);
-			
+			int32_t nodeCount = this->nodeCount;
+			if (!out->InitializeNodes(nodeCount)) {
+				return false;
+			}
+
+			// Convert raw node to map node.
+			const Geometry::Plane *planes = out->GetPlanes();
+			const BSP::Face *faces = out->GetFaces();
+			const FileFormat::Node *inputNode = nodes;
+			BSP::Node *outNode = out->GetNodes();
+			for (int32_t i = 0; i < nodeCount; ++i, ++inputNode, ++outNode) {
+				// Cast bounds to float vector.
+				Vector3 minimums;
+				Vector3 maximums;
+				minimums.x = static_cast<float>(inputNode->minimums.x);
+				minimums.y = static_cast<float>(inputNode->minimums.y);
+				minimums.z = static_cast<float>(inputNode->minimums.z);
+				maximums.x = static_cast<float>(inputNode->maximums.x);
+				maximums.y = static_cast<float>(inputNode->maximums.y);
+				maximums.z = static_cast<float>(inputNode->maximums.z);
+				outNode->SetParameters(
+					&planes[inputNode->planeIndex],
+					inputNode->frontChild,
+					inputNode->backChild,
+					minimums,
+					maximums,
+					&faces[inputNode->firstFace],
+					inputNode->faceCount);
+			}
 			return true;
 		}
 
@@ -58,27 +147,14 @@ namespace BSP
 		// Returns true on success, false otherwise.
 		bool Parser::LoadFaces()
 		{
-			const FileFormat::Lump *facesLump = &header->lumps[FacesLump];
-			int32_t faceCount = facesLump->length / sizeof(Face);
-			const FileFormat::Face *inputFace =
-				reinterpret_cast<const FileFormat::Face*>(file.GetBuffer() + facesLump->offset);
+			int32_t faceCount = this->faceCount;
 			if (!out->InitializeFaces(faceCount)) {
 				return false;
 			}
 
 			// Get the surface edges table, edges array, and vertices.
-			const FileFormat::Lump *edgesLump = &header->lumps[EdgesLump];
-			const FileFormat::Lump *surfaceEdgesLump = &header->lumps[SurfaceEdgesTableLump];
-			const FileFormat::Lump *verticesLump = &header->lumps[VerticesLump];
-			const FileFormat::Edge *edges = 
-				reinterpret_cast<const FileFormat::Edge*>(file.GetBuffer() + edgesLump->offset);
-			const FileFormat::SurfaceEdge *surfaceEdges = 
-				reinterpret_cast<const FileFormat::SurfaceEdge*>(file.GetBuffer() + surfaceEdgesLump->offset);
-			const Vector3 *vertices =
-				reinterpret_cast<const Vector3*>(file.GetBuffer() + verticesLump->offset);
-
-			// Go through each face.
 			BSP::Face *outputFace = out->GetFaces();
+			const FileFormat::Face *inputFace = faces;
 			for (int32_t i = 0; i < faceCount; ++i, ++inputFace, ++outputFace) {
 				int16_t edgeCount = inputFace->edgeCount;
 				if (!outputFace->Initialize(edgeCount)) {
@@ -116,15 +192,13 @@ namespace BSP
 		// Parse and copy the separating planes into the map.
 		bool Parser::LoadPlanes()
 		{
-			const FileFormat::Lump *planesLump = &header->lumps[PlanesLump];
-			int16_t planeCount = static_cast<int16_t>(planesLump->length / sizeof(FileFormat::Plane));
+			int32_t planeCount = this->planeCount;
 			if (!out->InitializePlanes(planeCount)) {
 				return false;
 			}
 
 			Geometry::Plane *outPlane = out->GetPlanes();
-			const FileFormat::Plane *inputPlane =
-				reinterpret_cast<const FileFormat::Plane*>(file.GetBuffer() + planesLump->offset);
+			const FileFormat::Plane *inputPlane = planes;
 			for (int16_t i = 0; i < planeCount; ++i, ++inputPlane, ++outPlane) {
 				outPlane->normal = inputPlane->normal;
 				outPlane->distance = inputPlane->distance;

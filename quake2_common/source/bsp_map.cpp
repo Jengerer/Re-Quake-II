@@ -60,6 +60,32 @@ namespace BSP
 		renderer->Draw(Renderer::TriangleFan, vertexCount);
 	}
 
+	Node::Node()
+	{
+	}
+
+	Node::~Node()
+	{
+	}
+
+	void Node::SetParameters(
+		const Geometry::Plane *plane,
+		int32_t frontChild,
+		int32_t backChild,
+		const Vector3 &minimums,
+		const Vector3 &maximums,
+		const BSP::Face *firstFace,
+		uint16_t faceCount)
+	{
+		this->plane = plane;
+		this->frontChild = frontChild;
+		this->backChild = backChild;
+		this->minimums = minimums;
+		this->maximums = maximums;
+		this->firstFace = firstFace;
+		this->faceCount = faceCount;
+	}
+
 	// Map-generic renderer resource definitions.
 	Renderer::MaterialLayout *Map::layout = nullptr;
 

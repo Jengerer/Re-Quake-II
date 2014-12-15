@@ -63,9 +63,32 @@ namespace BSP
 		Node();
 		~Node();
 
+		void SetParameters(
+			const Geometry::Plane *plane,
+			int32_t frontChild,
+			int32_t backChild,
+			const Vector3 &minimums,
+			const Vector3 &maximums,
+			const BSP::Face *firstFace,
+			uint16_t faceCount);
+
+		inline const Geometry::Plane *GetPlane() const { return plane; }
+		inline int32_t GetFrontChild() const { return frontChild; }
+		inline int32_t GetBackChild() const { return backChild; }
+		inline const Vector3 *GetMinimums() const { return &minimums; }
+		inline const Vector3 *GetMaximums() const { return &maximums; }
+		inline const BSP::Face *GetFirstFace() const { return firstFace; }
+		inline uint16_t GetFaceCount() const { return faceCount; }
+
 	private:
 
-		int32_t planeIndex;
+		const Geometry::Plane *plane;
+		int32_t frontChild;
+		int32_t backChild;
+		Vector3 minimums;
+		Vector3 maximums;
+		const Face *firstFace;
+		uint16_t faceCount;
 
 	};
 

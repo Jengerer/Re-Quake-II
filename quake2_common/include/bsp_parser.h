@@ -15,7 +15,6 @@ namespace BSP
 		// File format constants.
 		static const uint32_t MagicNumber = ('P' << 24) | ('S' << 16) | ('B' << 8) | 'I';
 		static const uint32_t Version = 38;
-		static const uint32_t NodeChildrenCount = 2;
 		static const uint32_t LightMapStyleCount = 4;
 
 		// Short vector type.
@@ -78,7 +77,8 @@ namespace BSP
 		struct Node
 		{
 			int32_t planeIndex;
-			int32_t children[NodeChildrenCount];
+			int32_t frontChild;
+			int32_t backChild;
 			ShortVector3 minimums;
 			ShortVector3 maximums;
 			uint16_t firstFace;
@@ -138,9 +138,13 @@ namespace BSP
 
 		private:
 
-			bool LoadNodes();
-			bool LoadFaces();
+			// Get the addresses to each lump and verify them.
+			bool PrepareLumps();
+
+			// Load each segment into the map.
 			bool LoadPlanes();
+			bool LoadFaces();
+			bool LoadNodes();
 
 		private:
 
@@ -149,6 +153,15 @@ namespace BSP
 
 			// File parsing helpers.
 			const Header *header;
+			const FileFormat::Plane *planes;
+			int32_t planeCount;
+			const Vector3 *vertices;
+			const FileFormat::Face *faces;
+			int32_t faceCount;
+			const FileFormat::Node *nodes;
+			int32_t nodeCount;
+			const FileFormat::Edge *edges;
+			const FileFormat::SurfaceEdge *surfaceEdges;
 
 		};
 
