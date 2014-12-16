@@ -588,6 +588,19 @@ namespace BSP
 		if (nodeIndex < 0) {
 			nodeIndex = GetLeafIndex(nodeIndex);
 			BSP::Leaf *leaf = &leaves[nodeIndex];
+
+			// Trace against brushes.
+			uint16_t brushCount = leaf->GetBrushCount();
+			for (uint16_t i = 0; i < brushCount; ++i) {
+				// Trace against each side.
+				const BSP::Brush *brush = leaf->GetLeafBrush(i);
+				const BSP::BrushSide *side = brush->GetFirstSide();
+				int32_t sideCount = brush->GetSideCount();
+				for (int32_t i = 0; i < sideCount; ++i, ++side) {
+					const Geometry::Plane *plane = side->GetPlane();
+				}
+			}
+
 		}
 		return true;
 	}
