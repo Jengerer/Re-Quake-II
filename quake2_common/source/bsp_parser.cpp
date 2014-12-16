@@ -41,7 +41,7 @@ namespace BSP
 			if (!LoadPlanes()) {
 				return false;
 			}
-			// Nodes need faces loaded.
+			// Nodes and leaf face table need faces loaded.
 			if (!LoadFaces()) {
 				return false;
 			}
@@ -58,6 +58,9 @@ namespace BSP
 			}
 			// Leaves need visibility clusters loaded.
 			if (!LoadVisibility()) {
+				return false;
+			}
+			if (!LoadLeafFaceTable()) {
 				return false;
 			}
 			if (!LoadLeaves()) {
@@ -108,6 +111,16 @@ namespace BSP
 					lumpReference = reinterpret_cast<const void**>(&faces);
 					lumpElementCount = &faceCount;
 					break;
+				case LeavesLump:
+					elementSize = sizeof(FileFormat::Leaf);
+					lumpReference = reinterpret_cast<const void**>(&leaves);
+					lumpElementCount = &leafCount;
+					break;
+				case LeafFacesTableLump:
+					elementSize = sizeof(int16_t);
+					lumpReference = reinterpret_cast<const void**>(&leafFaceTable);
+					lumpElementCount = &leafFaceCount;
+					break;
 				case EdgesLump:
 					elementSize = sizeof(FileFormat::Edge);
 					lumpReference = reinterpret_cast<const void**>(&edges);
@@ -127,11 +140,6 @@ namespace BSP
 					elementSize = sizeof(FileFormat::BrushSide);
 					lumpReference = reinterpret_cast<const void**>(&brushSides);
 					lumpElementCount = &brushSideCount;
-					break;
-				case LeavesLump:
-					elementSize = sizeof(FileFormat::Leaf);
-					lumpReference = reinterpret_cast<const void**>(&leaves);
-					lumpElementCount = &leafCount;
 					break;
 				default:
 					continue;
@@ -330,6 +338,25 @@ namespace BSP
 			return true;
 		}
 
+		// Parse and map the leaf face table.
+		bool Parser::LoadLeafFaceTable()
+		{
+			int32_t leafFaceCount = this->leafFaceCount;
+			if (!out->InitializeLeafFacesTable(leafFaceCount)) {
+				return false;
+			}
+
+			BSP::Face *faces = out->GetFaces();
+			BSP::Face **outTableEntry = out->GetLeafFaceTable();
+			const int16_t *inputIndex = leafFaceTable;
+			for (int32_t i = 0; i < leafFaceCount; ++i, ++inputIndex, ++outTableEntry) {
+				// Map the index to the face address.
+				int16_t currentIndex = *inputIndex;
+				*outTableEntry = &faces[currentIndex];
+			}
+			return true;
+		}
+
 		// Parse and copy leaves to map.
 		bool Parser::LoadLeaves()
 		{
@@ -338,8 +365,8 @@ namespace BSP
 				return false;
 			}
 
+			BSP::Face **leafFaceTable = out->GetLeafFaceTable();
 			const BSP::LeafCluster *mapClusters = out->GetClusters();
-			const BSP::Face *mapFaces = out->GetFaces();
 			const BSP::Brush *mapBrushes = out->GetBrushes();
 			BSP::Leaf *outputLeaf = out->GetLeaves();
 			const FileFormat::Leaf *inputLeaf = leaves;
@@ -363,7 +390,7 @@ namespace BSP
 					inputLeaf->areaIndex,
 					minimums,
 					maximums,
-					&mapFaces[inputLeaf->firstFace],
+					&leafFaceTable[inputLeaf->firstFaceTableIndex],
 					inputLeaf->faceCount,
 					&mapBrushes[inputLeaf->firstBrush],
 					inputLeaf->brushCount);

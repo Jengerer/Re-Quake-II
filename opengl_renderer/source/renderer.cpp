@@ -30,11 +30,11 @@ namespace OpenGL
 
 		// Set up GL rendering parameters.
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		// Only render clockwise triangles.
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
+		glFrontFace(GL_CW);
+		glCullFace(GL_BACK);
 
 		// Enable depth testing.
 		glEnable(GL_DEPTH_TEST);
@@ -46,11 +46,17 @@ namespace OpenGL
 	{
 	}
 
+	// Configure wireframe setting.
+	void Implementation::SetWireframe(bool wireframeEnabled) {
+		GLenum setting = (wireframeEnabled ? GL_LINE : GL_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, setting);
+	}
+
 	// Clear scene for next frame.
 	void Implementation::ClearScene()
 	{
 		// TODO: Make this an option for client.
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT); // | GL_COLOR_BUFFER_BIT);
 	}
 
 	// Set material for rendering.

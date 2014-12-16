@@ -21,7 +21,9 @@ Client::Client()
 	modelObject(nullptr),
 	modelView(nullptr),
 	modelProjection(nullptr),
-	mapProjection(nullptr)
+	mapView(nullptr),
+	mapProjection(nullptr),
+	mapColour(nullptr)
 {
 	camera.SetPosition(Vector3::Zero);
 }
@@ -112,6 +114,14 @@ bool Client::OnTickEnd()
 	const Vector3 *cameraPosition = camera.GetPosition();
 	renderer->SetMaterial(mapMaterial);
 	mapView->Set(&view);
+	renderer->SetWireframe(false);
+	Vector4 colour(1.f, 1.f, 1.f, 0.05f);
+	mapColour->Set(&colour);
+	map.Draw(*cameraPosition, renderer);
+	renderer->ClearScene();
+	renderer->SetWireframe(true);
+	colour = Vector4(1.f, 0.f, 0.f, 0.5f);
+	mapColour->Set(&colour);
 	map.Draw(*cameraPosition, renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
@@ -160,6 +170,10 @@ bool Client::LoadResources(void)
 	}
 	mapProjection = mapMaterial->GetVariable("projection");
 	if (mapProjection == nullptr) {
+		return false;
+	}
+	mapColour = mapMaterial->GetVariable("colour");
+	if (mapColour == nullptr) {
 		return false;
 	}
 

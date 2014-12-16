@@ -19,7 +19,12 @@ namespace BSP
 	};
 	const int FaceBufferIndex = 0;
 
-	Face::Face() : vertexBuffer(nullptr)
+	// Visibility index constants.
+	static const int32_t InvalidVisibilityFrame = -1;
+
+	Face::Face()
+		: vertexBuffer(nullptr),
+		visibilityFrame(InvalidVisibilityFrame)
 	{
 	}
 
@@ -60,7 +65,7 @@ namespace BSP
 		renderer->Draw(Renderer::TriangleFan, vertexCount);
 	}
 
-	Node::Node() : visibilityFrame(-1)
+	Node::Node() : visibilityFrame(InvalidVisibilityFrame)
 	{
 	}
 
@@ -186,7 +191,7 @@ namespace BSP
 		int16_t areaIndex,
 		const Vector3 &minimums,
 		const Vector3 &maximums,
-		const BSP::Face *firstFace,
+		BSP::Face **faceTableStart,
 		uint16_t faceCount,
 		const BSP::Brush *firstBrush,
 		uint16_t brushCount)
@@ -196,10 +201,21 @@ namespace BSP
 		this->areaIndex = areaIndex;
 		this->minimums = minimums;
 		this->maximums = maximums;
-		this->firstFace = firstFace;
+		this->faceTableStart = faceTableStart;
 		this->faceCount = faceCount;
 		this->firstBrush = firstBrush;
 		this->brushCount = brushCount;
+	}
+
+	// Mark all faces in this leaf as visible for this frame.
+	void Leaf::SetFacesVisible(int32_t currentVisibilityFrame)
+	{
+		int32_t leafFaceCount = this->faceCount;
+		BSP::Face **faceEntry = this->faceTableStart;
+		for (int32_t i = 0; i < leafFaceCount; ++i, ++faceEntry) {
+			BSP::Face *currentFace = *faceEntry;
+			currentFace->SetVisibilityFrame(currentVisibilityFrame);
+		}
 	}
 
 	// Map-generic renderer resource definitions.
@@ -210,7 +226,14 @@ namespace BSP
 		: planes(nullptr),
 		nodes(nullptr),
 		faces(nullptr),
-		visibilityFrame(-1)
+		brushSides(nullptr),
+		brushes(nullptr),
+		clusters(nullptr),
+		clusterData(nullptr),
+		decompressedCluster(nullptr),
+		leafFaceTable(nullptr),
+		leaves(nullptr),
+		visibilityFrame(InvalidVisibilityFrame)
 	{
 	}
 
@@ -237,7 +260,7 @@ namespace BSP
 		delete[] leaves;
 		leaves = nullptr;
 
-		// Data is allocated manually.
+		// Free manually allocated data.
 		if (clusterData != nullptr) {
 			MemoryManager::Free(clusterData);
 			clusterData = nullptr;
@@ -245,6 +268,10 @@ namespace BSP
 		if (decompressedCluster != nullptr) {
 			MemoryManager::Free(decompressedCluster);
 			decompressedCluster = nullptr;
+		}
+		if (leafFaceTable != nullptr) {
+			MemoryManager::Free(leafFaceTable);
+			leafFaceTable = nullptr;
 		}
 	}
 
@@ -328,6 +355,17 @@ namespace BSP
 		return true;
 	}
 
+	bool Map::InitializeLeafFacesTable(int32_t leafFaceCount)
+	{
+		leafFaceTable = 
+			reinterpret_cast<BSP::Face**>(MemoryManager::Allocate(leafFaceCount * sizeof(BSP::Face*)));
+		if (leafFaceTable == nullptr) {
+			ErrorStack::Log("Failed to allocate %d entries for leaf face table.", leafFaceCount);
+			return false;
+		}
+		return true;
+	}
+
 	bool Map::InitializeLeaves(int32_t leafCount)
 	{
 		leaves = new BSP::Leaf[leafCount];
@@ -377,8 +415,7 @@ namespace BSP
 		}
 		
 		// Start drawing from head of tree.
-		const BSP::Node *node = &nodes[HeadIndex];
-		DrawNode(node);
+		DrawNode(HeadIndex);
 	}
 
 	// Build the parent graph from a given node.
@@ -475,41 +512,50 @@ namespace BSP
 	}
 
 	// Draw the map from the given node.
-	void Map::DrawNode(const BSP::Node *node) const
+	void Map::DrawNode(int32_t nodeIndex) const
 	{
-		// Check if this node is visible.
-		if (!node->IsVisible(visibilityFrame)) {
-			return;
-		}
-
-		// Check which child to draw first.
-		int32_t nearChild;
-		int32_t farChild;
-		const Geometry::Plane *plane = node->GetPlane();
-		if (plane->IsPointInFront(referencePoint)) {
-			nearChild = node->GetFrontChild();
-			farChild = node->GetBackChild();
+		// Check if this node is a leaf.
+		if (nodeIndex < 0) {
+			// Mark all surfaces in leaf as visible.
+			nodeIndex = GetLeafIndex(nodeIndex);
+			BSP::Leaf *leaf = &leaves[nodeIndex];
+			leaf->SetFacesVisible(visibilityFrame);
 		}
 		else {
-			nearChild = node->GetBackChild();
-			farChild = node->GetFrontChild();
-		}
+			BSP::Node *node = &nodes[nodeIndex];
 
-		// Recurse into near child.
-		if (nearChild >= 0) {
-			DrawNode(&nodes[nearChild]);
-		}
+			// Check if this node is visible.
+			if (!node->IsVisible(visibilityFrame)) {
+				return;
+			}
 
-		// Draw this node's faces.
-		const BSP::Face *face = node->GetFirstFace();
-		int32_t faceCount = node->GetFaceCount();
-		for (int32_t i = 0; i < faceCount; ++i, ++face) {
-			face->Draw(renderer, layout);
-		}
+			// Check which child to draw first.
+			int32_t nearChild;
+			int32_t farChild;
+			const Geometry::Plane *plane = node->GetPlane();
+			if (plane->IsPointInFront(referencePoint)) {
+				nearChild = node->GetFrontChild();
+				farChild = node->GetBackChild();
+			}
+			else {
+				nearChild = node->GetBackChild();
+				farChild = node->GetFrontChild();
+			}
 
-		// Recurse into far child.
-		if (farChild >= 0) {
-			DrawNode(&nodes[farChild]);
+			// Recurse into near child.
+			DrawNode(nearChild);
+
+			// Draw this node's faces.
+			const BSP::Face *face = node->GetFirstFace();
+			int32_t faceCount = node->GetFaceCount();
+			for (int32_t i = 0; i < faceCount; ++i, ++face) {
+				if (face->IsVisible(visibilityFrame)) {
+					face->Draw(renderer, layout);
+				}
+			}
+
+			// Recurse into far child.
+			DrawNode(farChild);
 		}
 	}
 

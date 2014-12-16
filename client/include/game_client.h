@@ -50,6 +50,7 @@ private:
 	Renderer::Variable *modelProjection;
 	Renderer::Variable *mapView;
 	Renderer::Variable *mapProjection;
+	Renderer::Variable *mapColour;
 
 	// Model and map to render.
 	Camera camera;

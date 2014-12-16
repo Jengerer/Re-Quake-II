@@ -20,6 +20,9 @@ namespace Renderer
 		// Shut down renderer.
 		virtual void Destroy() = 0;
 
+		// Set wireframe setting.
+		virtual void SetWireframe(bool wireframeEnabled) = 0;
+
 		// Clear the scene for a new frame.
 		virtual void ClearScene() = 0;
 

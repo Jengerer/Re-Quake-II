@@ -36,8 +36,10 @@ namespace BSP
 		// Prepare face object.
 		bool Initialize(int vertexCount);
 
-		// Get a reference to the mesh to be filled out.
+		inline void SetVisibilityFrame(int32_t visibilityFrame) { this->visibilityFrame = visibilityFrame; }
+
 		inline FaceMesh *GetMesh() { return &mesh; }
+		inline bool IsVisible(int32_t currentVisibilityFrame) const { return (currentVisibilityFrame == visibilityFrame); }
 
 		// Load renderer resources for this face.
 		bool LoadResources(Renderer::Resources *resources);
@@ -51,6 +53,9 @@ namespace BSP
 
 		// Renderer resources.
 		Renderer::Buffer *vertexBuffer;
+		
+		// Visibility frame that this face is allowed to be drawn on.
+		int32_t visibilityFrame;
 
 	};
 
@@ -218,10 +223,12 @@ namespace BSP
 			int16_t areaIndex,
 			const Vector3 &minimums,
 			const Vector3 &maximums,
-			const BSP::Face *firstFace,
+			BSP::Face **faceTableStart,
 			uint16_t faceCount,
 			const BSP::Brush *firstBrush,
 			uint16_t brushCount);
+
+		void SetFacesVisible(int32_t currentVisibilityFrame);
 
 		inline void SetParent(BSP::Node *parent) { this->parent = parent; }
 
@@ -236,7 +243,7 @@ namespace BSP
 		int16_t areaIndex;
 		Vector3 minimums;
 		Vector3 maximums;
-		const BSP::Face *firstFace;
+		BSP::Face **faceTableStart;
 		uint16_t faceCount;
 		const BSP::Brush *firstBrush;
 		uint16_t brushCount;
@@ -255,6 +262,9 @@ namespace BSP
 		Map();
 		~Map();
 
+		// Free all memory.
+		void Destroy();
+
 		// Prepare map segments to be filled out.
 		bool InitializePlanes(int32_t planeCount);
 		bool InitializeFaces(int32_t faceCount);
@@ -262,13 +272,11 @@ namespace BSP
 		bool InitializeBrushSides(int32_t brushSideCount);
 		bool InitializeBrushes(int32_t brushCount);
 		bool InitializeClusters(int32_t clusterCount, int32_t dataSize);
+		bool InitializeLeafFacesTable(int32_t leafFaceIndexCount);
 		bool InitializeLeaves(int32_t leafCount);
 
 		// Populate the tree's ancestry information.
 		void BuildParentGraph();
-
-		// Free all memory.
-		void Destroy();
 
 		// Map buffer functions.
 		inline Geometry::Plane *GetPlanes() { return planes; }
@@ -278,6 +286,7 @@ namespace BSP
 		inline BSP::Brush *GetBrushes() { return brushes; }
 		inline BSP::LeafCluster *GetClusters() { return clusters; }
 		inline uint8_t *GetClusterData() { return clusterData; }
+		inline BSP::Face **GetLeafFaceTable() { return leafFaceTable; }
 		inline BSP::Leaf *GetLeaves() { return leaves; }
 
 		// Load renderer resources for the map.
@@ -299,8 +308,7 @@ namespace BSP
 		void SetParentsVisible(BSP::Leaf *leaf);
 
 		// BSP tree draw helpers.
-		void DrawNode(const BSP::Node *node) const;
-		void DrawLeaf(const BSP::Leaf *leaf) const;
+		void DrawNode(int32_t nodeIndex) const;
 
 	public:
 
@@ -325,6 +333,7 @@ namespace BSP
 		uint8_t *clusterData; // Compressed cluster data for all clusters.
 		uint8_t *decompressedCluster; // Buffer for decompressed cluster data.
 		int32_t clusterCount;
+		BSP::Face **leafFaceTable;
 		BSP::Leaf *leaves;
 		int32_t leafCount;
 

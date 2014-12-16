@@ -19,6 +19,9 @@ namespace OpenGL
 		// Shut down the renderer.
 		virtual void Destroy();
 
+		// Set wireframe setting.
+		virtual void SetWireframe(bool wireframeEnabled);
+
 		// Clear scene for a new frame.
 		virtual void ClearScene();
 

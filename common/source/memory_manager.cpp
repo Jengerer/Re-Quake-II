@@ -35,7 +35,9 @@ void MemoryManager::Shutdown(void)
 		current = &allocations[i];
 		fprintf(stderr, "Memory leak with allocation #%d of size %u.\n", current->allocationIndex, current->size);
 	}
-	fprintf(stderr, "Peak memory usage: %u bytes (%.2f%% of total).\n",
+	fprintf(
+		stderr,
+		"Peak memory usage: %u bytes (%.2f%% of total).\n",
 		peakMemoryUsage,
 		static_cast<float>(peakMemoryUsage) / static_cast<float>(totalMemoryUsage) * 100.f);
 #endif

@@ -131,7 +131,7 @@ namespace BSP
 			int16_t areaIndex;
 			ShortVector3 minimums;
 			ShortVector3 maximums;
-			uint16_t firstFace;
+			uint16_t firstFaceTableIndex;
 			uint16_t faceCount;
 			uint16_t firstBrush;
 			uint16_t brushCount;
@@ -176,6 +176,7 @@ namespace BSP
 			bool LoadBrushSides();
 			bool LoadBrushes();
 			bool LoadVisibility();
+			bool LoadLeafFaceTable();
 			bool LoadLeaves();
 
 		private:
@@ -200,6 +201,8 @@ namespace BSP
 			int32_t brushCount;
 			const FileFormat::BrushSide *brushSides;
 			int32_t brushSideCount;
+			const int16_t *leafFaceTable;
+			int32_t leafFaceCount;
 			const FileFormat::Leaf *leaves;
 			int32_t leafCount;
 
