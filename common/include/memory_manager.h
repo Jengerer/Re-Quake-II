@@ -45,7 +45,9 @@ public:
 private:
 
 #if defined(_DEBUG)
-	static int totalMemoryUsage;
+	static unsigned int activeMemoryUsage;
+	static unsigned int peakMemoryUsage;
+	static unsigned int totalMemoryUsage;
 
 	// Array/list of allocations.
 	static Allocation allocations[MaximumAllocations];

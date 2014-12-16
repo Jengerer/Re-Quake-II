@@ -4,7 +4,9 @@
 #include <stdio.h>
 
 // Allocation count static.
-int MemoryManager::totalMemoryUsage = 0;
+unsigned int MemoryManager::activeMemoryUsage = 0;
+unsigned int MemoryManager::peakMemoryUsage = 0;
+unsigned int MemoryManager::totalMemoryUsage = 0;
 int MemoryManager::allocationIndex = 0;
 int MemoryManager::breakAllocation = -1;
 int MemoryManager::usedStart = MaximumAllocations;
@@ -33,6 +35,9 @@ void MemoryManager::Shutdown(void)
 		current = &allocations[i];
 		fprintf(stderr, "Memory leak with allocation #%d of size %u.\n", current->allocationIndex, current->size);
 	}
+	fprintf(stderr, "Peak memory usage: %u bytes (%.2f%% of total).\n",
+		peakMemoryUsage,
+		static_cast<float>(peakMemoryUsage) / static_cast<float>(totalMemoryUsage) * 100.f);
 #endif
 }
 
@@ -66,6 +71,10 @@ void *MemoryManager::Allocate(unsigned int size)
 		usedStart = oldFreeStart;
 
 		// Add this allocation to the allocated list.
+		activeMemoryUsage += size;
+		if (activeMemoryUsage > peakMemoryUsage) {
+			peakMemoryUsage = activeMemoryUsage;
+		}
 		totalMemoryUsage += size;
 	}
 	else {
@@ -89,6 +98,9 @@ void MemoryManager::Free(void* buffer)
 
 		// Does address match?
 		if (current->address == buffer) {
+			// Update memory metrics.
+			activeMemoryUsage -= current->size;
+
 			// Move this node to the free list.
 			current->address = nullptr;
 			current->size = 0;
