@@ -89,11 +89,15 @@ void MD2Parser::LoadFrames()
 		outFrame->SetVertices(outVertex, BufferSize);
 		outFrame->SetFrameName(frame->name);
 		for (int j = 0; j < VertexCount; ++j, ++vertex, ++outVertex) {
-			// Quake II used Z as up, swap them so Y is up.
-			outVertex->position.x = (static_cast<float>(vertex->x) * scale.x) + offset.x;
-			outVertex->position.y = (static_cast<float>(vertex->z) * scale.z) + offset.z;
-			outVertex->position.z = (static_cast<float>(vertex->y) * scale.y) + offset.y;
-			outVertex->normal = QuakeNormals[vertex->normalIndex];
+			outVertex->position.FromQuakeCoordinates(
+				(static_cast<float>(vertex->x) * scale.x) + offset.x,
+				(static_cast<float>(vertex->y) * scale.y) + offset.y,
+				(static_cast<float>(vertex->z) * scale.z) + offset.z);
+			const Vector3 *quakeNormal = &QuakeNormals[vertex->normalIndex];
+			outVertex->normal.FromQuakeCoordinates(
+				quakeNormal->x,
+				quakeNormal->y,
+				quakeNormal->z);
 		}
 	}
 }

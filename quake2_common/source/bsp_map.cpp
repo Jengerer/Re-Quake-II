@@ -1,6 +1,5 @@
 #include "bsp_map.h"
 #include <error_stack.h>
-#include <stdio.h> // TODO: remove.
 
 namespace BSP
 {
@@ -452,7 +451,7 @@ namespace BSP
 					continue;
 				}
 				int32_t elementIndex = (leafClusterIndex >> BSP::ClusterBitVector::ElementIndexShift);
-				uint8_t bitIndex = (clusterIndex & BSP::ClusterBitVector::BitIndexMask);
+				uint8_t bitIndex = (leafClusterIndex & BSP::ClusterBitVector::BitIndexMask);
 				if ((decompressedCluster[elementIndex] & (1 << bitIndex)) != 0) {
 					SetParentsVisible(leaf);
 				}

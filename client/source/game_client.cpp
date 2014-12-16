@@ -24,7 +24,6 @@ Client::Client()
 	mapProjection(nullptr)
 {
 	camera.SetPosition(Vector3::Zero);
-	camera.SetPosition(Vector3(2384.f, 367.f, -100.f));
 }
 
 // Initialize client.
@@ -73,7 +72,7 @@ bool Client::OnTickBegin()
 	Vector3 forward;
 	const Vector3 *cameraPosition = camera.GetPosition();
 	camera.GetDirections(&forward, nullptr, nullptr);
-	forward.ScalarMultiple(forward, 0.5f);
+	forward.ScalarMultiple(forward, 2.0f);
 	forward.Sum(*cameraPosition, forward);
 	camera.SetPosition(forward);
 
