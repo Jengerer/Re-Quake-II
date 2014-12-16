@@ -118,11 +118,6 @@ bool Client::OnTickEnd()
 	Vector4 colour(1.f, 1.f, 1.f, 0.05f);
 	mapColour->Set(&colour);
 	map.Draw(*cameraPosition, renderer);
-	renderer->ClearScene();
-	renderer->SetWireframe(true);
-	colour = Vector4(1.f, 0.f, 0.f, 0.5f);
-	mapColour->Set(&colour);
-	map.Draw(*cameraPosition, renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
 	// Draw model.

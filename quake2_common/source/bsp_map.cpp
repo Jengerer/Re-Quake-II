@@ -191,9 +191,9 @@ namespace BSP
 		int16_t areaIndex,
 		const Vector3 &minimums,
 		const Vector3 &maximums,
-		BSP::Face **faceTableStart,
+		BSP::Face **firstFace,
 		uint16_t faceCount,
-		const BSP::Brush *firstBrush,
+		BSP::Brush **firstBrush,
 		uint16_t brushCount)
 	{
 		this->contents = contents;
@@ -201,7 +201,7 @@ namespace BSP
 		this->areaIndex = areaIndex;
 		this->minimums = minimums;
 		this->maximums = maximums;
-		this->faceTableStart = faceTableStart;
+		this->firstFace = firstFace;
 		this->faceCount = faceCount;
 		this->firstBrush = firstBrush;
 		this->brushCount = brushCount;
@@ -211,7 +211,7 @@ namespace BSP
 	void Leaf::SetFacesVisible(int32_t currentVisibilityFrame)
 	{
 		int32_t leafFaceCount = this->faceCount;
-		BSP::Face **faceEntry = this->faceTableStart;
+		BSP::Face **faceEntry = this->firstFace;
 		for (int32_t i = 0; i < leafFaceCount; ++i, ++faceEntry) {
 			BSP::Face *currentFace = *faceEntry;
 			currentFace->SetVisibilityFrame(currentVisibilityFrame);
@@ -231,7 +231,8 @@ namespace BSP
 		clusters(nullptr),
 		clusterData(nullptr),
 		decompressedCluster(nullptr),
-		leafFaceTable(nullptr),
+		leafFaces(nullptr),
+		leafBrushes(nullptr),
 		leaves(nullptr),
 		visibilityFrame(InvalidVisibilityFrame)
 	{
@@ -269,9 +270,13 @@ namespace BSP
 			MemoryManager::Free(decompressedCluster);
 			decompressedCluster = nullptr;
 		}
-		if (leafFaceTable != nullptr) {
-			MemoryManager::Free(leafFaceTable);
-			leafFaceTable = nullptr;
+		if (leafFaces != nullptr) {
+			MemoryManager::Free(leafFaces);
+			leafFaces = nullptr;
+		}
+		if (leafBrushes != nullptr) {
+			MemoryManager::Free(leafBrushes);
+			leafBrushes = nullptr;
 		}
 	}
 
@@ -355,12 +360,23 @@ namespace BSP
 		return true;
 	}
 
-	bool Map::InitializeLeafFacesTable(int32_t leafFaceCount)
+	bool Map::InitializeLeafFaces(int32_t leafFaceCount)
 	{
-		leafFaceTable = 
+		leafFaces = 
 			reinterpret_cast<BSP::Face**>(MemoryManager::Allocate(leafFaceCount * sizeof(BSP::Face*)));
-		if (leafFaceTable == nullptr) {
+		if (leafFaces == nullptr) {
 			ErrorStack::Log("Failed to allocate %d entries for leaf face table.", leafFaceCount);
+			return false;
+		}
+		return true;
+	}
+
+	bool Map::InitializeLeafBrushes(int32_t leafBrushCount)
+	{
+		leafBrushes =
+			reinterpret_cast<BSP::Brush**>(MemoryManager::Allocate(leafBrushCount * sizeof(BSP::Brush*)));
+		if (leafBrushes == nullptr) {
+			ErrorStack::Log("Failed to allocate %d entries for leaf brush table.", leafBrushCount);
 			return false;
 		}
 		return true;
@@ -416,6 +432,12 @@ namespace BSP
 		
 		// Start drawing from head of tree.
 		DrawNode(HeadIndex);
+	}
+
+	// Trace a line through the map.
+	bool Map::TraceLine(const Vector3 &start, const Vector3 &end, float *timeOut)
+	{
+		return TraceLine(HeadIndex, start, end, timeOut);
 	}
 
 	// Build the parent graph from a given node.
@@ -557,6 +579,17 @@ namespace BSP
 			// Recurse into far child.
 			DrawNode(farChild);
 		}
+	}
+
+	// Trace a line through a given BSP node.
+	bool Map::TraceLine(int32_t nodeIndex, const Vector3 &start, const Vector3 &end, float *timeOut)
+	{
+		// Check if we're in a leaf.
+		if (nodeIndex < 0) {
+			nodeIndex = GetLeafIndex(nodeIndex);
+			BSP::Leaf *leaf = &leaves[nodeIndex];
+		}
+		return true;
 	}
 
 	// Get generic map renderer resources.

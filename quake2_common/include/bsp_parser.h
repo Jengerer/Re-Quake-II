@@ -37,10 +37,10 @@ namespace BSP
 			FacesLump = 6,
 			LightMapsLump = 7,
 			LeavesLump = 8,
-			LeafFacesTableLump = 9,
-			LeafBrushesTableLump = 10,
+			LeafFacesLump = 9,
+			LeafBrushesLump = 10,
 			EdgesLump = 11,
-			SurfaceEdgesTableLump = 12,
+			SurfaceEdgesLump = 12,
 			ModelsLump = 13,
 			BrushesLump = 14,
 			BrushSidesLump = 15,
@@ -131,9 +131,9 @@ namespace BSP
 			int16_t areaIndex;
 			ShortVector3 minimums;
 			ShortVector3 maximums;
-			uint16_t firstFaceTableIndex;
+			uint16_t firstFace; // Index into leaf faces table, not faces.
 			uint16_t faceCount;
-			uint16_t firstBrush;
+			uint16_t firstBrush; // Index into leaf brush table, not brushes.
 			uint16_t brushCount;
 		};
 
@@ -176,7 +176,8 @@ namespace BSP
 			bool LoadBrushSides();
 			bool LoadBrushes();
 			bool LoadVisibility();
-			bool LoadLeafFaceTable();
+			bool LoadLeafFaces();
+			bool LoadLeafBrushes();
 			bool LoadLeaves();
 
 		private:
@@ -201,8 +202,10 @@ namespace BSP
 			int32_t brushCount;
 			const FileFormat::BrushSide *brushSides;
 			int32_t brushSideCount;
-			const int16_t *leafFaceTable;
+			const int16_t *leafFaces;
 			int32_t leafFaceCount;
+			const uint16_t *leafBrushes;
+			int32_t leafBrushCount;
 			const FileFormat::Leaf *leaves;
 			int32_t leafCount;
 

@@ -225,7 +225,7 @@ namespace BSP
 			const Vector3 &maximums,
 			BSP::Face **faceTableStart,
 			uint16_t faceCount,
-			const BSP::Brush *firstBrush,
+			BSP::Brush **firstBrush,
 			uint16_t brushCount);
 
 		void SetFacesVisible(int32_t currentVisibilityFrame);
@@ -233,6 +233,8 @@ namespace BSP
 		inline void SetParent(BSP::Node *parent) { this->parent = parent; }
 
 		inline int16_t GetClusterIndex() const { return clusterIndex; }
+		inline const BSP::Brush *GetLeafBrush(uint16_t index) const { return firstBrush[index]; }
+		inline uint16_t GetBrushCount() const { return brushCount; }
 		inline BSP::Node *GetParent() const { return parent; }
 
 	private:
@@ -243,9 +245,9 @@ namespace BSP
 		int16_t areaIndex;
 		Vector3 minimums;
 		Vector3 maximums;
-		BSP::Face **faceTableStart;
+		BSP::Face **firstFace;
 		uint16_t faceCount;
-		const BSP::Brush *firstBrush;
+		BSP::Brush **firstBrush;
 		uint16_t brushCount;
 
 		// Additional data for visibility traversal.
@@ -272,7 +274,8 @@ namespace BSP
 		bool InitializeBrushSides(int32_t brushSideCount);
 		bool InitializeBrushes(int32_t brushCount);
 		bool InitializeClusters(int32_t clusterCount, int32_t dataSize);
-		bool InitializeLeafFacesTable(int32_t leafFaceIndexCount);
+		bool InitializeLeafFaces(int32_t leafFaceCount);
+		bool InitializeLeafBrushes(int32_t leafBrushCount);
 		bool InitializeLeaves(int32_t leafCount);
 
 		// Populate the tree's ancestry information.
@@ -286,7 +289,8 @@ namespace BSP
 		inline BSP::Brush *GetBrushes() { return brushes; }
 		inline BSP::LeafCluster *GetClusters() { return clusters; }
 		inline uint8_t *GetClusterData() { return clusterData; }
-		inline BSP::Face **GetLeafFaceTable() { return leafFaceTable; }
+		inline BSP::Face **GetLeafFaces() { return leafFaces; }
+		inline BSP::Brush **GetLeafBrushes() { return leafBrushes; }
 		inline BSP::Leaf *GetLeaves() { return leaves; }
 
 		// Load renderer resources for the map.
@@ -294,6 +298,9 @@ namespace BSP
 		
 		// Draw the map.
 		void Draw(const Vector3 &viewPoint, Renderer::Interface *renderer);
+
+		// Trace a line through the map.
+		bool TraceLine(const Vector3 &start, const Vector3 &end, float *timeOut);
 
 	private:
 
@@ -309,6 +316,9 @@ namespace BSP
 
 		// BSP tree draw helpers.
 		void DrawNode(int32_t nodeIndex) const;
+
+		// Trace a line within a certain node.
+		bool TraceLine(int32_t nodeIndex, const Vector3 &start, const Vector3 &end, float *timeOut);
 
 	public:
 
@@ -333,7 +343,8 @@ namespace BSP
 		uint8_t *clusterData; // Compressed cluster data for all clusters.
 		uint8_t *decompressedCluster; // Buffer for decompressed cluster data.
 		int32_t clusterCount;
-		BSP::Face **leafFaceTable;
+		BSP::Face **leafFaces;
+		BSP::Brush **leafBrushes;
 		BSP::Leaf *leaves;
 		int32_t leafCount;
 
