@@ -43,7 +43,7 @@ namespace BSP
 		bool LoadResources(Renderer::Resources *resources);
 
 		// Draw this face.
-		void Draw(Renderer::Interface *renderer, Renderer::MaterialLayout *layout);
+		void Draw(Renderer::Interface *renderer, Renderer::MaterialLayout *layout) const;
 
 	private:
 
@@ -72,6 +72,9 @@ namespace BSP
 			const BSP::Face *firstFace,
 			uint16_t faceCount);
 
+		inline void SetParent(BSP::Node *parent) { this->parent = parent; }
+		inline void SetVisibilityFrame(int32_t visibilityFrame) { this->visibilityFrame = visibilityFrame; }
+
 		inline const Geometry::Plane *GetPlane() const { return plane; }
 		inline int32_t GetFrontChild() const { return frontChild; }
 		inline int32_t GetBackChild() const { return backChild; }
@@ -79,9 +82,14 @@ namespace BSP
 		inline const Vector3 *GetMaximums() const { return &maximums; }
 		inline const BSP::Face *GetFirstFace() const { return firstFace; }
 		inline uint16_t GetFaceCount() const { return faceCount; }
+		inline BSP::Node *GetParent() const { return parent; }
+		inline uint32_t GetVisibilityFrame() const { return visibilityFrame; }
+
+		inline bool IsVisible(int32_t visibilityFrame) const { return (visibilityFrame == this->visibilityFrame); }
 
 	private:
 
+		// Parameters from the raw map.
 		const Geometry::Plane *plane;
 		int32_t frontChild;
 		int32_t backChild;
@@ -89,6 +97,10 @@ namespace BSP
 		Vector3 maximums;
 		const Face *firstFace;
 		uint16_t faceCount;
+
+		// Additional parameters for visibliity traversal.
+		BSP::Node *parent;
+		int32_t visibilityFrame;
 
 	};
 
@@ -141,6 +153,56 @@ namespace BSP
 
 	};
 
+	// Class representing a bit vector correspoding to the map clusters.
+	class ClusterBitVector : public Allocatable
+	{
+
+	public:
+
+		ClusterBitVector();
+		~ClusterBitVector();
+
+		// Decompress the visibility set to a full bit vector.
+		void Decompress(int32_t clusterCount, uint8_t *out) const;
+
+		inline void SetStart(const uint8_t *start) { this->start = start; }
+
+	private:
+
+		const uint8_t *start;
+
+	public:
+
+		static const int32_t ClustersPerElement = 8; // Number of clusters in a single byte.
+		static const uint32_t ElementIndexShift = 3; // Bits to shift to get decompressed element for a cluster.
+		static const uint32_t BitIndexMask = 7; // Mask for retrieving bit index in an element.
+
+	};
+
+	// Visibility cluster containing both a visibility set for potentially visible
+	// and potentially audible leaves.
+	class LeafCluster : public Allocatable
+	{
+
+	public:
+
+		LeafCluster();
+		~LeafCluster();
+
+		void SetParameters(
+			const uint8_t *visibleData,
+			const uint8_t *audibleData);
+
+		inline const BSP::ClusterBitVector *GetVisibilitySet() const { return &visibleSet; }
+		inline const BSP::ClusterBitVector *GetAudibilitySet() const { return &audibleSet; }
+		
+	private:
+
+		BSP::ClusterBitVector visibleSet;
+		BSP::ClusterBitVector audibleSet;
+
+	};
+
 	// Class representing a leaf node in a BSP.
 	class Leaf : public Allocatable
 	{
@@ -152,7 +214,7 @@ namespace BSP
 
 		void SetParameters(
 			int32_t contents,
-			int16_t visibilityCluster,
+			int16_t clusterIndex,
 			int16_t areaIndex,
 			const Vector3 &minimums,
 			const Vector3 &maximums,
@@ -161,10 +223,16 @@ namespace BSP
 			const BSP::Brush *firstBrush,
 			uint16_t brushCount);
 
+		inline void SetParent(BSP::Node *parent) { this->parent = parent; }
+
+		inline int16_t GetClusterIndex() const { return clusterIndex; }
+		inline BSP::Node *GetParent() const { return parent; }
+
 	private:
 
+		// Parameters from map data.
 		int32_t contents;
-		int16_t visibilityCluster;
+		int16_t clusterIndex;
 		int16_t areaIndex;
 		Vector3 minimums;
 		Vector3 maximums;
@@ -172,6 +240,9 @@ namespace BSP
 		uint16_t faceCount;
 		const BSP::Brush *firstBrush;
 		uint16_t brushCount;
+
+		// Additional data for visibility traversal.
+		BSP::Node *parent;
 
 	};
 
@@ -190,7 +261,11 @@ namespace BSP
 		bool InitializeNodes(int32_t nodeCount);
 		bool InitializeBrushSides(int32_t brushSideCount);
 		bool InitializeBrushes(int32_t brushCount);
+		bool InitializeClusters(int32_t clusterCount, int32_t dataSize);
 		bool InitializeLeaves(int32_t leafCount);
+
+		// Populate the tree's ancestry information.
+		void BuildParentGraph();
 
 		// Free all memory.
 		void Destroy();
@@ -201,19 +276,40 @@ namespace BSP
 		inline BSP::Face *GetFaces() { return faces; }
 		inline BSP::BrushSide *GetBrushSides() { return brushSides; }
 		inline BSP::Brush *GetBrushes() { return brushes; }
+		inline BSP::LeafCluster *GetClusters() { return clusters; }
+		inline uint8_t *GetClusterData() { return clusterData; }
 		inline BSP::Leaf *GetLeaves() { return leaves; }
 
 		// Load renderer resources for the map.
 		bool LoadResources(Renderer::Resources *resources);
 		
 		// Draw the map.
-		void Draw(Renderer::Interface *renderer);
+		void Draw(const Vector3 &viewPoint, Renderer::Interface *renderer);
+
+	private:
+
+		// Helper for building the ancestry graph.
+		void BuildParentGraph(int32_t nodeIndex, BSP::Node *parent);
+
+		// Find the leaf that a point is in.
+		const BSP::Leaf *GetLeafByPoint(const Vector3 &point); // TODO: we can probably use referencePoint instead of passing.
+
+		// Mark all leaves in a certain cluster as visible for the frame.
+		void MarkVisibleCluster(int32_t clusterIndex);
+		void SetParentsVisible(BSP::Leaf *leaf);
+
+		// BSP tree draw helpers.
+		void DrawNode(const BSP::Node *node) const;
+		void DrawLeaf(const BSP::Leaf *leaf) const;
 
 	public:
 
 		// Get material layout for models.
 		static bool LoadStaticResources(Renderer::Resources *resources, Renderer::Material *mapMaterial);
 		static void FreeStaticResources();
+		
+		// Convert negative index to leaf index.
+		static inline int32_t GetLeafIndex(int32_t index) { return (-1) - index; }
 
 	private:
 
@@ -225,9 +321,29 @@ namespace BSP
 		int32_t faceCount;
 		BSP::BrushSide *brushSides;
 		BSP::Brush *brushes;
+		BSP::LeafCluster *clusters;
+		uint8_t *clusterData; // Compressed cluster data for all clusters.
+		uint8_t *decompressedCluster; // Buffer for decompressed cluster data.
+		int32_t clusterCount;
 		BSP::Leaf *leaves;
+		int32_t leafCount;
+
+		// Variables to use for drawing and leaf traversing (to avoid having to pass as parameters repeatedly).
+		Vector3 referencePoint;
+		Renderer::Interface *renderer;
+
+		// Visibility information.
+		int32_t visibleCluster;
+		int32_t visibilityFrame;
 
 	private:
+
+		// Node constants.
+		static const int32_t HeadIndex = 0;
+		static const int32_t SolidLeaf = 0;
+
+		// Cluster constants.
+		static const int32_t InvalidClusterIndex = -1;
 
 		// Map-generic material layout.
 		static Renderer::MaterialLayout *layout;

@@ -73,6 +73,19 @@ namespace BSP
 			int32_t type; // Which axis is normal aligned to, if any.
 		};
 
+		// Visibility header.
+		struct VisibilityHeader
+		{
+			int32_t clusterCount;
+		};
+
+		// Visibility cluster entry.
+		struct VisibilityCluster
+		{
+			int32_t visibilityOffset;
+			int32_t audibilityOffset;
+		};
+
 		// BSP tree node structure.
 		struct Node
 		{
@@ -114,7 +127,7 @@ namespace BSP
 		struct Leaf
 		{
 			int32_t contents; // Content of all brushes in this leaf.
-			int16_t visibilityCluster;
+			int16_t clusterIndex; // Cluster of visibility/audibility sets.
 			int16_t areaIndex;
 			ShortVector3 minimums;
 			ShortVector3 maximums;
@@ -162,6 +175,7 @@ namespace BSP
 			bool LoadNodes();
 			bool LoadBrushSides();
 			bool LoadBrushes();
+			bool LoadVisibility();
 			bool LoadLeaves();
 
 		private:
@@ -174,6 +188,8 @@ namespace BSP
 			const FileFormat::Plane *planes;
 			int32_t planeCount;
 			const Vector3 *vertices;
+			const uint8_t *visibilityStart;
+			int32_t visibilityLength;
 			const FileFormat::Face *faces;
 			int32_t faceCount;
 			const FileFormat::Node *nodes;

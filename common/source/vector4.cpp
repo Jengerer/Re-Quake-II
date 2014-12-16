@@ -25,12 +25,6 @@ void Vector4::Clear()
 	Set(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-// Copy components from other vector.
-void Vector4::Copy(const Vector4 *vector)
-{
-	Set(vector->x, vector->y, vector->z, vector->w);
-}
-
 // Set individual components.
 void Vector4::Set(float x, float y, float z, float w)
 {

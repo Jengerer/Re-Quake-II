@@ -56,9 +56,16 @@ namespace BSP
 			if (!LoadBrushes()) {
 				return false;
 			}
+			// Leaves need visibility clusters loaded.
+			if (!LoadVisibility()) {
+				return false;
+			}
 			if (!LoadLeaves()) {
 				return false;
 			}
+
+			// Build leaf/node parent graph.
+			out->BuildParentGraph();
 			return true;
 		}
 
@@ -66,58 +73,65 @@ namespace BSP
 		bool Parser::PrepareLumps()
 		{
 			// Go through each lump and validate its size against the element structure.
+			const FileFormat::Lump *lump;
 			for (int32_t i = EntitiesLump; i != LumpCount; ++i) {
-				const FileFormat::Lump *lump = &header->lumps[i];
+				lump = &header->lumps[i];
 
 				// Get the validation parameters.
 				int32_t elementSize; // The size of each element in the lump.
 				const void **lumpReference; // The pointer to fill out with the lump location.
-				int32_t *lumpSizeReference; // The integer, if any, to fill out with lump element size.
+				int32_t *lumpElementCount; // The integer, if any, to fill out with lump element size.
 				switch (i) {
 				case PlanesLump:
 					elementSize = sizeof(FileFormat::Plane);
 					lumpReference = reinterpret_cast<const void**>(&planes);
-					lumpSizeReference = &planeCount;
+					lumpElementCount = &planeCount;
 					break;
 				case VerticesLump:
 					elementSize = sizeof(Vector3);
 					lumpReference = reinterpret_cast<const void**>(&vertices);
-					lumpSizeReference = nullptr;
+					lumpElementCount = nullptr;
+					break;
+				case VisibilityLump:
+					// Visibility isn't just an array of elements; requires lump size.
+					elementSize = sizeof(uint8_t);
+					lumpReference = reinterpret_cast<const void**>(&visibilityStart);
+					lumpElementCount = &visibilityLength;
 					break;
 				case NodesLump:
 					elementSize = sizeof(FileFormat::Node);
 					lumpReference = reinterpret_cast<const void**>(&nodes);
-					lumpSizeReference = &nodeCount;
+					lumpElementCount = &nodeCount;
 					break;
 				case FacesLump:
 					elementSize = sizeof(FileFormat::Face);
 					lumpReference = reinterpret_cast<const void**>(&faces);
-					lumpSizeReference = &faceCount;
+					lumpElementCount = &faceCount;
 					break;
 				case EdgesLump:
 					elementSize = sizeof(FileFormat::Edge);
 					lumpReference = reinterpret_cast<const void**>(&edges);
-					lumpSizeReference = nullptr;
+					lumpElementCount = nullptr;
 					break;
 				case SurfaceEdgesTableLump:
 					elementSize = sizeof(FileFormat::SurfaceEdge);
 					lumpReference = reinterpret_cast<const void**>(&surfaceEdges);
-					lumpSizeReference = nullptr;
+					lumpElementCount = nullptr;
 					break;
 				case BrushesLump:
 					elementSize = sizeof(FileFormat::Brush);
 					lumpReference = reinterpret_cast<const void**>(&brushes);
-					lumpSizeReference = &brushCount;
+					lumpElementCount = &brushCount;
 					break;
 				case BrushSidesLump:
 					elementSize = sizeof(FileFormat::BrushSide);
 					lumpReference = reinterpret_cast<const void**>(&brushSides);
-					lumpSizeReference = &brushSideCount;
+					lumpElementCount = &brushSideCount;
 					break;
 				case LeavesLump:
 					elementSize = sizeof(FileFormat::Leaf);
 					lumpReference = reinterpret_cast<const void**>(&leaves);
-					lumpSizeReference = &leafCount;
+					lumpElementCount = &leafCount;
 					break;
 				default:
 					continue;
@@ -130,8 +144,8 @@ namespace BSP
 					return false;
 				}
 				*lumpReference = file.GetBuffer() + lump->offset;
-				if (lumpSizeReference != nullptr) {
-					*lumpSizeReference = lumpSize / elementSize;
+				if (lumpElementCount != nullptr) {
+					*lumpElementCount = lumpSize / elementSize;
 				}
 			}
 			return true;
@@ -155,12 +169,15 @@ namespace BSP
 				// Cast bounds to float vector.
 				Vector3 minimums;
 				Vector3 maximums;
-				minimums.x = static_cast<float>(inputNode->minimums.x);
-				minimums.y = static_cast<float>(inputNode->minimums.y);
-				minimums.z = static_cast<float>(inputNode->minimums.z);
-				maximums.x = static_cast<float>(inputNode->maximums.x);
-				maximums.y = static_cast<float>(inputNode->maximums.y);
-				maximums.z = static_cast<float>(inputNode->maximums.z);
+				minimums.FromQuakeCoordinates(
+					static_cast<float>(inputNode->minimums.x),
+					static_cast<float>(inputNode->minimums.y),
+					static_cast<float>(inputNode->minimums.z));
+				maximums.FromQuakeCoordinates(
+					static_cast<float>(inputNode->maximums.x),
+					static_cast<float>(inputNode->maximums.y),
+					static_cast<float>(inputNode->maximums.z));
+
 				outNode->SetParameters(
 					&planes[inputNode->planeIndex],
 					inputNode->frontChild,
@@ -209,11 +226,10 @@ namespace BSP
 						currentEdge = &edges[edgeIndex];
 						currentVertex = &vertices[currentEdge->startIndex];
 					}
-
-					// Make Y up instead of Z.
-					outputVertex->position.x = currentVertex->x;
-					outputVertex->position.y = currentVertex->z;
-					outputVertex->position.z = currentVertex->y;
+					outputVertex->position.FromQuakeCoordinates(
+						currentVertex->x,
+						currentVertex->y,
+						currentVertex->z);
 				}
 			}
 			return true;
@@ -230,7 +246,10 @@ namespace BSP
 			Geometry::Plane *outPlane = out->GetPlanes();
 			const FileFormat::Plane *inputPlane = planes;
 			for (int16_t i = 0; i < planeCount; ++i, ++inputPlane, ++outPlane) {
-				outPlane->normal = inputPlane->normal;
+				outPlane->normal.FromQuakeCoordinates(
+					inputPlane->normal.x,
+					inputPlane->normal.y,
+					inputPlane->normal.z);
 				outPlane->distance = inputPlane->distance;
 			}
 			return true;
@@ -275,6 +294,42 @@ namespace BSP
 			return true;
 		}
 
+		// Parse and copy visibility data.
+		bool Parser::LoadVisibility()
+		{
+			const FileFormat::VisibilityHeader *header =
+				reinterpret_cast<const FileFormat::VisibilityHeader*>(visibilityStart);
+			int32_t clusterCount = header->clusterCount;
+
+			// Get size of just visibility data (excluding headers/clusters).
+			int32_t dataStart = sizeof(FileFormat::VisibilityHeader) + 
+				(clusterCount * sizeof(FileFormat::VisibilityCluster));
+			int32_t dataSize = visibilityLength - dataStart;
+			if (!out->InitializeClusters(clusterCount, dataSize)) {
+				return false;
+			}
+
+			// Copy the raw data over.
+			uint8_t *mapData = out->GetClusterData();
+			uint8_t *outData = mapData;
+			const uint8_t *inputData = visibilityStart + dataStart;
+			for (int32_t i = 0; i < dataSize; ++i, ++inputData, ++outData) {
+				*outData = *inputData;
+			}
+
+			// Clusters immediately follow header in file.
+			BSP::LeafCluster *outCluster = out->GetClusters();
+			const FileFormat::VisibilityCluster *inputCluster =
+				reinterpret_cast<const FileFormat::VisibilityCluster*>(header + 1);
+			for (int32_t i = 0; i < clusterCount; ++i, ++inputCluster, ++outCluster) {
+				// Translate offsets to just cluster data.
+				outCluster->SetParameters(
+					&mapData[inputCluster->visibilityOffset - dataStart],
+					&mapData[inputCluster->audibilityOffset - dataStart]);
+			}
+			return true;
+		}
+
 		// Parse and copy leaves to map.
 		bool Parser::LoadLeaves()
 		{
@@ -283,23 +338,28 @@ namespace BSP
 				return false;
 			}
 
+			const BSP::LeafCluster *mapClusters = out->GetClusters();
 			const BSP::Face *mapFaces = out->GetFaces();
 			const BSP::Brush *mapBrushes = out->GetBrushes();
 			BSP::Leaf *outputLeaf = out->GetLeaves();
 			const FileFormat::Leaf *inputLeaf = leaves;
-			for (int32_t i = 0; i < leafCount; ++i) {
-				// Convert bounds to float vector.
+			for (int32_t i = 0; i < leafCount; ++i, ++inputLeaf, ++outputLeaf) {
+				// Convert bounds to float vector, swap Y with Z.
 				Vector3 minimums;
 				Vector3 maximums;
-				minimums.x = static_cast<float>(inputLeaf->minimums.x);
-				minimums.y = static_cast<float>(inputLeaf->minimums.y);
-				minimums.z = static_cast<float>(inputLeaf->minimums.z);
-				maximums.x = static_cast<float>(inputLeaf->maximums.x);
-				maximums.y = static_cast<float>(inputLeaf->maximums.y);
-				maximums.z = static_cast<float>(inputLeaf->maximums.z);
+				minimums.FromQuakeCoordinates(
+					static_cast<float>(inputLeaf->minimums.x),
+					static_cast<float>(inputLeaf->minimums.y),
+					static_cast<float>(inputLeaf->minimums.z));
+				maximums.FromQuakeCoordinates(
+					static_cast<float>(inputLeaf->maximums.x),
+					static_cast<float>(inputLeaf->maximums.y),
+					static_cast<float>(inputLeaf->maximums.z));
+
+				// Resolve pointers.
 				outputLeaf->SetParameters(
 					inputLeaf->contents,
-					inputLeaf->visibilityCluster,
+					inputLeaf->clusterIndex,
 					inputLeaf->areaIndex,
 					minimums,
 					maximums,

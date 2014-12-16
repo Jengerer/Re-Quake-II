@@ -13,12 +13,10 @@ public:
 	Vector4();
 	Vector4(float x, float y, float z, float w);
 	Vector4(const Vector4 &other);
-
 	void operator=(const Vector4 &other);
 
 	// Set all components to zero.
 	void Clear();
-	void Copy(const Vector4 *vector);
 	void Set(float x, float y, float z, float w);
 
 	// Set the XYZ components of this vector from a 3-dimensional vector.

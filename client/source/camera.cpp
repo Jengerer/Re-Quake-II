@@ -40,7 +40,7 @@ void Camera::GenerateViewTransform(Matrix4x4 *out)
 	rotation.Transpose(&rotation);
 	
 	// Get the inverse translation matrix.
-	translateOffset.Negation(&position);
+	translateOffset.Negation(position);
 	translation.Translation(&translateOffset);
 
 	// Multiply the two.

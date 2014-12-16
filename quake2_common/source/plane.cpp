@@ -16,4 +16,11 @@ namespace Geometry
 	{
 	}
 
+	// Returns whether a point is in front of the plane.
+	bool Plane::IsPointInFront(const Vector3 &point) const
+	{
+		float offset = normal.DotProduct(point) - distance;
+		return (offset > 0.f);
+	}
+
 }

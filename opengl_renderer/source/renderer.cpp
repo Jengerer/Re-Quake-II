@@ -30,9 +30,11 @@ namespace OpenGL
 
 		// Set up GL rendering parameters.
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		// Only render clockwise triangles.
-		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
 
 		// Enable depth testing.
 		glEnable(GL_DEPTH_TEST);

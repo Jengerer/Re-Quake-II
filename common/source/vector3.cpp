@@ -39,7 +39,7 @@ void Vector3::Set(float x, float y, float z)
 // Get the vector L2-norm (square magnitude).
 float Vector3::GetSquareMagnitude() const
 {
-	return DotProduct(this);
+	return DotProduct(*this);
 }
 
 // Get the vector magnitude.
@@ -50,82 +50,83 @@ float Vector3::GetMagnitude() const
 }
 
 // Assign normalized vector.
-void Vector3::Normalized(const Vector3 *vector)
+void Vector3::Normalized(const Vector3 &vector)
 {
 	float inverseMagnitude = 1.0f / GetMagnitude();
 	ScalarMultiple(vector, inverseMagnitude);
 }
 
 // Assign scalar multiple of vector.
-void Vector3::ScalarMultiple(const Vector3 *vector, float factor)
+void Vector3::ScalarMultiple(const Vector3 &vector, float factor)
 {
-	x = vector->x * factor;
-	y = vector->y * factor;
-	z = vector->z * factor;
+	x = vector.x * factor;
+	y = vector.y * factor;
+	z = vector.z * factor;
 }
 
 // Assign vector negation.
-void Vector3::Negation(const Vector3 *vector)
+void Vector3::Negation(const Vector3 &vector)
 {
-	x = -(vector->x);
-	y = -(vector->y);
-	z = -(vector->z);
+	x = -vector.x;
+	y = -vector.y;
+	z = -vector.z;
 }
 
 // Assign result of vector sum.
-void Vector3::Sum(const Vector3 *a, const Vector3 *b)
+void Vector3::Sum(const Vector3 &a, const Vector3 &b)
 {
-	x = a->x + b->x;
-	y = a->y + b->y;
-	z = a->z + b->z;
+	x = a.x + b.x;
+	y = a.y + b.y;
+	z = a.z + b.z;
 }
 
 // Assign result of vector difference.
-void Vector3::Difference(const Vector3 *a, const Vector3 *b)
+void Vector3::Difference(const Vector3 &a, const Vector3 &b)
 {
-	x = a->x - b->x;
-	y = a->y - b->y;
-	z = a->z - b->z;
+	x = a.x - b.x;
+	y = a.y - b.y;
+	z = a.z - b.z;
 }
 
 // Calculate vector dot product.
-float Vector3::DotProduct(const Vector3 *vector) const
+float Vector3::DotProduct(const Vector3 &vector) const
 {
-	return (x * vector->x) + (y * vector->y) + (z * vector->z);
+	return (x * vector.x) + (y * vector.y) + (z * vector.z);
 }
 
 // Assign result of vector cross product to this vector.
-void Vector3::CrossProduct(const Vector3 *a, const Vector3 *b)
+void Vector3::CrossProduct(const Vector3 &a, const Vector3 &b)
 {
 	// Store X and Y in variables since we need originals to calculate Z.
-	float xProduct = (a->y * b->z) - (a->z * b->y);
-	float yProduct = (a->z * b->x) - (a->x * b->z);
+	float xProduct = (a.y * b.z) - (a.z * b.y);
+	float yProduct = (a.z * b.x) - (a.x * b.z);
 
 	// Calculate Z and fill in results.
-	z = (a->x * b->y) - (a->y * b->x);
+	z = (a.x * b.y) - (a.y * b.x);
 	y = yProduct;
 	x = xProduct;
 }
 
 // Assign sum with scaled vector.
-void Vector3::SumMultiple(const Vector3 *base, const Vector3 *scaled, float factor)
+void Vector3::SumMultiple(const Vector3 &base, const Vector3 &scaled, float factor)
 {
-	ScalarMultiple(scaled, factor);
-	Sum(base, this);
+	Vector3 multiple;
+	multiple.ScalarMultiple(scaled, factor);
+	Sum(base, multiple);
 }
 
 // Sets components to a set of degree angles matching a given direction.
 // Assumes input vector is not the zero vector.
 // This vector cannot be the operand.
-void Vector3::AnglesFromVector(const Vector3 *direction)
+void Vector3::AnglesFromVector(const Vector3 &direction)
 {
 	// Calculate yaw (rotation about Y axis).
-	y = MathCommon::ArcTangent(direction->x, direction->z);
+	y = MathCommon::ArcTangent(direction.x, direction.z);
 
 	// Calculate pitch (rotation about X axis).
-	float squarexzDistance = (direction->x * direction->x) + (direction->z * direction->z);
+	float squarexzDistance = (direction.x * direction.x) + (direction.z * direction.z);
 	float xzDistance = MathCommon::SquareRoot(squarexzDistance);
-	x = MathCommon::ArcTangent(direction->y, xzDistance);
+	x = MathCommon::ArcTangent(direction.y, xzDistance);
 
 	// Any roll will satisfy, so no roll.
 	z = 0.0f;
@@ -166,4 +167,12 @@ void Vector3::AnglesToVectors(Vector3 *forward, Vector3 *right, Vector3 *up) con
 		up->y = cosX * cosZ;
 		up->z = (sinY * sinZ) + (sinX * cosY * cosZ);
 	}
+}
+
+// Assign this vector components translated from the Quake coordinate system.
+void Vector3::FromQuakeCoordinates(float x, float y, float z)
+{
+	this->x = -y;
+	this->y = z;
+	this->z = -x;
 }

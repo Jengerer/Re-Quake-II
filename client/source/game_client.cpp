@@ -24,6 +24,7 @@ Client::Client()
 	mapProjection(nullptr)
 {
 	camera.SetPosition(Vector3::Zero);
+	camera.SetPosition(Vector3(2384.f, 367.f, -100.f));
 }
 
 // Initialize client.
@@ -70,9 +71,10 @@ bool Client::OnTickBegin()
 
 	// Move camera forward.
 	Vector3 forward;
+	const Vector3 *cameraPosition = camera.GetPosition();
 	camera.GetDirections(&forward, nullptr, nullptr);
-	forward.ScalarMultiple(&forward, 1.f);
-	forward.Sum(camera.GetPosition(), &forward);
+	forward.ScalarMultiple(forward, 0.5f);
+	forward.Sum(*cameraPosition, forward);
 	camera.SetPosition(forward);
 
 	// Reset cursor.
@@ -108,9 +110,10 @@ bool Client::OnTickEnd()
 	angle += 1.f;
 
 	// Draw map.
+	const Vector3 *cameraPosition = camera.GetPosition();
 	renderer->SetMaterial(mapMaterial);
 	mapView->Set(&view);
-	map.Draw(renderer);
+	map.Draw(*cameraPosition, renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
 	// Draw model.
