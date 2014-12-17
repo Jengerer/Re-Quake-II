@@ -197,25 +197,34 @@ bool Client::LoadResources(void)
 
 	// Load package.
 	Pack::Manager manager;
-	if (!manager.Initialize("pak1.pak")) {
-		return false;
-	}
-
-	// Load model.
-	MD2Parser file;
-	if (!file.Load("tris.md2", &model)) {
-		return false;
-	}
-	if (!model.LoadResources(resources)) {
+	if (!manager.Initialize("pak0.pak")) {
 		return false;
 	}
 
 	// Load map.
+	FileData modelData;
+	if (!manager.Read("maps/city1.bsp", &modelData)) {
+		return false;
+	}
+	const uint8_t *modelBuffer = reinterpret_cast<const uint8_t*>(modelData.GetData());
 	BSP::FileFormat::Parser bspParser;
-	if (!bspParser.Load("city1.bsp", &map)) {
+	if (!bspParser.Load(modelBuffer, &map)) {
 		return false;
 	}
 	if (!map.LoadResources(resources)) {
+		return false;
+	}
+
+	// Load model.
+	MD2Parser md2Parser;
+	if (!manager.Read("models/monsters/bitch/tris.md2", &modelData)) {
+		return false;
+	}
+	modelBuffer = reinterpret_cast<const uint8_t*>(modelData.GetData());
+	if (!md2Parser.Load(modelBuffer, &model)) {
+		return false;
+	}
+	if (!model.LoadResources(resources)) {
 		return false;
 	}
 	return true;
@@ -247,6 +256,9 @@ void Client::FreeResources(void)
 	}
 	if (mapMaterial != nullptr) {
 		mapMaterial->Destroy();
+	}
+	if (mapColour != nullptr) {
+		mapColour->Destroy();
 	}
 
 	// Destroy model.

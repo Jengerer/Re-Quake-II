@@ -162,7 +162,7 @@ namespace BSP
 			~Parser();
 
 			// Load and fill a map.
-			bool Load(const char *name, BSP::Map *out);
+			bool Load(const uint8_t *mapData, BSP::Map *out);
 
 		private:
 
@@ -182,8 +182,11 @@ namespace BSP
 
 		private:
 
-			FileData data; // Map file data.
-			BSP::Map *out; // Map to be filled out.
+			// Buffer data for the map.
+			const uint8_t *data;
+
+			// Map to be filled out.
+			BSP::Map *out;
 
 			// File parsing helpers.
 			const Header *header;

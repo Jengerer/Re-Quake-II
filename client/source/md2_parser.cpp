@@ -13,28 +13,20 @@ MD2Parser::~MD2Parser()
 }
 
 // Load a model from a file.
-bool MD2Parser::Load(const char *filename, EntityModel *out)
+bool MD2Parser::Load(const uint8_t *modelData, EntityModel *out)
 {
+	// Set input data.
+	this->data = modelData;
+
 	// Set output file.
 	this->out = out;
 
-	// Load the file into memory.
-	File modelFile;
-	if (!modelFile.Open(filename, File::BinaryReadMode)) {
-		ErrorStack::Log("Failed to open model file: %s.", filename);
-		return false;
-	}
-	if (!modelFile.Read(&data)) {
-		ErrorStack::Log("Failed to read model data from file: %s.", filename);
-		return false;
-	}
-
 	// Set up pointers to file segments.
-	header = reinterpret_cast<const MD2Header*>(data.GetData());
+	header = reinterpret_cast<const MD2Header*>(data);
 	if (!VerifyHeader()) {
 		return false;
 	}
-	commands = reinterpret_cast<const MD2Command*>(data.GetData() + header->commandsOffset);
+	commands = reinterpret_cast<const MD2Command*>(data + header->commandsOffset);
 
 	// Initialize the model.
 	if (!out->Initialize(header->frameCount, header->vertexCount)) {
@@ -84,7 +76,7 @@ void MD2Parser::LoadFrames()
 	// Get frames we're filling out.
 	EntityModelFrame *outFrame = out->GetFrames();
 	for (int32_t i = FrameStart; i < FrameEnd; i += FrameStride, ++outFrame) {
-		const MD2Frame *frame = reinterpret_cast<const MD2Frame*>(data.GetData() + i);
+		const MD2Frame *frame = reinterpret_cast<const MD2Frame*>(data + i);
 		const MD2Vertex *vertex = reinterpret_cast<const MD2Vertex*>(frame + 1);
 		Vector3 scale = frame->scale;
 		Vector3 offset = frame->offset;

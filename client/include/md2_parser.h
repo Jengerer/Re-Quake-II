@@ -84,7 +84,7 @@ public:
 
 	// Parse a model from a file.
 	// Assumes the output model is new.
-	bool Load(const char *filename, EntityModel *out);
+	bool Load(const uint8_t *modelData, EntityModel *out);
 
 private:
 
@@ -106,7 +106,7 @@ private:
 private:
 
 	// Raw data.
-	FileData data;
+	const uint8_t *data;
 
 	// Model we're filling in.
 	EntityModel *out;

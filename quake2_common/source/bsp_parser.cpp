@@ -16,25 +16,13 @@ namespace BSP
 		}
 
 		// Load the map and fill out the output map.
-		bool Parser::Load(const char *name, BSP::Map *out)
+		bool Parser::Load(const uint8_t *mapData, BSP::Map *out)
 		{
+			this->data = mapData;
 			this->out = out;
-
-			File file;
-			if (!file.Open(name, File::BinaryReadMode)) {
-				return false;
-			}
-			int32_t length = file.GetLength();
-			if (length == -1) {
-				return false;
-			}
-			if (!file.Read(length, &data)) {
-				ErrorStack::Log("Failed to read map from file: %s.", name);
-				return false;
-			}
-			header = reinterpret_cast<const Header*>(data.GetData());
+			header = reinterpret_cast<const Header*>(data);
 			if (header->magic != MagicNumber) {
-				ErrorStack::Log("Invalid format retrieved, header mismatch.");
+				ErrorStack::Log("Bad map format, mismatched header.");
 				return false;
 			}
 			if (header->version != Version) {
@@ -165,7 +153,7 @@ namespace BSP
 					ErrorStack::Log("Bad map format: element size mismatch for lump %d.", i);
 					return false;
 				}
-				*lumpReference = data.GetData() + lump->offset;
+				*lumpReference = data + lump->offset;
 				if (lumpElementCount != nullptr) {
 					*lumpElementCount = lumpSize / elementSize;
 				}

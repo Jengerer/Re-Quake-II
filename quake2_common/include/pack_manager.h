@@ -24,13 +24,6 @@ namespace Pack
 		int32_t size;
 	};
 
-	// Package read structure filled out by the manager.
-	struct ReadResult
-	{
-		uint8_t *buffer;
-		int32_t size;
-	};
-
 	// Class that manages a Quake PAK file directory.
 	class Quake2CommonLibrary Manager
 	{
@@ -42,6 +35,16 @@ namespace Pack
 
 		// Load in a new PAK file.
 		bool Initialize(const char *filename);
+
+		// Read a file from the pack.
+		// Fills out a file data handle to the file data from the pack.
+		bool Read(const char *filename, FileData *out);
+
+	private:
+
+		// Get the header for a given filename.
+		// Returns null if file can't be found.
+		const Entry *FindHeader(const char *filename) const;
 
 	private:
 

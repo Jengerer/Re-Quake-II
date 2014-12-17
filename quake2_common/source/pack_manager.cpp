@@ -1,5 +1,6 @@
 #include "pack_manager.h"
 #include <error_stack.h>
+#include <string.h>
 
 namespace Pack
 {
@@ -55,5 +56,45 @@ namespace Pack
 		fileCount = directorySize / sizeof(Entry);
 		return true;
 	}
+
+	// Read a file from the pack.
+	// Fills out a file data handle to the file data in the pack.
+	bool Manager::Read(const char *filename, FileData *out)
+	{
+		const Entry *header = FindHeader(filename);
+		if (header == nullptr) {
+			ErrorStack::Log("Failed to find file in pack: %s.", filename);
+			return false;
+		}
+
+		// Seek to the file and load.
+		if (!file.Seek(header->offset, File::OffsetStart)) {
+			ErrorStack::Log("Failed to seek to file in pack: %s.", filename);
+			return false;
+		}
+
+		// Read the file.
+		if (!file.Read(header->size, out)) {
+			ErrorStack::Log("Failed to read file from pack: %s.", filename);
+			return false;
+		}
+		return true;
+	}
+
+	// Find the header for a given filename.
+	// Returns null if it can't be found.
+	const Entry *Manager::FindHeader(const char *filename) const
+	{
+		const Entry *current = files;
+		for (int32_t i = 0; i < fileCount; ++i, ++current) {
+			// TODO: make this case insensitive.
+			const char *currentName = reinterpret_cast<const char*>(&current->name);
+			if (strncmp(filename, currentName, NameLength) == 0) {
+				return current;
+			}
+		}
+		return nullptr;
+	}
+
 
 }
