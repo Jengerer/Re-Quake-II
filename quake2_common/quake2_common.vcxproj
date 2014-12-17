@@ -84,6 +84,7 @@
     <ClInclude Include="include\bsp_map.h" />
     <ClInclude Include="include\bsp_parser.h" />
     <ClInclude Include="include\mesh.h" />
+    <ClInclude Include="include\pack_manager.h" />
     <ClInclude Include="include\plane.h" />
     <ClInclude Include="include\quake2_common_define.h" />
   </ItemGroup>

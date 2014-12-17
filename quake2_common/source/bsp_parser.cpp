@@ -19,11 +19,20 @@ namespace BSP
 		bool Parser::Load(const char *name, BSP::Map *out)
 		{
 			this->out = out;
-			if (!file.Read(name)) {
-				ErrorStack::Log("Failed to open map file '%s'.", name);
+
+			File file;
+			if (!file.Open(name, File::BinaryReadMode)) {
 				return false;
 			}
-			header = reinterpret_cast<const Header*>(file.GetBuffer());
+			int32_t length = file.GetLength();
+			if (length == -1) {
+				return false;
+			}
+			if (!file.Read(length, &data)) {
+				ErrorStack::Log("Failed to read map from file: %s.", name);
+				return false;
+			}
+			header = reinterpret_cast<const Header*>(data.GetData());
 			if (header->magic != MagicNumber) {
 				ErrorStack::Log("Invalid format retrieved, header mismatch.");
 				return false;
@@ -156,7 +165,7 @@ namespace BSP
 					ErrorStack::Log("Bad map format: element size mismatch for lump %d.", i);
 					return false;
 				}
-				*lumpReference = file.GetBuffer() + lump->offset;
+				*lumpReference = data.GetData() + lump->offset;
 				if (lumpElementCount != nullptr) {
 					*lumpElementCount = lumpSize / elementSize;
 				}

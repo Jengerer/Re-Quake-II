@@ -182,7 +182,7 @@ namespace BSP
 
 		private:
 
-			File file; // Input map file.
+			FileData data; // Map file data.
 			BSP::Map *out; // Map to be filled out.
 
 			// File parsing helpers.

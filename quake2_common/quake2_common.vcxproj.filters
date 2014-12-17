@@ -24,6 +24,9 @@
     <ClInclude Include="include\plane.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\pack_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\bsp_parser.cpp">

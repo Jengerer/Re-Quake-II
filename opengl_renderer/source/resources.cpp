@@ -15,22 +15,24 @@ namespace OpenGL
 	// Create material by vertex/pixel shader.
 	Renderer::Material *Resources::CreateMaterial(const char *vertexFile, const char *pixelFile)
 	{
-		// Read the vertex/pixel shaders.
-		const char *vertexSource, *pixelSource;
-		int vertexLength, pixelLength;
-		File vertexShader, pixelShader;
-		if (!vertexShader.Read(vertexFile)) {
-			ErrorStack::Log("Failed to open vertex shader file '%s'.", vertexFile);
+		FileData vertexData, pixelData;
+		File shaderFile;
+		if (!shaderFile.Open(vertexFile, File::ReadMode)) {
+			ErrorStack::Log("Failed to open vertex shader: %s.", vertexFile);
 			return nullptr;
 		}
-		if (!pixelShader.Read(pixelFile)) {
-			ErrorStack::Log("Failed to read pixel shader file '%s'.", pixelFile);
+		if (!shaderFile.Read(&vertexData)) {
+			ErrorStack::Log("Failed to read vertex shader from file: %s.", vertexFile);
 			return nullptr;
 		}
-		vertexSource = vertexShader.GetBuffer();
-		vertexLength = vertexShader.GetSize();
-		pixelSource = pixelShader.GetBuffer();
-		pixelLength = pixelShader.GetSize();
+		if (!shaderFile.Open(pixelFile, File::ReadMode)) {
+			ErrorStack::Log("Failed to open pixel shader file: %s.", pixelFile);
+			return nullptr;
+		}
+		if (!shaderFile.Read(&pixelData)) {
+			ErrorStack::Log("Failed to read pixel shader from file: %s.", pixelFile);
+			return nullptr;
+		}
 
 		// Create material object.
 		Material *material = new Material();
@@ -40,6 +42,10 @@ namespace OpenGL
 		}
 
 		// Build with the source.
+		const char *vertexSource = reinterpret_cast<const char*>(vertexData.GetData());
+		const char *pixelSource = reinterpret_cast<const char*>(pixelData.GetData());
+		int32_t vertexLength = vertexData.GetSize();
+		int32_t pixelLength = pixelData.GetSize();
 		if (!material->Initialize(vertexSource, vertexLength, pixelSource, pixelLength)) {
 			material->Destroy();
 			return nullptr;

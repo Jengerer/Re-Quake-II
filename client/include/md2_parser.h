@@ -105,7 +105,8 @@ private:
 
 private:
 
-	File file;
+	// Raw data.
+	FileData data;
 
 	// Model we're filling in.
 	EntityModel *out;
