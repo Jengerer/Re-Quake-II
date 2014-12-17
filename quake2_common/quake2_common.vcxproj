@@ -89,6 +89,7 @@
     <ClInclude Include="include\quake2_common_define.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\pack_manager.cpp" />
     <ClCompile Include="source\plane.cpp" />
     <ClCompile Include="source\bsp_map.cpp" />
     <ClCompile Include="source\bsp_parser.cpp" />

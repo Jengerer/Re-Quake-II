@@ -3,6 +3,7 @@
 #include <bsp_parser.h>
 #include <math_common.h>
 #include <memory_manager.h>
+#include <pack_manager.h>
 #include <stdio.h>
 
 // Rendering parameters.
@@ -191,6 +192,12 @@ bool Client::LoadResources(void)
 		return false;
 	}
 	if (!BSP::Map::LoadStaticResources(resources, mapMaterial)) {
+		return false;
+	}
+
+	// Load package.
+	Pack::Manager manager;
+	if (!manager.Initialize("pak1.pak")) {
 		return false;
 	}
 

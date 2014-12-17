@@ -38,5 +38,8 @@
     <ClCompile Include="source\plane.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\pack_manager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

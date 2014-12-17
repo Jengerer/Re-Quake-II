@@ -1,5 +1,6 @@
 #pragma once
 
+#include "quake2_common_define.h"
 #include <file.h>
 #include <inttypes.h>
 
@@ -31,24 +32,27 @@ namespace Pack
 	};
 
 	// Class that manages a Quake PAK file directory.
-	class PackManager
+	class Quake2CommonLibrary Manager
 	{
 
 	public:
 
-		PackManager();
-		~PackManager();
+		Manager();
+		~Manager();
 
 		// Load in a new PAK file.
 		bool Initialize(const char *filename);
 
-		// Find a file and get the buffer.
-		bool Open(const char *filename, ReadResult *out);
-
 	private:
 
 		File file; // Package file being managed.
-		FileData directory; // Package directory buffer.
+		FileData directoryData; // Package directory buffer.
+
+		// Pointer to the directory in the data.
+		const Entry *files;
+		int32_t fileCount;
+
+
 
 	};
 
