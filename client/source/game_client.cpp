@@ -195,9 +195,9 @@ bool Client::LoadResources(void)
 		return false;
 	}
 
-	// Load package.
+	// Load packs.
 	Pack::Manager manager;
-	if (!manager.Initialize("pak0.pak")) {
+	if (!manager.AddPack("pak0.pak")) {
 		return false;
 	}
 
@@ -206,9 +206,8 @@ bool Client::LoadResources(void)
 	if (!manager.Read("maps/city1.bsp", &modelData)) {
 		return false;
 	}
-	const uint8_t *modelBuffer = reinterpret_cast<const uint8_t*>(modelData.GetData());
 	BSP::FileFormat::Parser bspParser;
-	if (!bspParser.Load(modelBuffer, &map)) {
+	if (!bspParser.Load(modelData.GetData(), &map)) {
 		return false;
 	}
 	if (!map.LoadResources(resources)) {
@@ -220,8 +219,7 @@ bool Client::LoadResources(void)
 	if (!manager.Read("models/monsters/bitch/tris.md2", &modelData)) {
 		return false;
 	}
-	modelBuffer = reinterpret_cast<const uint8_t*>(modelData.GetData());
-	if (!md2Parser.Load(modelBuffer, &model)) {
+	if (!md2Parser.Load(modelData.GetData(), &model)) {
 		return false;
 	}
 	if (!model.LoadResources(resources)) {

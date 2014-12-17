@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common_define.h"
-#include <new>
 
 // Allocation structure.
 struct Allocation

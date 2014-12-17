@@ -14,19 +14,19 @@ public:
 	~FileData();
 
 	// Allocate the buffer for the data.
-	int8_t *AllocateData(int32_t size);	
+	uint8_t *AllocateData(int32_t size);	
 
 	// Change the reported data size (when reading text, file size and text size differ).
 	inline void SetSize(int32_t size) { this->size = size; }
 
 	// Retrieve file parameters.
-	inline const int8_t *GetData() const { return data; }
+	inline const uint8_t *GetData() const { return data; }
 	inline int32_t GetSize() const { return size; }
 
 
 private:
 
-	int8_t *data;
+	uint8_t *data;
 	int32_t size;
 
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "quake2_common_define.h"
+#include <allocatable.h>
 #include <file.h>
 #include <inttypes.h>
 
@@ -24,6 +25,42 @@ namespace Pack
 		int32_t size;
 	};
 
+	// Class for representing a pack directory.
+	class Directory : public Allocatable
+	{
+
+	public:
+
+		Directory(Directory *directory);
+		~Directory();
+
+		// Initialize pack directory from file data.
+		bool Initialize(const char *filename);
+
+		// Get a reference to a file in the pack.
+		// Returns nullptr if the file does not exist.
+		const Entry *FindEntry(const char *filename) const;
+
+		// Load a file from the pack by its header.
+		bool Read(const Entry *entry, FileData *out);
+		
+		// Intrusive list functions.
+		inline Directory *GetNext() { return next; }
+
+	private:
+
+		File file; // Package file being managed.
+		FileData directoryData; // Package directory buffer.
+
+		// Pack directory members.
+		const Entry *files;
+		int32_t fileCount;
+
+		// Intrusive list elements.
+		Directory *next;
+
+	};
+
 	// Class that manages a Quake PAK file directory.
 	class Quake2CommonLibrary Manager
 	{
@@ -34,7 +71,7 @@ namespace Pack
 		~Manager();
 
 		// Load in a new PAK file.
-		bool Initialize(const char *filename);
+		bool AddPack(const char *filename);
 
 		// Read a file from the pack.
 		// Fills out a file data handle to the file data from the pack.
@@ -42,20 +79,7 @@ namespace Pack
 
 	private:
 
-		// Get the header for a given filename.
-		// Returns null if file can't be found.
-		const Entry *FindHeader(const char *filename) const;
-
-	private:
-
-		File file; // Package file being managed.
-		FileData directoryData; // Package directory buffer.
-
-		// Pointer to the directory in the data.
-		const Entry *files;
-		int32_t fileCount;
-
-
+		Directory *head;
 
 	};
 

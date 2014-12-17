@@ -18,13 +18,13 @@ FileData::~FileData()
 }
 
 // Allocate space for data to be read from file.
-int8_t *FileData::AllocateData(int32_t size)
+uint8_t *FileData::AllocateData(int32_t size)
 {
 	// Check if we have enough space.
 	if (this->size >= size) {
 		return data;
 	}
-	int8_t *buffer = reinterpret_cast<int8_t*>(MemoryManager::Allocate(size));
+	uint8_t *buffer = reinterpret_cast<uint8_t*>(MemoryManager::Allocate(size));
 	if (buffer == nullptr) {
 		return false;
 	}
@@ -124,7 +124,7 @@ bool File::Seek(int32_t offset, SeekType type)
 bool File::Read(int32_t size, FileData *out)
 {
 	// Allocate an extra byte for text.
-	int8_t *data = out->AllocateData(size);
+	uint8_t *data = out->AllocateData(size);
 	if (data == nullptr) {
 		ErrorStack::Log("Failed to allocate %d bytes to read from file.", size);
 		return false;
