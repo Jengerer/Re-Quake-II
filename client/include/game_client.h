@@ -41,6 +41,7 @@ private:
 	GameManager::Utilities *utilities;
 
 	// Shader parameters.
+	Renderer::Texture *modelSkin;
 	Renderer::Material *modelMaterial;
 	Renderer::Material *mapMaterial;
 
@@ -48,6 +49,7 @@ private:
 	Renderer::Variable *modelObject;
 	Renderer::Variable *modelView;
 	Renderer::Variable *modelProjection;
+	Renderer::Variable *modelTexture;
 	Renderer::Variable *mapView;
 	Renderer::Variable *mapProjection;
 	Renderer::Variable *mapColour;

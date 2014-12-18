@@ -4,6 +4,8 @@
 #include "renderer/index_buffer_interface.h"
 #include "renderer/material_interface.h"
 #include "renderer/shared.h"
+#include "renderer/texture.h"
+#include <image.h>
 
 namespace Renderer
 {
@@ -27,6 +29,9 @@ namespace Renderer
 			const void *indices,
 			unsigned int bufferSize,
 			Renderer::DataType indexType) = 0; 
+
+		// Create texture from image data.
+		virtual Texture *CreateTexture(const Image<PixelRGBA> *image) = 0;
 
 	};
 

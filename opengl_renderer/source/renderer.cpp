@@ -1,6 +1,7 @@
 #include "material.h"
 #include "material_layout.h"
 #include "renderer.h"
+#include "texture.h"
 #include <error_stack.h>
 #include <file.h>
 #include <memory_manager.h>
@@ -105,6 +106,13 @@ namespace OpenGL
 
 		// Unset index type.
 		indexType = 0;
+	}
+
+	// Bind a texture to a given texture slot.
+	void Implementation::SetTexture(Renderer::Texture *texture, unsigned int slot)
+	{
+		Texture *glTexture = static_cast<Texture*>(texture);
+		glTexture->Bind(slot);
 	}
 
 	// Draw non-indexed primitive.

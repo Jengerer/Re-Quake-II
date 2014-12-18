@@ -3,7 +3,7 @@
 namespace Renderer
 {
 
-	// Buffer of vertex data.
+	// Interface for buffer of vertex data.
 	class Buffer
 	{
 

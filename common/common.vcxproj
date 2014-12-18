@@ -15,6 +15,7 @@
     <ClInclude Include="include\common_define.h" />
     <ClInclude Include="include\error_stack.h" />
     <ClInclude Include="include\file.h" />
+    <ClInclude Include="include\image.h" />
     <ClInclude Include="include\math_common.h" />
     <ClInclude Include="include\matrix3x3.h" />
     <ClInclude Include="include\matrix4x4.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="include\renderer\renderer_interface.h" />
     <ClInclude Include="include\renderer\resources_interface.h" />
     <ClInclude Include="include\renderer\shared.h" />
+    <ClInclude Include="include\renderer\texture.h" />
     <ClInclude Include="include\renderer\variable_interface.h" />
     <ClInclude Include="include\vector2.h" />
     <ClInclude Include="include\vector3.h" />

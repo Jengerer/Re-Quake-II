@@ -21,58 +21,14 @@ const Renderer::Attribute textureAttributes[TextureAttributeCount] = {
 };
 const int StartFrameBufferIndex = 0;
 const int EndFrameBufferIndex = 1;
-const int TextureAttributeIndex = 2;
-const int QuakeBufferCount = 1;
+const int TextureCoordinateBufferIndex = 2;
+const int QuakeBufferCount = 3;
 const Renderer::BufferLayout QuakeBufferLayouts[QuakeBufferCount] =
 {
 	Renderer::BufferLayout(StartFrameAttributes, StartFrameAttributeCount),
-	// Renderer::BufferLayout(endFrameAttributes, EndFrameAttributeCount),
-	// Renderer::BufferLayout(textureAttributes, TextureAttributeCount)
+	Renderer::BufferLayout(endFrameAttributes, EndFrameAttributeCount),
+	Renderer::BufferLayout(textureAttributes, TextureAttributeCount)
 };
-
-EntityModelSegment::EntityModelSegment()
-	: indices(nullptr),
-	indexBuffer(nullptr)
-{
-}
-
-EntityModelSegment::~EntityModelSegment()
-{
-	// Free renderer resource.
-	if (indexBuffer != nullptr) {
-		indexBuffer->Destroy();
-	}
-}
-
-// Initialize segment for index count.
-void EntityModelSegment::SetParameters(const unsigned int *indices, int indexCount, Renderer::PrimitiveType type)
-{
-	this->indices = indices;
-	this->indexCount = indexCount;
-	this->type = type;
-}
-
-// Prepare the index buffer resource for this segment.
-bool EntityModelSegment::LoadResources(Renderer::Resources *resources)
-{
-	// Create an index buffer with this data.
-	int bufferSize = sizeof(int) * indexCount;
-	Renderer::IndexBuffer *indexBuffer = resources->CreateIndexBuffer(indices, bufferSize, Renderer::UnsignedIntType);
-	if (indexBuffer == nullptr) {
-		ErrorStack::Log("Failed to create index buffer for segment.");
-		return false;
-	}
-	this->indexBuffer = indexBuffer;
-	return true;
-}
-
-// Make a draw call for this segment.
-void EntityModelSegment::Draw(Renderer::Interface *renderer)
-{
-	renderer->SetIndexBuffer(indexBuffer);
-	renderer->DrawIndexed(type, indexCount);
-	renderer->UnsetIndexBuffer(indexBuffer);
-}
 
 EntityModelFrame::EntityModelFrame() : vertices(nullptr), bufferSize(0), vertexBuffer(nullptr)
 {
@@ -118,10 +74,7 @@ Renderer::MaterialLayout *EntityModel::layout = nullptr;
 
 EntityModel::EntityModel()
 	: frames(nullptr),
-	frameCount(0),
-	indices(nullptr),
-	segments(nullptr),
-	segmentCount(0)
+	frameCount(0)
 {
 }
 
@@ -131,7 +84,7 @@ EntityModel::~EntityModel()
 }
 
 // Initialize entity model vertices and frames.
-bool EntityModel::Initialize(int frameCount, int vertexCount)
+bool EntityModel::Initialize(int frameCount, int triangleCount)
 {
 	// Allocate frame objects.
 	frames = new EntityModelFrame[frameCount];
@@ -142,31 +95,18 @@ bool EntityModel::Initialize(int frameCount, int vertexCount)
 	this->frameCount = frameCount;
 
 	// Allocate enough vertices for all frames.
-	const int TotalVertices = frameCount * vertexCount;
+	const int VerticesPerFrame = triangleCount * VerticesPerTriangle;
+	const int TotalVertices = frameCount * VerticesPerFrame;
 	if (!mesh.Initialize(TotalVertices)) {
 		ErrorStack::Log("Failed to allocate %d vertices for model.", TotalVertices);
 		return false;
 	}
-	return true;
-}
 
-// Initialize the entity model indices.
-bool EntityModel::InitializeSegments(int indexCount, int segmentCount)
-{
-	int bufferSize = indexCount * sizeof(int);
-	unsigned int *indices = reinterpret_cast<unsigned int*>(MemoryManager::Allocate(bufferSize));
-	if (indices == nullptr) {
-		ErrorStack::Log("Failed to allocate %d indices for model index buffer.", indexCount);
+	// Allocate texture coordinates for triangles.
+	if (!textureCoordinates.Initialize(VerticesPerFrame)) {
+		ErrorStack::Log("Failed to allocate %d texture coordinates for model.", TotalVertices);
 		return false;
 	}
-	this->indices = indices;
-
-	segments = new EntityModelSegment[segmentCount];
-	if (segments == nullptr) {
-		ErrorStack::Log("Failed to allocate %d segment objects for model.", segmentCount);
-		return false;
-	}
-	this->segmentCount = segmentCount;
 	return true;
 }
 
@@ -175,32 +115,28 @@ void EntityModel::Destroy()
 {
 	delete[] frames;
 	frames = nullptr;
-	delete[] segments;
-	segments = nullptr;
-	if (indices != nullptr) {
-		MemoryManager::Free(indices);
-		indices = nullptr;
-	}
 	mesh.Destroy();
+	textureCoordinates.Destroy();
 }
 
 // Load the mesh in the renderer.
 bool EntityModel::LoadResources(Renderer::Resources *resources)
 {
-	int count = segmentCount;
-	EntityModelSegment *segment = segments;
-	for (int i = 0; i < count; ++i, ++segment) {
-		if (!segment->LoadResources(resources)) {
-			return false;
-		}
-	}
-
-	count = frameCount;
+	int count = frameCount;
 	EntityModelFrame *frame = frames;
 	for (int i = 0; i < count; ++i, ++frame) {
 		if (!frame->LoadResources(resources)) {
 			return false;
 		}
+	}
+
+	// Load texture coordinates into a buffer.
+	textureCoordinateBuffer = resources->CreateBuffer(
+		textureCoordinates.GetVertexBuffer(),
+		textureCoordinates.GetVertexBufferSize());
+	if (textureCoordinateBuffer == nullptr) {
+		ErrorStack::Log("Failed to create texture coordinate buffer for model.");
+		return false;
 	}
 	return true;
 }
@@ -210,14 +146,12 @@ void EntityModel::Draw(Renderer::Interface *renderer)
 {
 	Renderer::Buffer *buffer = frames[0].GetVertexBuffer();
 	layout->BindBuffer(StartFrameBufferIndex, buffer);
+	layout->BindBuffer(EndFrameBufferIndex, buffer);
+	layout->BindBuffer(TextureCoordinateBufferIndex, textureCoordinateBuffer);
 	renderer->SetMaterialLayout(layout);
 
-	int count = segmentCount;
-	EntityModelSegment *segment = segments;
-	for (int i = 0; i < count; ++i, ++segment) {
-		segment->Draw(renderer);
-	}
-
+	// Number of vertices per frame matches texture coordinate count.
+	renderer->Draw(Renderer::Triangles, textureCoordinates.GetVertexCount());
 	renderer->UnsetMaterialLayout(layout);
 }
 

@@ -37,6 +37,9 @@
     <ClInclude Include="include\resources.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\texture.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\attribute.cpp">
@@ -70,6 +73,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\common.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\texture.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

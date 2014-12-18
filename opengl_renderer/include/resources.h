@@ -30,6 +30,9 @@ namespace OpenGL
 			unsigned int bufferSize,
 			Renderer::DataType indexType);
 
+		// Create a texture from an image.
+		virtual Renderer::Texture *CreateTexture(const Image<PixelRGBA> *image);
+
 	public:
 
 		// Singleton getter.

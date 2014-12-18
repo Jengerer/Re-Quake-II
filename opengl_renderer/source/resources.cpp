@@ -2,6 +2,7 @@
 #include "index_buffer.h"
 #include "material.h"
 #include "resources.h"
+#include "texture.h"
 #include <error_stack.h>
 #include <file.h>
 #include <memory_manager.h>
@@ -102,44 +103,25 @@ namespace OpenGL
 		return buffer;
 	}
 
-	/*
-	// Create 2D texture from image.
-	int opengl_create_texture2d(
-		const image_t *image,
-		renderer_texture_t *out)
+	// Create a texture from a set of image data.
+	Renderer::Texture *Resources::CreateTexture(const Image<PixelRGBA> *image)
 	{
-		opengl_texture_t *opengl_texture;
-		GLuint texture_handle;
-
-		// Allocate space for the structure.
-		opengl_texture = (opengl_texture_t*)memory_allocate(sizeof(opengl_model_t));
-		if (opengl_texture == NULL) {
-			return 0;
+		Texture *texture = new Texture();
+		if (texture == nullptr) {
+			ErrorStack::Log("Failed to allocate OpenGL texture object.");
+			return false;
 		}
-		opengl_null_texture(opengl_texture);
-		out->buffer = opengl_texture;
-
-		// Get a texture handle.
-		glGenTextures(1, &texture_handle);
-		opengl_texture->handle = texture_handle;
-
-		// Bind the texture and load the image data.
-		glBindTexture(GL_TEXTURE_2D, texture_handle);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->buffer);
-
-		// Don't tile the textures.
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		// Linear interpolation for smaller and larger textures.
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		// Unbind the texture.
-		glBindTexture(GL_TEXTURE_2D, 0);
-		return 1;
+		if (!texture->Initialize()) {
+			texture->Destroy();
+			ErrorStack::Log("Failed to initialize OpenGL texture object.");
+			return false;
+		}
+		if (!texture->Load(image)) {
+			texture->Destroy();
+			return false;
+		}
+		return static_cast<Renderer::Texture*>(texture);
 	}
-	*/
 
 	// Get singleton instance of resource loader.
 	Resources *Resources::GetInstance()

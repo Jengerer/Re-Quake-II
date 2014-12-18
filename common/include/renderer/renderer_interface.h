@@ -4,6 +4,7 @@
 #include "renderer/index_buffer_interface.h"
 #include "renderer/material_interface.h"
 #include "renderer/material_layout_interface.h"
+#include "renderer/texture.h"
 
 namespace Renderer
 {
@@ -43,6 +44,9 @@ namespace Renderer
 
 		// Unset the index buffer from rendering.
 		virtual void UnsetIndexBuffer(IndexBuffer *indexBuffer) = 0;
+
+		// Bind a texture to a given texture slot.
+		virtual void SetTexture(Texture *texture, unsigned int slot) = 0;
 
 		// Draw primitive without indices.
 		virtual void Draw(PrimitiveType type, unsigned int count) = 0;

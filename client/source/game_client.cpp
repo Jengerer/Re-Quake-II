@@ -1,9 +1,11 @@
 #include "md2_parser.h"
 #include "game_client.h"
 #include <bsp_parser.h>
+#include <image.h>
 #include <math_common.h>
 #include <memory_manager.h>
 #include <pack_manager.h>
+#include <pcx_parser.h>
 #include <stdio.h>
 
 // Rendering parameters.
@@ -105,7 +107,7 @@ bool Client::OnTickEnd()
 	Matrix4x4 objectMatrix;
 	Matrix4x4 rotate;
 	Matrix4x4 obj;
-	Vector3 translation(0.f, -50.f, -150.f);
+	Vector3 translation(0.f, -50.f, -75.f);
 	objectMatrix.Translation(&translation);
 	rotate.RotationY(angle);
 	obj.Product(&objectMatrix, &rotate);
@@ -114,18 +116,18 @@ bool Client::OnTickEnd()
 	// Draw map.
 	const Vector3 *cameraPosition = camera.GetPosition();
 	renderer->SetMaterial(mapMaterial);
-	mapView->Set(&view);
+	mapView->SetMatrix4x4(&view);
 	renderer->SetWireframe(false);
 	Vector4 colour(1.f, 1.f, 1.f, 0.05f);
-	mapColour->Set(&colour);
+	mapColour->SetVector4(&colour);
 	map.Draw(*cameraPosition, renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
 	// Draw model.
 	renderer->SetMaterial(modelMaterial);
-	modelObject->Set(&obj);
+	modelObject->SetMatrix4x4(&obj);
 	view.Identity();
-	modelView->Set(&view);
+	modelView->SetMatrix4x4(&view);
 	model.Draw(renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
@@ -160,6 +162,10 @@ bool Client::LoadResources(void)
 	if (modelProjection == nullptr) {
 		return false;
 	}
+	modelTexture = modelMaterial->GetVariable("texture");
+	if (modelTexture == nullptr) {
+		return false;
+	}
 	mapView = mapMaterial->GetVariable("view");
 	if (mapView == nullptr) {
 		return false;
@@ -172,28 +178,9 @@ bool Client::LoadResources(void)
 	if (mapColour == nullptr) {
 		return false;
 	}
-
-	// Generate projection matrix.
-	Matrix4x4 projectionMatrix;
-	projectionMatrix.PerspectiveProjection(AspectRatio, FieldOfView, NearDistanceZ, FarDistanceZ);
-
-	// Activate the material for setting variables.
-	Renderer::Interface *renderer = utilities->GetRenderer();
-	renderer->SetMaterial(modelMaterial);
-	modelProjection->Set(&projectionMatrix);
-	renderer->UnsetMaterial(modelMaterial);
-	renderer->SetMaterial(mapMaterial);
-	mapProjection->Set(&projectionMatrix);
-	renderer->UnsetMaterial(mapMaterial);
-
-	// Load static model resources.
+	
+	// Prepare to load game resources.
 	Renderer::Resources *resources = utilities->GetRendererResources();
-	if (!EntityModel::LoadStaticResources(resources, modelMaterial)) {
-		return false;
-	}
-	if (!BSP::Map::LoadStaticResources(resources, mapMaterial)) {
-		return false;
-	}
 
 	// Load packs.
 	Pack::Manager manager;
@@ -215,7 +202,7 @@ bool Client::LoadResources(void)
 	}
 
 	// Load model.
-	MD2Parser md2Parser;
+	MD2::Parser md2Parser;
 	if (!manager.Read("models/monsters/bitch/tris.md2", &modelData)) {
 		return false;
 	}
@@ -223,6 +210,45 @@ bool Client::LoadResources(void)
 		return false;
 	}
 	if (!model.LoadResources(resources)) {
+		return false;
+	}
+
+	// Load texture.
+	Image<PixelRGBA> image;
+	PCX::Parser pcxParser;
+	FileData textureData;
+	if (!manager.Read("models/monsters/bitch/skin.pcx", &textureData)) {
+		return false;
+	}
+	if (!pcxParser.Load(textureData.GetData(), textureData.GetSize(), &image)) {
+		return false;
+	}
+
+	// Create a texture.
+	modelSkin = resources->CreateTexture(&image);
+	if (modelSkin == nullptr) {
+		return false;
+	}
+
+	// Generate projection matrix.
+	Matrix4x4 projectionMatrix;
+	projectionMatrix.PerspectiveProjection(AspectRatio, FieldOfView, NearDistanceZ, FarDistanceZ);
+
+	// Activate the material for setting variables.
+	Renderer::Interface *renderer = utilities->GetRenderer();
+	renderer->SetMaterial(modelMaterial);
+	modelProjection->SetMatrix4x4(&projectionMatrix);
+	modelTexture->SetInteger(0);
+	renderer->UnsetMaterial(modelMaterial);
+	renderer->SetMaterial(mapMaterial);
+	mapProjection->SetMatrix4x4(&projectionMatrix);
+	renderer->UnsetMaterial(mapMaterial);
+
+	// Load static model resources.
+	if (!EntityModel::LoadStaticResources(resources, modelMaterial)) {
+		return false;
+	}
+	if (!BSP::Map::LoadStaticResources(resources, mapMaterial)) {
 		return false;
 	}
 	return true;
@@ -241,11 +267,19 @@ void Client::FreeResources(void)
 	if (modelObject != nullptr) {
 		modelObject->Destroy();
 	}
+	if (modelTexture != nullptr) {
+		modelTexture->Destroy();
+	}
 	if (mapView != nullptr) {
 		mapView->Destroy();
 	}
 	if (mapProjection != nullptr) {
 		mapProjection->Destroy();
+	}
+
+	// Destroy textures.
+	if (modelSkin != nullptr) {
+		modelSkin->Destroy();
 	}
 
 	// Destroy materials.

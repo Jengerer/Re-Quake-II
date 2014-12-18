@@ -1,13 +1,14 @@
 #pragma once
 
 #include "common.h"
+#include <allocatable.h>
 #include <renderer/buffer_interface.h>
 
 namespace OpenGL
 {
 
 	// Class representing a buffer of data passed to shader.
-	class Buffer : public Renderer::Buffer
+	class Buffer : public Renderer::Buffer, public Allocatable
 	{
 
 	public:

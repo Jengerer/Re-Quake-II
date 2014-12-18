@@ -86,21 +86,20 @@
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\client_define.h" />
     <ClInclude Include="include\entity_model.h" />
-    <ClInclude Include="include\image.h" />
     <ClInclude Include="include\image_loader.h" />
     <ClInclude Include="include\client_export.h" />
     <ClInclude Include="include\game_client.h" />
     <ClInclude Include="include\md2_parser.h" />
+    <ClInclude Include="include\pcx_parser.h" />
     <ClInclude Include="include\quake_normals.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\entity_model.cpp" />
-    <ClCompile Include="source\image.cpp" />
-    <ClCompile Include="source\image_loader.cpp" />
     <ClCompile Include="source\client_export.cpp" />
     <ClCompile Include="source\game_client.cpp" />
     <ClCompile Include="source\md2_parser.cpp" />
+    <ClCompile Include="source\pcx_parser.cpp" />
     <ClCompile Include="source\quake_normals.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

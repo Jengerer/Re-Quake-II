@@ -78,6 +78,12 @@
     <ClInclude Include="include\file.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\renderer\texture.h">
+      <Filter>include\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\image.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\error_stack.cpp">

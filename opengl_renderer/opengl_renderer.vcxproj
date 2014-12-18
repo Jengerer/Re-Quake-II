@@ -85,6 +85,7 @@
     <ClInclude Include="include\buffer.h" />
     <ClInclude Include="include\buffer_layout.h" />
     <ClInclude Include="include\common.h" />
+    <ClInclude Include="include\texture.h" />
     <ClInclude Include="include\material_layout.h" />
     <ClInclude Include="include\opengl_define.h" />
     <ClInclude Include="include\opengl_export.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\resources.cpp" />
     <ClCompile Include="source\attribute.cpp" />
+    <ClCompile Include="source\texture.cpp" />
     <ClCompile Include="source\variable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

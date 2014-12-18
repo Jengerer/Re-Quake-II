@@ -13,36 +13,7 @@ struct EntityModelVertex
 	Vector3 normal;
 };
 typedef Mesh<EntityModelVertex> EntityModelMesh;
-
-// Entity model segment that's rendered as triangle strip or fan.
-class EntityModelSegment : public Allocatable
-{
-
-public:
-
-	EntityModelSegment();
-	~EntityModelSegment();
-
-	// Set up entity model segment.
-	void SetParameters(const unsigned int *indices, int indexCount, Renderer::PrimitiveType type);
-
-	// Loading and cleaning renderer resources.
-	bool LoadResources(Renderer::Resources *resources);
-
-	// Make a draw call for this segment.
-	void Draw(Renderer::Interface *renderer);
-
-private:
-
-	// Index data buffer.
-	const unsigned int *indices;
-	int indexCount;
-
-	// Renderer parameters for this segment.
-	Renderer::IndexBuffer *indexBuffer;
-	Renderer::PrimitiveType type;
-
-};
+typedef Mesh<Vector2> EntityModelTextureCoordinates;
 
 // Entity model frame.
 class EntityModelFrame : public Allocatable
@@ -93,10 +64,7 @@ public:
 	~EntityModel();
 
 	// Allocate vertices and the frames.
-	bool Initialize(int frameCount, int vertexCount);
-
-	// Allocate objects for the segments.
-	bool InitializeSegments(int indexCount, int segmentCount);
+	bool Initialize(int frameCount, int triangleCount);
 
 	// Shut down entity model.
 	void Destroy();
@@ -110,10 +78,8 @@ public:
 	// Model buffer functions.
 	inline EntityModelFrame *GetFrames() { return frames; }
 	inline int GetFrameCount() const { return frameCount; }
-	inline unsigned int *GetIndexData() const { return indices; }
-	inline EntityModelSegment *GetSegments() { return segments; }
-	inline int GetSegmentCount() const { return segmentCount; }
 	inline EntityModelMesh *GetMesh() { return &mesh; }
+	inline EntityModelTextureCoordinates *GetTextureCoordinates() { return &textureCoordinates; }
 
 public:
 
@@ -128,12 +94,14 @@ private:
 	EntityModelFrame *frames;
 	int frameCount;
 
-	// Array of model segments (and their index buffers).
-	unsigned int *indices;
-	EntityModelSegment *segments;
-	int segmentCount;
+	// Array of texture coordinates.
+	EntityModelTextureCoordinates textureCoordinates;
+	Renderer::Buffer *textureCoordinateBuffer;
 
 private:
+
+	// Helper constant for loading data.
+	static const int VerticesPerTriangle = 3;
 
 	// Model-generic material layout.
 	static Renderer::MaterialLayout *layout;

@@ -43,6 +43,9 @@ namespace OpenGL
 		// Unset index buffer from rendering.
 		virtual void UnsetIndexBuffer(Renderer::IndexBuffer *indexBuffer);
 
+		// Bind a texture to a given texture slot.
+		virtual void SetTexture(Renderer::Texture *texture, unsigned int slot);
+
 		// Draw non-indexed primitive.
 		virtual void Draw(Renderer::PrimitiveType type, unsigned int count);
 

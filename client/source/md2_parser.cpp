@@ -2,147 +2,137 @@
 #include "md2_parser.h"
 #include "quake_normals.h"
 
-MD2Parser::MD2Parser()
-	: out(nullptr),
-	header(nullptr)
+namespace MD2
 {
-}
 
-MD2Parser::~MD2Parser()
-{
-}
-
-// Load a model from a file.
-bool MD2Parser::Load(const uint8_t *modelData, EntityModel *out)
-{
-	// Set input data.
-	this->data = modelData;
-
-	// Set output file.
-	this->out = out;
-
-	// Set up pointers to file segments.
-	header = reinterpret_cast<const MD2Header*>(data);
-	if (!VerifyHeader()) {
-		return false;
-	}
-	commands = reinterpret_cast<const MD2Command*>(data + header->commandsOffset);
-
-	// Initialize the model.
-	if (!out->Initialize(header->frameCount, header->vertexCount)) {
-		return false;
+	Parser::Parser()
+		: out(nullptr),
+		header(nullptr)
+	{
 	}
 
-	// Load the segments.
-	if (!LoadCommands()) {
-		return false;
+	Parser::~Parser()
+	{
 	}
 
-	// Load the frames into the model.
-	LoadFrames();
-	return true;
-}
+	// Load a model from a file.
+	bool Parser::Load(const uint8_t *modelData, EntityModel *out)
+	{
+		// Set input data.
+		this->data = modelData;
 
-// Verify header.
-bool MD2Parser::VerifyHeader()
-{
-	if (header->magicNumber != MagicNumber) {
-		ErrorStack::Log("Bad format: mismatch on header magic number (%x != %x).", header->magicNumber, MagicNumber);
-		return false;
+		// Set output file.
+		this->out = out;
+
+		// Set up pointers to file segments.
+		header = reinterpret_cast<const Header*>(data);
+		if (!VerifyHeader()) {
+			return false;
+		}
+
+		// Initialize the model.
+		if (!out->Initialize(header->frameCount, header->triangleCount)) {
+			return false;
+		}
+
+		// Set up triangle references for loading.
+		triangles = reinterpret_cast<const Triangle*>(data + header->trianglesOffset);
+		triangleCount = header->triangleCount;
+
+		// Load the frames into the model.
+		LoadFrames();
+		LoadTextureCoordinates();
+		return true;
 	}
-	if (header->version != Version) {
-		ErrorStack::Log("Bad version number found in map (%d, expected %d).", header->version, Version);
-		return false;
+
+	// Verify header.
+	bool Parser::VerifyHeader()
+	{
+		if (header->magicNumber != MagicNumber) {
+			ErrorStack::Log("Bad format: mismatch on header magic number (%x != %x).", header->magicNumber, MagicNumber);
+			return false;
+		}
+		if (header->version != Version) {
+			ErrorStack::Log("Bad version number found in map (%d, expected %d).", header->version, Version);
+			return false;
+		}
+		return true;
 	}
-	return true;
-}
-#include <stdio.h>
 
-// Load the frame data.
-void MD2Parser::LoadFrames()
-{
-	// Keep a reference for the vertices.
-	EntityModelMesh *outMesh = out->GetMesh();
-	EntityModelVertex *outVertex = outMesh->GetVertexBuffer();
-	const int VertexCount = header->vertexCount;
-	const int BufferSize = VertexCount * sizeof(EntityModelVertex);
+	// Load the frame data.
+	void Parser::LoadFrames()
+	{
+		// Keep a reference for the vertices.
+		EntityModelMesh *outMesh = out->GetMesh();
+		EntityModelVertex *outVertex = outMesh->GetVertexBuffer();
+		const int VertexCount = header->vertexCount;
 
-	// Get space between frames.
-	const int32_t FrameCount = header->frameCount;
-	const int32_t FrameStride = sizeof(MD2Frame) + (VertexCount * sizeof(MD2Vertex));
-	const int32_t FrameStart = header->framesOffset;
-	const int32_t FrameEnd = FrameStart + (FrameCount * FrameStride);
+		// Prepare for looping through triangles.
+		const Triangle *triangles = this->triangles;
+		const int32_t TriangleCount = this->triangleCount;
+		const int BufferSize = TriangleCount * VerticesPerTriangle * sizeof(EntityModelVertex);
 
-	// Get frames we're filling out.
-	EntityModelFrame *outFrame = out->GetFrames();
-	for (int32_t i = FrameStart; i < FrameEnd; i += FrameStride, ++outFrame) {
-		const MD2Frame *frame = reinterpret_cast<const MD2Frame*>(data + i);
-		const MD2Vertex *vertex = reinterpret_cast<const MD2Vertex*>(frame + 1);
-		Vector3 scale = frame->scale;
-		Vector3 offset = frame->offset;
+		// Get space between frames.
+		const int32_t FrameCount = header->frameCount;
+		const int32_t FrameStride = sizeof(Frame) + (VertexCount * sizeof(Vertex));
+		const int32_t FrameStart = header->framesOffset;
+		const int32_t FrameEnd = FrameStart + (FrameCount * FrameStride);
 
-		// Start the frame vertices at current vertex.
-		outFrame->SetVertices(outVertex, BufferSize);
-		outFrame->SetFrameName(frame->name);
-		for (int j = 0; j < VertexCount; ++j, ++vertex, ++outVertex) {
-			outVertex->position.FromQuakeCoordinates(
-				(static_cast<float>(vertex->x) * scale.x) + offset.x,
-				(static_cast<float>(vertex->y) * scale.y) + offset.y,
-				(static_cast<float>(vertex->z) * scale.z) + offset.z);
-			const Vector3 *quakeNormal = &QuakeNormals[vertex->normalIndex];
-			outVertex->normal.FromQuakeCoordinates(
-				quakeNormal->x,
-				quakeNormal->y,
-				quakeNormal->z);
+		// Get frames we're filling out.
+		EntityModelFrame *outFrame = out->GetFrames();
+		for (int32_t i = FrameStart; i < FrameEnd; i += FrameStride, ++outFrame) {
+			const Frame *frame = reinterpret_cast<const Frame*>(data + i);
+			const Vertex *frameVertices = reinterpret_cast<const Vertex*>(frame + 1);
+			const Vector3 FrameScale = frame->scale;
+			const Vector3 FrameOffset = frame->offset;
+
+			// Start the frame vertices at current vertex.
+			outFrame->SetVertices(outVertex, BufferSize);
+			outFrame->SetFrameName(frame->name);
+
+			// Fill out vertices for each triangle.
+			const Triangle *currentTriangle = triangles;
+			for (int32_t j = 0; j < TriangleCount; ++j, ++currentTriangle) {
+				for (int32_t k = 0; k < VerticesPerTriangle; ++k, ++outVertex) {
+					const int32_t VertexIndex = currentTriangle->vertexIndices[k];
+					const Vertex *vertex = &frameVertices[VertexIndex];
+					outVertex->position.FromQuakeCoordinates(
+						(static_cast<float>(vertex->x) * FrameScale.x) + FrameOffset.x,
+						(static_cast<float>(vertex->y) * FrameScale.y) + FrameOffset.y,
+						(static_cast<float>(vertex->z) * FrameScale.z) + FrameOffset.z);
+					const Vector3 *quakeNormal = &QuakeNormals[vertex->normalIndex];
+					outVertex->normal.FromQuakeCoordinates(
+						quakeNormal->x,
+						quakeNormal->y,
+						quakeNormal->z);
+				}
+			}
 		}
 	}
-}
 
-// Load segments and their indices.
-bool MD2Parser::LoadCommands()
-{
-	// Go through each command segment.
-	int32_t vertexCount;
-	Renderer::PrimitiveType commandType;
-	const MD2Command *currentCommand = commands;
+	// Load the texture coordinate data.
+	void Parser::LoadTextureCoordinates()
+	{
+		// Get reference to output texture coordinates.
+		EntityModelTextureCoordinates *outTextureCoordinates = out->GetTextureCoordinates();
+		Vector2 *outVector = outTextureCoordinates->GetVertexBuffer();
 
-	// First count the number of primitives.
-	// When number of vertices to draw is 0, we're done.
-	int segmentCount = 0;
-	for (currentCommand = commands; (vertexCount = (currentCommand++)->vertexCount) != 0; ++segmentCount) {
-		if (vertexCount < 0) {
-			vertexCount = -vertexCount;
-		}
-		currentCommand += (vertexCount * PacketIntegerCount);
-	}
+		// Prepare for copying data.
+		const TextureCoordinate *textureCoordinates = reinterpret_cast<const TextureCoordinate*>(data + header->textureCoordinatesOffset);
+		const float WidthFactor = 1.f / static_cast<float>(header->skinWidth);
+		const float HeightFactor = 1.f / static_cast<float>(header->skinHeight);
 
-	// Don't count the last segment (it's the zero command).
-	int indexCount = header->commandCount - (segmentCount + 1);
-	if (!out->InitializeSegments(indexCount, segmentCount)) {
-		return false;
-	}
-	unsigned int *outIndex = out->GetIndexData();
-	EntityModelSegment *outSegment = out->GetSegments();
-
-	// Go through each command segment.
-	// When number of vertices to draw is 0, we're done.
-	for (currentCommand = commands; (vertexCount = (currentCommand++)->vertexCount) != 0; ++outSegment) {
-		// If it's negative, we're drawing a fan.
-		if (vertexCount < 0) {
-			commandType = Renderer::TriangleFan;
-			vertexCount = -vertexCount;
-		}
-		else {
-			commandType = Renderer::TriangleStrip;
-		}
-		outSegment->SetParameters(outIndex, vertexCount, commandType);
-
-		// Copy indices to index buffer.
-		const MD2CommandPacket *packet = reinterpret_cast<const MD2CommandPacket*>(currentCommand);
-		currentCommand += vertexCount * PacketIntegerCount;
-		for (; vertexCount > 0; --vertexCount, ++packet, ++outIndex) {
-			*outIndex = static_cast<unsigned int>(packet->vertexIndex);
+		// Go through each triangle and load texture coordinates.
+		const Triangle *currentTriangle = triangles;
+		const int32_t TriangleCount = this->triangleCount;
+		for (int32_t i = 0; i < TriangleCount; ++i, ++currentTriangle) {
+			for (int32_t j = 0; j < VerticesPerTriangle; ++j, ++outVector) {
+				const int32_t TextureCoordinateIndex = currentTriangle->textureCoordinateIndices[j];
+				const TextureCoordinate *inputCoordinate = &textureCoordinates[TextureCoordinateIndex];
+				outVector->x = static_cast<float>(inputCoordinate->s) * WidthFactor;
+				outVector->y = static_cast<float>(inputCoordinate->t) * HeightFactor;
+			}
 		}
 	}
-	return true;
+
 }

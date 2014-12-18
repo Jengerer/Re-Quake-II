@@ -53,34 +53,35 @@ void *MemoryManager::Allocate(unsigned int size)
 	if (currentIndex == breakAllocation) {
 		__debugbreak();
 	}
+	if (result != nullptr) {
+		// Fill out allocation.
+		if (freeStart != MaximumAllocations) {
+			// Get the allocation structure.
+			Allocation *allocation = &allocations[freeStart];
+			allocation->address = result;
+			allocation->size = size;
+			allocation->allocationIndex = currentIndex;
 
-	// Fill out allocation.
-	if ((result != nullptr) && (freeStart != MaximumAllocations)) {
-		// Get the allocation structure.
-		Allocation *allocation = &allocations[freeStart];
-		allocation->address = result;
-		allocation->size = size;
-		allocation->allocationIndex = currentIndex;
+			// Update next free.
+			int oldFreeStart = freeStart;
+			freeStart = allocation->nextIndex;
 
-		// Update next free.
-		int oldFreeStart = freeStart;
-		freeStart = allocation->nextIndex;
+			// Set next node to current allocated head.
+			allocation->nextIndex = usedStart;
 
-		// Set next node to current allocated head.
-		allocation->nextIndex = usedStart;
+			// Set as new allocated head.
+			usedStart = oldFreeStart;
 
-		// Set as new allocated head.
-		usedStart = oldFreeStart;
-
-		// Add this allocation to the allocated list.
-		activeMemoryUsage += size;
-		if (activeMemoryUsage > peakMemoryUsage) {
-			peakMemoryUsage = activeMemoryUsage;
+			// Add this allocation to the allocated list.
+			activeMemoryUsage += size;
+			if (activeMemoryUsage > peakMemoryUsage) {
+				peakMemoryUsage = activeMemoryUsage;
+			}
+			totalMemoryUsage += size;
 		}
-		totalMemoryUsage += size;
-	}
-	else {
-		fprintf(stderr, "Exceeded maximum allocations.\n");
+		else {
+			fprintf(stderr, "Exceeded maximum allocations.\n");
+		}
 	}
 #endif
 	return result;

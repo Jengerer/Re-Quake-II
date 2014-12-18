@@ -5,7 +5,9 @@ in vec3 position0;
 in vec3 normal0;
 in vec3 position1;
 in vec3 normal1;
-out vec3 ps_normal;
+in vec2 uv;
+out vec3 psNormal;
+out vec2 psUV;
 
 // Camera view variables.
 uniform mat4 object;
@@ -22,5 +24,6 @@ void main(void) {
 		view *
 		object *
 		vec4(mix(position0, position1, time), 1.f);
-	ps_normal = mix(normal0, normal1, time);
+	psNormal = mix(normal0, normal1, time);
+	psUV = uv;
 }

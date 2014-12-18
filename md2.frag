@@ -1,11 +1,12 @@
 #version 150
 
-in vec3 ps_normal;
-out vec4 frag_colour;
+in vec3 psNormal;
+in vec2 psUV;
+out vec4 fragColour;
 
 // Texture variables.
-uniform sampler2D texture2d;
+uniform sampler2D texture;
 
 void main(void) {
-	frag_colour = vec4(ps_normal, 1.f);
+	fragColour = vec4(texture2D(texture, psUV).rgb, length(psNormal));
 }

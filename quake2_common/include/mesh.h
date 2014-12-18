@@ -30,12 +30,10 @@ private:
 };
 
 template <typename VertexType>
-Mesh<VertexType>::Mesh()
-	: vertices(nullptr), vertexCount(0)
+Mesh<VertexType>::Mesh() : vertices(nullptr), vertexCount(0)
 {
 }
 
-// Destroy vertex buffer.
 template <typename VertexType>
 Mesh<VertexType>::~Mesh()
 {
