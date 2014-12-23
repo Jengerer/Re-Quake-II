@@ -1,5 +1,6 @@
 #include "bsp_map.h"
 #include <error_stack.h>
+#include <string.h>
 
 namespace BSP
 {
@@ -18,6 +19,28 @@ namespace BSP
 		Renderer::BufferLayout(FaceAttributes, FaceAttributeCount)
 	};
 	const int FaceBufferIndex = 0;
+
+	FaceTexture::FaceTexture() : texture(nullptr)
+	{
+	}
+
+	FaceTexture::~FaceTexture()
+	{
+		if (texture != nullptr) {
+			texture->Destroy();
+		}
+	}
+
+	// Copy texture name to entry.
+	void FaceTexture::SetName(const char name[TextureNameLength])
+	{
+		strncpy(this->name, name, TextureNameLength);
+	}
+
+	// Load this entry's texture resource.
+	bool FaceTexture::LoadResources(Renderer::Resources *resources)
+	{
+	}
 
 	// Visibility index constants.
 	static const int32_t InvalidVisibilityFrame = -1;

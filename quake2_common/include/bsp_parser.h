@@ -98,6 +98,20 @@ namespace BSP
 			uint16_t faceCount;
 		};
 
+		// Map texture info structure.
+		static const int TextureOffsetSIndex = 0;
+		static const int TextureOffsetTIndex = 1;
+		static const int TextureOffsetCount = 2;
+		static const int TextureNameLength = 32;
+		struct Texture
+		{
+			Vector4 offsets[TextureOffsetCount];
+			int32_t flags;
+			int32_t value;
+			char name[TextureNameLength];
+			int32_t nextTextureIndex; // -1 marks end of chain.
+		};
+
 		// BSP leaf face structure.
 		struct Face
 		{

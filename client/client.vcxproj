@@ -82,7 +82,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\bsp_map.h" />
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\client_define.h" />
     <ClInclude Include="include\entity_model.h" />

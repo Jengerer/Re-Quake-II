@@ -24,6 +24,32 @@ namespace BSP
 	};
 	typedef Mesh<FaceVertex> FaceMesh;
 
+	// Face texture information structure.
+	class FaceTexture : public Allocatable
+	{
+
+	public:
+
+		static const int TextureNameLength = 32;
+
+	public:
+
+		FaceTexture();
+		~FaceTexture();
+
+		// Copy name of texture to store in this entry.
+		void SetName(const char name[TextureNameLength]);
+
+		// Load this entry's texture resource.
+		bool LoadResources(Renderer::Resources *resources);
+
+	private:
+
+		char name[TextureNameLength];
+		Renderer::Texture *texture;
+
+	};
+
 	// Class that wraps a map face.
 	class Face : public Allocatable
 	{

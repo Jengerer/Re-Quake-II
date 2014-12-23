@@ -27,6 +27,12 @@
     <ClInclude Include="include\pack_manager.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\quake_file_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wal_parser.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\bsp_parser.cpp">
@@ -39,6 +45,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\pack_manager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\quake_file_manager.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

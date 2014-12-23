@@ -145,8 +145,8 @@ bool EntityModel::LoadResources(Renderer::Resources *resources)
 void EntityModel::Draw(Renderer::Interface *renderer)
 {
 	Renderer::Buffer *buffer = frames[0].GetVertexBuffer();
-	layout->BindBuffer(StartFrameBufferIndex, buffer);
-	layout->BindBuffer(EndFrameBufferIndex, buffer);
+	layout->BindBuffer(StartFrameBufferIndex, frames[0].GetVertexBuffer());
+	layout->BindBuffer(EndFrameBufferIndex, frames[1].GetVertexBuffer());
 	layout->BindBuffer(TextureCoordinateBufferIndex, textureCoordinateBuffer);
 	renderer->SetMaterialLayout(layout);
 

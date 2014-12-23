@@ -23,7 +23,7 @@ void main(void) {
 	gl_Position = projection *
 		view *
 		object *
-		vec4(mix(position0, position1, time), 1.f);
+		vec4(mix(position0, position1, object[0][0]), 1.f);
 	psNormal = mix(normal0, normal1, time);
 	psUV = uv;
 }
