@@ -1,4 +1,5 @@
 #include "bsp_parser.h"
+#include "quake_file_manager.h"
 #include <error_stack.h>
 
 namespace BSP
@@ -16,9 +17,15 @@ namespace BSP
 		}
 
 		// Load the map and fill out the output map.
-		bool Parser::Load(const uint8_t *mapData, BSP::Map *out)
+		bool Parser::Load(const char *filename, BSP::Map *out)
 		{
-			this->data = mapData;
+			// Get file data.
+			FileData mapData;
+			QuakeFileManager *quakeFiles = QuakeFileManager::GetInstance();
+			if (!quakeFiles->Read(filename, &mapData)) {
+				return false;
+			}
+			this->data = mapData.GetData();
 			this->out = out;
 			header = reinterpret_cast<const Header*>(data);
 			if (header->magic != MagicNumber) {

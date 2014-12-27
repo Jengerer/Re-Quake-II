@@ -87,7 +87,7 @@ namespace MD2
 
 		// Parse a model from a file.
 		// Assumes the output model is new.
-		bool Load(const uint8_t *modelData, EntityModel *out);
+		bool Load(const char *filename, EntityModel *out);
 
 	private:
 
@@ -108,7 +108,8 @@ namespace MD2
 
 	private:
 
-		// Raw data.
+		// Model file data.
+		FileData modelFile;
 		const uint8_t *data;
 
 		// Model we're filling in.

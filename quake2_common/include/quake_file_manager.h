@@ -1,9 +1,10 @@
 #pragma once
 
 #include "pack_manager.h"
+#include "quake2_common_define.h"
 
 // Public class for managing files for Quake.
-class QuakeFileManager : public Allocatable
+class Quake2CommonLibrary QuakeFileManager : public Allocatable
 {
 
 public:
@@ -11,6 +12,9 @@ public:
 	// Singleton initialization and destruction.
 	static bool Initialize();
 	static void Destroy();
+
+	// Get the singleton instance.
+	static QuakeFileManager *GetInstance();
 
 public:
 

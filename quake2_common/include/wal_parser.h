@@ -1,5 +1,6 @@
 #pragma once
 
+#include "quake2_common_define.h"
 #include <image.h>
 #include <inttypes.h>
 
@@ -22,8 +23,14 @@ namespace WAL
 	};
 
 	// WAL parser class.
-	class Parser
+	class Quake2CommonLibrary Parser
 	{
+
+	public:
+
+		// Handle the WAL palette resource.
+		static bool LoadPalette();
+		static void DestroyPalette();
 
 	public:
 
@@ -31,10 +38,7 @@ namespace WAL
 		~Parser();
 
 		// Parse a file into an RGBA image using a specific palette.
-		bool Read(
-			const char *filename,
-			const Image<PixelRGBA> *palette,
-			Image<PixelRGBA> *out);
+		bool Read(const char *filename, Image<PixelRGBA> *out);
 
 	};
 

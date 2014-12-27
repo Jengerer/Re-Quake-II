@@ -1,6 +1,7 @@
 #include "error_stack.h"
 #include "md2_parser.h"
 #include "quake_normals.h"
+#include <quake_file_manager.h>
 
 namespace MD2
 {
@@ -16,10 +17,14 @@ namespace MD2
 	}
 
 	// Load a model from a file.
-	bool Parser::Load(const uint8_t *modelData, EntityModel *out)
+	bool Parser::Load(const char *filename, EntityModel *out)
 	{
 		// Set input data.
-		this->data = modelData;
+		QuakeFileManager *quakeFiles = QuakeFileManager::GetInstance();
+		if (!quakeFiles->Read(filename, &modelFile)) {
+			return false;
+		}
+		this->data = modelFile.GetData();
 
 		// Set output file.
 		this->out = out;

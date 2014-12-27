@@ -43,6 +43,9 @@ namespace BSP
 		// Load this entry's texture resource.
 		bool LoadResources(Renderer::Resources *resources);
 
+		// Bind the face texture.
+		void BindTexture(Renderer::Interface *renderer) const;
+
 	private:
 
 		char name[TextureNameLength];
@@ -76,6 +79,7 @@ namespace BSP
 	private:
 
 		FaceMesh mesh;
+		const FaceTexture *texture;
 
 		// Renderer resources.
 		Renderer::Buffer *vertexBuffer;

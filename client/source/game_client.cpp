@@ -4,9 +4,10 @@
 #include <image.h>
 #include <math_common.h>
 #include <memory_manager.h>
-#include <pack_manager.h>
 #include <pcx_parser.h>
+#include <quake_file_manager.h>
 #include <stdio.h>
+#include <wal_parser.h>
 
 // Rendering parameters.
 const char *ModelVertexShader = "md2.vert";
@@ -181,20 +182,18 @@ bool Client::LoadResources(void)
 	
 	// Prepare to load game resources.
 	Renderer::Resources *resources = utilities->GetRendererResources();
+	if (!QuakeFileManager::Initialize()) {
+		return false;
+	}
 
-	// Load packs.
-	Pack::Manager manager;
-	if (!manager.AddPack("pak0.pak")) {
+	// Load the palette.
+	if (!WAL::Parser::LoadPalette()) {
 		return false;
 	}
 
 	// Load map.
-	FileData modelData;
-	if (!manager.Read("maps/city1.bsp", &modelData)) {
-		return false;
-	}
 	BSP::FileFormat::Parser bspParser;
-	if (!bspParser.Load(modelData.GetData(), &map)) {
+	if (!bspParser.Load("maps/city1.bsp", &map)) {
 		return false;
 	}
 	if (!map.LoadResources(resources)) {
@@ -203,10 +202,7 @@ bool Client::LoadResources(void)
 
 	// Load model.
 	MD2::Parser md2Parser;
-	if (!manager.Read("models/monsters/bitch/tris.md2", &modelData)) {
-		return false;
-	}
-	if (!md2Parser.Load(modelData.GetData(), &model)) {
+	if (!md2Parser.Load("models/monster/bitch/tris.md2", &model)) {
 		return false;
 	}
 	if (!model.LoadResources(resources)) {
@@ -216,11 +212,7 @@ bool Client::LoadResources(void)
 	// Load texture.
 	Image<PixelRGBA> image;
 	PCX::Parser pcxParser;
-	FileData textureData;
-	if (!manager.Read("models/monsters/bitch/skin.pcx", &textureData)) {
-		return false;
-	}
-	if (!pcxParser.Load(textureData.GetData(), textureData.GetSize(), &image)) {
+	if (!pcxParser.Load("models/monsters/bitch/skin.pcx", &image)) {
 		return false;
 	}
 
@@ -300,6 +292,7 @@ void Client::FreeResources(void)
 	// Destroy static materials.
 	EntityModel::FreeStaticResources();
 	BSP::Map::FreeStaticResources();
+	WAL::Parser::DestroyPalette();
 }
 
 // Initialize the game's shaders for rendering.

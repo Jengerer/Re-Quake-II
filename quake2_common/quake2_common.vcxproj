@@ -55,7 +55,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>Quake2CommonLibraryExport;WIN32;_DEBUG;_WINDOWS;_USRDLL;QUAKE2_COMMON_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>Quake2CommonLibraryExport;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;QUAKE2_COMMON_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,17 +85,20 @@
     <ClInclude Include="include\bsp_parser.h" />
     <ClInclude Include="include\mesh.h" />
     <ClInclude Include="include\pack_manager.h" />
+    <ClInclude Include="include\pcx_parser.h" />
     <ClInclude Include="include\plane.h" />
     <ClInclude Include="include\quake2_common_define.h" />
     <ClInclude Include="include\quake_file_manager.h" />
     <ClInclude Include="include\wal_parser.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\pcx_parser.cpp" />
     <ClCompile Include="source\pack_manager.cpp" />
     <ClCompile Include="source\plane.cpp" />
     <ClCompile Include="source\bsp_map.cpp" />
     <ClCompile Include="source\bsp_parser.cpp" />
     <ClCompile Include="source\quake_file_manager.cpp" />
+    <ClCompile Include="source\wal_parser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "image.h"
+#include "quake_file_manager.h"
+#include "quake2_common_define.h"
 #include <inttypes.h>
 
 namespace PCX
@@ -32,7 +34,7 @@ namespace PCX
 	};
 
 	// Class that parses a PCX format file to an image.
-	class Parser
+	class Quake2CommonLibrary Parser
 	{
 
 	public:
@@ -41,30 +43,14 @@ namespace PCX
 		~Parser();
 
 		// Parse data from a PCX file and output to an image.
-		bool Load(const uint8_t *data, int32_t dataLength, Image<PixelRGBA> *out);
+		bool Load(const char *filename, Image<PixelRGBA> *out);
 
 		// Parse data from a PCX file using a specific palette to an image.
-		bool Load(
-			const uint8_t *data,
-			const Image<PixelRGB> *palette,
-			Image<PixelRGBA> *out);
+		// TODO: WAL files may be the only ones that use external palette.
+		bool Load(const char *filename, const Image<PixelRGB> *palette, Image<PixelRGBA> *out);
 
 		// Load just the palette from the image.
-		bool LoadPalette(
-			const uint8_t *data,
-			int32_t dataLength,
-			Image<PixelRGB> *out);
-
-	private:
-
-		// Get the palette pointer from the data.
-		const PixelRGB *GetPaletteData() const;
-
-		// Generic operation of loading the image data using palette data.
-		bool LoadHelper(
-			const Header *header,
-			const PixelRGB *palette,
-			Image<PixelRGBA> *out);
+		bool LoadPalette(const char *filename, Image<PixelRGB> *out);
 
 	private:
 
@@ -73,9 +59,22 @@ namespace PCX
 
 	private:
 
+		// Load the file and verify the header.
+		bool ReadFile(const char *filename);
+
+		// Get the palette pointer from the data.
+		const PixelRGB *GetPaletteData() const;
+
+		// Generic operation of loading the image data using palette data.
+		bool LoadHelper(const PixelRGB *palette, Image<PixelRGBA> *out);
+
+	private:
+
 		// Current file data we're parsing.
+		FileData imageFile;
 		const uint8_t *data;
 		int32_t dataLength;
+		const Header *header;
 
 	};
 

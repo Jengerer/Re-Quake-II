@@ -1,4 +1,6 @@
 #include "bsp_map.h"
+#include "quake_file_manager.h"
+#include "wal_parser.h"
 #include <error_stack.h>
 #include <string.h>
 
@@ -19,6 +21,7 @@ namespace BSP
 		Renderer::BufferLayout(FaceAttributes, FaceAttributeCount)
 	};
 	const int FaceBufferIndex = 0;
+	const int FaceTextureSlot = 0;
 
 	FaceTexture::FaceTexture() : texture(nullptr)
 	{
@@ -40,6 +43,27 @@ namespace BSP
 	// Load this entry's texture resource.
 	bool FaceTexture::LoadResources(Renderer::Resources *resources)
 	{
+		// Load the image.
+		Image<PixelRGBA> image;
+		WAL::Parser walParser;
+		if (!walParser.Read(name, &image)) {
+			ErrorStack::Log("Failed to load WAL texture from file.");
+			return false;
+		}
+
+		// Create texture resource.
+		texture = resources->CreateTexture(&image);
+		if (texture == nullptr) {
+			ErrorStack::Log("Failed to create renderer texture from WAL file.");
+			return false;
+		}
+		return true;
+	}
+
+	// Bind the face texture for rendering.
+	void FaceTexture::BindTexture(Renderer::Interface *renderer) const
+	{
+		renderer->SetTexture(texture, FaceTextureSlot);
 	}
 
 	// Visibility index constants.
@@ -83,6 +107,7 @@ namespace BSP
 	// Draw this face.
 	void Face::Draw(Renderer::Interface *renderer, Renderer::MaterialLayout *layout) const
 	{
+		texture->BindTexture(renderer);
 		const int vertexCount = mesh.GetVertexCount();
 		layout->BindBuffer(FaceBufferIndex, vertexBuffer);
 		renderer->Draw(Renderer::TriangleFan, vertexCount);

@@ -33,6 +33,9 @@
     <ClInclude Include="include\wal_parser.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\pcx_parser.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\bsp_parser.cpp">
@@ -48,6 +51,12 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\quake_file_manager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\wal_parser.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\pcx_parser.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

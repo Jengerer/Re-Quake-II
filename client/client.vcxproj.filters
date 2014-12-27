@@ -35,9 +35,6 @@
     <ClInclude Include="include\md2_parser.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\pcx_parser.h">
-      <Filter>include</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\client_export.cpp">
@@ -56,9 +53,6 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\md2_parser.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\pcx_parser.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

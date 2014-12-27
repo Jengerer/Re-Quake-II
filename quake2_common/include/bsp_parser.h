@@ -176,7 +176,7 @@ namespace BSP
 			~Parser();
 
 			// Load and fill a map.
-			bool Load(const uint8_t *mapData, BSP::Map *out);
+			bool Load(const char *filename, BSP::Map *out);
 
 		private:
 

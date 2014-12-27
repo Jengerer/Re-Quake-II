@@ -28,6 +28,12 @@ void QuakeFileManager::Destroy()
 	}
 }
 
+// Get the instance of the file manager.
+QuakeFileManager *QuakeFileManager::GetInstance()
+{
+	return instance;
+}
+
 // Pack manager for file manager.
 bool QuakeFileManager::Read(const char *filename, FileData *out)
 {

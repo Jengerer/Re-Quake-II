@@ -56,7 +56,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>ClientLibraryExport;WIN32;_DEBUG;_WINDOWS;_USRDLL;CLIENT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ClientLibraryExport;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;CLIENT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -89,7 +89,6 @@
     <ClInclude Include="include\client_export.h" />
     <ClInclude Include="include\game_client.h" />
     <ClInclude Include="include\md2_parser.h" />
-    <ClInclude Include="include\pcx_parser.h" />
     <ClInclude Include="include\quake_normals.h" />
   </ItemGroup>
   <ItemGroup>
@@ -98,7 +97,6 @@
     <ClCompile Include="source\client_export.cpp" />
     <ClCompile Include="source\game_client.cpp" />
     <ClCompile Include="source\md2_parser.cpp" />
-    <ClCompile Include="source\pcx_parser.cpp" />
     <ClCompile Include="source\quake_normals.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

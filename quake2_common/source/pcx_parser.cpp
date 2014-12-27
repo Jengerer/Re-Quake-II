@@ -30,19 +30,76 @@ namespace PCX
 
 	// Parse data from a PCX file and output to an image.
 	// Returns true on success, false otherwise.
-	bool Parser::Load(const uint8_t *data, int32_t dataLength, Image<PixelRGBA> *out)
+	bool Parser::Load(const char *filename, Image<PixelRGBA> *out)
 	{
-		this->data = data;
-		this->dataLength = dataLength;
-		const Header *header = reinterpret_cast<const Header*>(data);
-		if (!Verify(header)) {
+		if (!ReadFile(filename)) {
 			return false;
 		}
 		const PixelRGB *palette = GetPaletteData();
 		if (palette == nullptr) {
 			return false;
 		}
-		if (!LoadHelper(header, palette, out)) {
+		if (!LoadHelper(palette, out)) {
+			return false;
+		}
+		return true;
+	}
+
+	// Parse just the palette from the file to an image.
+	bool Parser::LoadPalette(const char *filename, Image<PixelRGB> *out)
+	{
+		if (!ReadFile(filename)) {
+			return false;
+		}
+
+		// Palette is one dimensional.
+		if (!out->Initialize(PaletteColours, 1)) {
+			ErrorStack::Log("Failed to size palette image.");
+			return false;
+		}
+
+		// Copy the data over.
+		const PixelRGB *inColour = GetPaletteData();
+		PixelRGB *outColour = out->GetBuffer();
+		for (int i = 0; i < PaletteColours; ++i) {
+			*outColour++ = *inColour++;
+		}
+		return true;
+	}
+
+	// Verify the header for the known formats.
+	bool Parser::Verify(const Header *header)
+	{
+		if (header->identifier != Identifier) {
+			ErrorStack::Log("Unexpected header identifier for PCX file: %x.", header->identifier);
+			return false;
+		}
+		if (header->version != Version) {
+			ErrorStack::Log("Unexpected version for PCX file: %u.", header->version);
+			return false;
+		}
+		if (header->encoding != Encoding) {
+			ErrorStack::Log("Unexpected encoding for PCX file: %u.", header->encoding);
+			return false;
+		}
+		if (header->bitsPerPixel != BitsPerPixel) {
+			ErrorStack::Log("Unexpected bits per pixel for PCX file: %u.", header->bitsPerPixel);
+			return false;
+		}
+		return true;
+	}
+
+	// Read the file and verify the header.
+	bool Parser::ReadFile(const char *filename)
+	{
+		QuakeFileManager *quakeFiles = QuakeFileManager::GetInstance();
+		if (!quakeFiles->Read(filename, &imageFile)) {
+			return false;
+		}
+		this->data = imageFile.GetData();
+		this->dataLength = imageFile.GetSize();
+		header = reinterpret_cast<const Header*>(data);
+		if (!Verify(header)) {
 			return false;
 		}
 		return true;
@@ -62,10 +119,7 @@ namespace PCX
 	}
 
 	// Load the data to the image using a specific palette.
-	bool Parser::LoadHelper(
-		const Header *header,
-		const PixelRGB *palette,
-		Image<PixelRGBA> *out)
+	bool Parser::LoadHelper(const PixelRGB *palette, Image<PixelRGBA> *out)
 	{
 		// Size output image.
 		const uint16_t Width = header->endX - header->startX + 1;
@@ -102,28 +156,5 @@ namespace PCX
 		}
 		return true;
 	}
-
-	// Verify the header for the known formats.
-	bool Parser::Verify(const Header *header)
-	{
-		if (header->identifier != Identifier) {
-			ErrorStack::Log("Unexpected header identifier for PCX file: %x.", header->identifier);
-			return false;
-		}
-		if (header->version != Version) {
-			ErrorStack::Log("Unexpected version for PCX file: %u.", header->version);
-			return false;
-		}
-		if (header->encoding != Encoding) {
-			ErrorStack::Log("Unexpected encoding for PCX file: %u.", header->encoding);
-			return false;
-		}
-		if (header->bitsPerPixel != BitsPerPixel) {
-			ErrorStack::Log("Unexpected bits per pixel for PCX file: %u.", header->bitsPerPixel);
-			return false;
-		}
-		return true;
-	}
-
 
 }
