@@ -27,7 +27,7 @@ Client::Client()
 	modelProjection(nullptr),
 	mapView(nullptr),
 	mapProjection(nullptr),
-	mapColour(nullptr)
+	mapTexture(nullptr)
 {
 	camera.SetPosition(Vector3::Zero);
 }
@@ -119,8 +119,6 @@ bool Client::OnTickEnd()
 	renderer->SetMaterial(mapMaterial);
 	mapView->SetMatrix4x4(&view);
 	renderer->SetWireframe(false);
-	Vector4 colour(1.f, 1.f, 1.f, 0.05f);
-	mapColour->SetVector4(&colour);
 	map.Draw(*cameraPosition, renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
@@ -129,6 +127,7 @@ bool Client::OnTickEnd()
 	modelObject->SetMatrix4x4(&obj);
 	view.Identity();
 	modelView->SetMatrix4x4(&view);
+	renderer->SetTexture(modelSkin, 0);
 	model.Draw(renderer);
 	renderer->UnsetMaterial(modelMaterial);
 
@@ -175,8 +174,8 @@ bool Client::LoadResources(void)
 	if (mapProjection == nullptr) {
 		return false;
 	}
-	mapColour = mapMaterial->GetVariable("colour");
-	if (mapColour == nullptr) {
+	mapTexture = mapMaterial->GetVariable("texture");
+	if (mapTexture == nullptr) {
 		return false;
 	}
 	
@@ -202,7 +201,7 @@ bool Client::LoadResources(void)
 
 	// Load model.
 	MD2::Parser md2Parser;
-	if (!md2Parser.Load("models/monster/bitch/tris.md2", &model)) {
+	if (!md2Parser.Load("models/monsters/bitch/tris.md2", &model)) {
 		return false;
 	}
 	if (!model.LoadResources(resources)) {
@@ -234,6 +233,7 @@ bool Client::LoadResources(void)
 	renderer->UnsetMaterial(modelMaterial);
 	renderer->SetMaterial(mapMaterial);
 	mapProjection->SetMatrix4x4(&projectionMatrix);
+	mapTexture->SetInteger(0);
 	renderer->UnsetMaterial(mapMaterial);
 
 	// Load static model resources.
@@ -281,8 +281,8 @@ void Client::FreeResources(void)
 	if (mapMaterial != nullptr) {
 		mapMaterial->Destroy();
 	}
-	if (mapColour != nullptr) {
-		mapColour->Destroy();
+	if (mapTexture != nullptr) {
+		mapTexture->Destroy();
 	}
 
 	// Destroy model.

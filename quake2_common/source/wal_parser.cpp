@@ -4,12 +4,19 @@
 #include "pcx_parser.h"
 #include "quake_file_manager.h"
 #include "wal_parser.h"
+#include <string.h>
 
 namespace WAL
 {
 
 	// Colour map file name.
 	static const char *ColourMap = "pics/colormap.pcx";
+
+	// WAL string constants.
+	static const char TextureDirectory[] = "textures/";
+	static const char TextureExtension[] = ".wal";
+	static const int FullPathLength =
+		WAL::NameLength + (sizeof(TextureDirectory) - 1) + (sizeof(TextureExtension) - 1);
 
 	// WAL generic colour map.
 	static Image<PixelRGBA> palette;
@@ -73,9 +80,11 @@ namespace WAL
 	bool Parser::Read(const char *filename, Image<PixelRGBA> *out)
 	{
 		// Open the WAL file.
+		char fullPath[FullPathLength];
+		sprintf(fullPath, "%s%s%s", TextureDirectory, filename, TextureExtension);
 		QuakeFileManager *quakeFiles = QuakeFileManager::GetInstance();
 		FileData walData;
-		if (!quakeFiles->Read(filename, &walData)) {
+		if (!quakeFiles->Read(fullPath, &walData)) {
 			return false;
 		}
 		const Header *header = reinterpret_cast<const Header*>(walData.GetData());

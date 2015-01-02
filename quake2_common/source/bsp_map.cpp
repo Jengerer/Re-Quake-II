@@ -296,6 +296,8 @@ namespace BSP
 	{
 		delete[] planes;
 		planes = nullptr;
+		delete[] textures;
+		textures = nullptr;
 		delete[] nodes;
 		nodes = nullptr;
 		delete[] faces;
@@ -335,6 +337,17 @@ namespace BSP
 			ErrorStack::Log("Failed to allocate %d planes for map.", planeCount);
 			return false;
 		}
+		return true;
+	}
+
+	bool Map::InitializeTextures(int32_t textureCount)
+	{
+		textures = new BSP::FaceTexture[textureCount];
+		if (textures == nullptr) {
+			ErrorStack::Log("Failed to allocate %d textures for map.", textureCount);
+			return false;
+		}
+		this->textureCount = textureCount;
 		return true;
 	}
 
@@ -450,7 +463,14 @@ namespace BSP
 	// Load the map renderer resources.
 	bool Map::LoadResources(Renderer::Resources *resources)
 	{
-		Face *currentFace = this->faces;
+		BSP::FaceTexture *currentTexture = this->textures;
+		int32_t textureCount = this->textureCount;
+		for (int32_t i = 0; i < textureCount; ++i, ++currentTexture) {
+			if (!currentTexture->LoadResources(resources)) {
+				return false;
+			}
+		}
+		BSP::Face *currentFace = this->faces;
 		int32_t faceCount = this->faceCount;
 		for (int32_t i = 0; i < faceCount; ++i, ++currentFace) {
 			if (!currentFace->LoadResources(resources)) {

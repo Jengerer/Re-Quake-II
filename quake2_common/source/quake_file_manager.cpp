@@ -12,7 +12,7 @@ bool QuakeFileManager::Initialize()
 		ErrorStack::Log("Failed to allocate Quake file manager object.");
 		return false;
 	}
-	if (!manager->Initialize()) {
+	if (!manager->AddPacks()) {
 		delete manager;
 		return false;
 	}
@@ -54,14 +54,14 @@ QuakeFileManager::~QuakeFileManager()
 // Add available packages.
 bool QuakeFileManager::AddPacks()
 {
-	const int QuakePackCount = 3;
+	const int QuakePackCount = 1;
 	const char *QuakePacks[QuakePackCount] = {
 		"pak0.pak",
-		"pak1.pak",
-		"pak2.pak"
+		//"pak1.pak",
+		//"pak2.pak"
 	};
 	for (int i = 0; i < QuakePackCount; ++i) {
-		if (!packs.AddPack(QuakePacks[QuakePackCount])) {
+		if (!packs.AddPack(QuakePacks[i])) {
 			return false;
 		}
 	}

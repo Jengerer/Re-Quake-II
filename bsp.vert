@@ -4,7 +4,7 @@
 in vec3 position;
 in vec2 uv;
 in vec2 lightMapUV;
-out vec3 ps_normal;
+out vec2 psUV;
 
 // Camera view variables.
 uniform mat4 view;
@@ -15,5 +15,5 @@ void main(void) {
 	gl_Position = projection *
 		view *
 		vec4(position, 1.f);
-	ps_normal = vec3(uv.x, lightMapUV.y, gl_Position.w);
+	psUV = (uv / 64.f) + lightMapUV; // Lightmap is (0, 0) for now.
 }

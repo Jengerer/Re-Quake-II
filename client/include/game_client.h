@@ -52,7 +52,7 @@ private:
 	Renderer::Variable *modelTexture;
 	Renderer::Variable *mapView;
 	Renderer::Variable *mapProjection;
-	Renderer::Variable *mapColour;
+	Renderer::Variable *mapTexture;
 
 	// Model and map to render.
 	Camera camera;

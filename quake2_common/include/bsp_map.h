@@ -19,7 +19,7 @@ namespace BSP
 	struct FaceVertex
 	{
 		Vector3 position;
-		Vector2 texture;
+		Vector2 uv;
 		Vector2 lightMap;
 	};
 	typedef Mesh<FaceVertex> FaceMesh;
@@ -65,6 +65,7 @@ namespace BSP
 		// Prepare face object.
 		bool Initialize(int vertexCount);
 
+		inline void SetTexture(const FaceTexture *texture) { this->texture = texture; }
 		inline void SetVisibilityFrame(int32_t visibilityFrame) { this->visibilityFrame = visibilityFrame; }
 
 		inline FaceMesh *GetMesh() { return &mesh; }
@@ -299,6 +300,7 @@ namespace BSP
 
 		// Prepare map segments to be filled out.
 		bool InitializePlanes(int32_t planeCount);
+		bool InitializeTextures(int32_t textureCount);
 		bool InitializeFaces(int32_t faceCount);
 		bool InitializeNodes(int32_t nodeCount);
 		bool InitializeBrushSides(int32_t brushSideCount);
@@ -313,6 +315,7 @@ namespace BSP
 
 		// Map buffer functions.
 		inline Geometry::Plane *GetPlanes() { return planes; }
+		inline BSP::FaceTexture *GetTextures() { return textures; }
 		inline BSP::Node *GetNodes() { return nodes; }
 		inline BSP::Face *GetFaces() { return faces; }
 		inline BSP::BrushSide *GetBrushSides() { return brushSides; }
@@ -363,10 +366,12 @@ namespace BSP
 
 		// Map component arrays/lengths.
 		Geometry::Plane *planes;
-		BSP::Node *nodes;
-		int32_t nodeCount; // TODO: if we loop through nodes as tree, This may not be needed either.
+		BSP::FaceTexture *textures;
+		int32_t textureCount;
 		BSP::Face *faces;
 		int32_t faceCount;
+		BSP::Node *nodes;
+		int32_t nodeCount; // TODO: if we loop through nodes as tree, This may not be needed either.
 		BSP::BrushSide *brushSides;
 		BSP::Brush *brushes;
 		BSP::LeafCluster *clusters;

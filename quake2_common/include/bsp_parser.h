@@ -99,13 +99,13 @@ namespace BSP
 		};
 
 		// Map texture info structure.
-		static const int TextureOffsetSIndex = 0;
-		static const int TextureOffsetTIndex = 1;
-		static const int TextureOffsetCount = 2;
 		static const int TextureNameLength = 32;
 		struct Texture
 		{
-			Vector4 offsets[TextureOffsetCount];
+			Vector3 scaleS;
+			float offsetS;
+			Vector3 scaleT;
+			float offsetT;
 			int32_t flags;
 			int32_t value;
 			char name[TextureNameLength];
@@ -185,6 +185,7 @@ namespace BSP
 
 			// Load each segment into the map.
 			bool LoadPlanes();
+			bool LoadTextures();
 			bool LoadFaces();
 			bool LoadNodes();
 			bool LoadBrushSides();
@@ -202,13 +203,17 @@ namespace BSP
 			// Map to be filled out.
 			BSP::Map *out;
 
-			// File parsing helpers.
+			// File header helper.
 			const Header *header;
+
+			// Lump pointers and counts.
 			const FileFormat::Plane *planes;
 			int32_t planeCount;
 			const Vector3 *vertices;
 			const uint8_t *visibilityStart;
 			int32_t visibilityLength;
+			const FileFormat::Texture *textures;
+			int32_t textureCount;
 			const FileFormat::Face *faces;
 			int32_t faceCount;
 			const FileFormat::Node *nodes;

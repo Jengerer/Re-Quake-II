@@ -45,6 +45,10 @@ namespace BSP
 			if (!LoadPlanes()) {
 				return false;
 			}
+			// Faces require face textures.
+			if (!LoadTextures()) {
+				return false;
+			}
 			// Nodes and leaf face table need faces loaded.
 			if (!LoadFaces()) {
 				return false;
@@ -115,6 +119,11 @@ namespace BSP
 					lumpReference = reinterpret_cast<const void**>(&nodes);
 					lumpElementCount = &nodeCount;
 					break;
+				case TexturesLump:
+					elementSize = sizeof(FileFormat::Texture);
+					lumpReference = reinterpret_cast<const void**>(&textures);
+					lumpElementCount = &textureCount;
+					break;
 				case FacesLump:
 					elementSize = sizeof(FileFormat::Face);
 					lumpReference = reinterpret_cast<const void**>(&faces);
@@ -168,6 +177,105 @@ namespace BSP
 			return true;
 		}
 
+		// Parse and copy the separating planes into the map.
+		bool Parser::LoadPlanes()
+		{
+			int32_t planeCount = this->planeCount;
+			if (!out->InitializePlanes(planeCount)) {
+				return false;
+			}
+
+			Geometry::Plane *outPlane = out->GetPlanes();
+			const FileFormat::Plane *inputPlane = planes;
+			for (int16_t i = 0; i < planeCount; ++i, ++inputPlane, ++outPlane) {
+				outPlane->normal.FromQuakeCoordinates(
+					inputPlane->normal.x,
+					inputPlane->normal.y,
+					inputPlane->normal.z);
+				outPlane->distance = inputPlane->distance;
+			}
+			return true;
+		}
+
+		// Loads textures from the lump into the output map.
+		// Returns true on success, false otherwise.
+		bool Parser::LoadTextures()
+		{
+			int32_t textureCount = this->textureCount;
+			if (!out->InitializeTextures(textureCount)) {
+				return false;
+			}
+			BSP::FaceTexture *outputTexture = out->GetTextures();
+			const FileFormat::Texture *inputTexture = textures;
+			for (int32_t i = 0; i < textureCount; ++i, ++inputTexture, ++outputTexture) {
+				outputTexture->SetName(inputTexture->name);
+			}
+			return true;
+		}
+
+		// Loads faces from the lump and saves them into the output map object.
+		// Returns true on success, false otherwise.
+		bool Parser::LoadFaces()
+		{
+			int32_t faceCount = this->faceCount;
+			if (!out->InitializeFaces(faceCount)) {
+				return false;
+			}
+
+			// Get the surface edges table, edges array, and vertices.
+			BSP::Face *outputFace = out->GetFaces();
+			const FileFormat::Face *inputFace = faces;
+			const FileFormat::Texture *fileTextures = textures;
+			const BSP::FaceTexture *mapTextures = out->GetTextures();
+			for (int32_t i = 0; i < faceCount; ++i, ++inputFace, ++outputFace) {
+				int16_t edgeCount = inputFace->edgeCount;
+				if (!outputFace->Initialize(edgeCount)) {
+					return false;
+				}
+				FaceMesh *outputMesh = outputFace->GetMesh();
+				FaceVertex *outputVertex = outputMesh->GetVertexBuffer();
+
+				// Get the texture information structure to get UV coordinates.
+				int16_t textureIndex = inputFace->textureIndex;
+				const FileFormat::Texture *currentTexture = &textures[textureIndex];
+
+				// Build polygon from face edges.
+				const FileFormat::SurfaceEdge *currentEdgeEntry = &surfaceEdges[inputFace->firstEdge];
+				for (int16_t j = 0; j < edgeCount; ++j, ++currentEdgeEntry, ++outputVertex) {
+					int32_t edgeIndex = currentEdgeEntry->edgeIndex;
+
+					// If negative index, it's counter-clockwise order, so get end vertex.
+					const FileFormat::Edge *currentEdge;
+					const Vector3 *currentVertex;
+					if (edgeIndex < 0) {
+						currentEdge = &edges[-edgeIndex];
+						currentVertex = &vertices[currentEdge->endIndex];
+					}
+					else {
+						currentEdge = &edges[edgeIndex];
+						currentVertex = &vertices[currentEdge->startIndex];
+					}
+					outputVertex->position.FromQuakeCoordinates(
+						currentVertex->x,
+						currentVertex->y,
+						currentVertex->z);
+
+					// Calculate U and V.
+					outputVertex->uv.x = (currentVertex->DotProduct(currentTexture->scaleS) + currentTexture->offsetS);
+					outputVertex->uv.y = currentVertex->DotProduct(currentTexture->scaleT) + currentTexture->offsetT;
+					
+					// TODO: These are dummy values.
+					outputVertex->lightMap.x = 0.f;
+					outputVertex->lightMap.y = 0.f;
+				}
+				
+				// Assign the texture from the texture table.
+				const BSP::FaceTexture *faceTexture = &mapTextures[textureIndex];
+				outputFace->SetTexture(faceTexture);
+			}
+			return true;
+		}
+
 		// Load the non-leaf nodes from the file into the map.
 		// Returns true on success, false otherwise.
 		bool Parser::LoadNodes()
@@ -203,71 +311,6 @@ namespace BSP
 					maximums,
 					&faces[inputNode->firstFace],
 					inputNode->faceCount);
-			}
-			return true;
-		}
-
-		// Loads faces from the lump and saves them into the output map object.
-		// Returns true on success, false otherwise.
-		bool Parser::LoadFaces()
-		{
-			int32_t faceCount = this->faceCount;
-			if (!out->InitializeFaces(faceCount)) {
-				return false;
-			}
-
-			// Get the surface edges table, edges array, and vertices.
-			BSP::Face *outputFace = out->GetFaces();
-			const FileFormat::Face *inputFace = faces;
-			for (int32_t i = 0; i < faceCount; ++i, ++inputFace, ++outputFace) {
-				int16_t edgeCount = inputFace->edgeCount;
-				if (!outputFace->Initialize(edgeCount)) {
-					return false;
-				}
-				FaceMesh *outputMesh = outputFace->GetMesh();
-				FaceVertex *outputVertex = outputMesh->GetVertexBuffer();
-
-				// Build polygon from face edges.
-				const FileFormat::SurfaceEdge *currentEdgeEntry = &surfaceEdges[inputFace->firstEdge];
-				for (int16_t j = 0; j < edgeCount; ++j, ++currentEdgeEntry, ++outputVertex) {
-					int32_t edgeIndex = currentEdgeEntry->edgeIndex;
-
-					// If negative index, it's counter-clockwise order, so get end vertex.
-					const FileFormat::Edge *currentEdge;
-					const Vector3 *currentVertex;
-					if (edgeIndex < 0) {
-						currentEdge = &edges[-edgeIndex];
-						currentVertex = &vertices[currentEdge->endIndex];
-					}
-					else {
-						currentEdge = &edges[edgeIndex];
-						currentVertex = &vertices[currentEdge->startIndex];
-					}
-					outputVertex->position.FromQuakeCoordinates(
-						currentVertex->x,
-						currentVertex->y,
-						currentVertex->z);
-				}
-			}
-			return true;
-		}
-		
-		// Parse and copy the separating planes into the map.
-		bool Parser::LoadPlanes()
-		{
-			int32_t planeCount = this->planeCount;
-			if (!out->InitializePlanes(planeCount)) {
-				return false;
-			}
-
-			Geometry::Plane *outPlane = out->GetPlanes();
-			const FileFormat::Plane *inputPlane = planes;
-			for (int16_t i = 0; i < planeCount; ++i, ++inputPlane, ++outPlane) {
-				outPlane->normal.FromQuakeCoordinates(
-					inputPlane->normal.x,
-					inputPlane->normal.y,
-					inputPlane->normal.z);
-				outPlane->distance = inputPlane->distance;
 			}
 			return true;
 		}
