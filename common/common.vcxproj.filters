@@ -78,11 +78,11 @@
     <ClInclude Include="include\file.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\renderer\texture.h">
-      <Filter>include\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="include\image.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderer\texture_interface.h">
+      <Filter>include\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "bsp_painter.h"
 #include "mesh.h"
 #include "plane.h"
 #include "quake2_common_define.h"
@@ -14,15 +15,6 @@
 
 namespace BSP
 {
-
-	// Vertex type for a face point.
-	struct FaceVertex
-	{
-		Vector3 position;
-		Vector2 uv;
-		Vector2 lightMap;
-	};
-	typedef Mesh<FaceVertex> FaceMesh;
 
 	// Face texture information structure.
 	class FaceTexture : public Allocatable
@@ -43,13 +35,15 @@ namespace BSP
 		// Load this entry's texture resource.
 		bool LoadResources(Renderer::Resources *resources);
 
-		// Bind the face texture.
-		void BindTexture(Renderer::Interface *renderer) const;
+		// Get the texture resource and size.
+		inline Renderer::Texture *GetTexture() const { return texture; }
+		inline const Vector2 *GetSize() const { return &textureSize; }
 
 	private:
 
 		char name[TextureNameLength];
 		Renderer::Texture *texture;
+		Vector2 textureSize;
 
 	};
 
@@ -330,7 +324,10 @@ namespace BSP
 		bool LoadResources(Renderer::Resources *resources);
 		
 		// Draw the map.
-		void Draw(const Vector3 &viewPoint, Renderer::Interface *renderer);
+		void Draw(
+			Renderer::Interface *renderer,
+			const Vector3 &viewPoint,
+			const Matrix4x4 &projectionViewTransform);
 
 		// Trace a line through the map.
 		bool TraceLine(const Vector3 &start, const Vector3 &end, float *timeOut);
@@ -354,10 +351,6 @@ namespace BSP
 		bool TraceLine(int32_t nodeIndex, const Vector3 &start, const Vector3 &end, float *timeOut);
 
 	public:
-
-		// Get material layout for models.
-		static bool LoadStaticResources(Renderer::Resources *resources, Renderer::Material *mapMaterial);
-		static void FreeStaticResources();
 		
 		// Convert negative index to leaf index.
 		static inline int32_t GetLeafIndex(int32_t index) { return (-1) - index; }

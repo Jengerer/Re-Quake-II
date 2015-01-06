@@ -2,7 +2,7 @@
 
 #include <allocatable.h>
 #include <image.h>
-#include <renderer/texture.h>
+#include <renderer/texture_interface.h>
 
 namespace OpenGL
 {

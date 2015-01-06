@@ -36,6 +36,9 @@
     <ClInclude Include="include\pcx_parser.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\bsp_painter.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\bsp_parser.cpp">
@@ -57,6 +60,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\pcx_parser.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\bsp_painter.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

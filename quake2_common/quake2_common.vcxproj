@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClInclude Include="include\bsp_map.h" />
     <ClInclude Include="include\bsp_parser.h" />
+    <ClInclude Include="include\bsp_painter.h" />
     <ClInclude Include="include\mesh.h" />
     <ClInclude Include="include\pack_manager.h" />
     <ClInclude Include="include\pcx_parser.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="include\wal_parser.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\bsp_painter.cpp" />
     <ClCompile Include="source\pcx_parser.cpp" />
     <ClCompile Include="source\pack_manager.cpp" />
     <ClCompile Include="source\plane.cpp" />

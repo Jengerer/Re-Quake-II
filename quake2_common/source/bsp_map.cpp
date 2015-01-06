@@ -7,22 +7,6 @@
 namespace BSP
 {
 
-	// Quake II map material layout.
-	const int FaceAttributeCount = 3;
-	const Renderer::Attribute FaceAttributes[FaceAttributeCount] =
-	{
-		Renderer::Attribute("position", Renderer::PositionType, Renderer::Vector3Type),
-		Renderer::Attribute("uv", Renderer::TextureCoordinateType, Renderer::Vector2Type),
-		Renderer::Attribute("lightMapUV", Renderer::TextureCoordinateType, Renderer::Vector2Type)
-	};
-	const int QuakeMapBufferCount = 1;
-	const Renderer::BufferLayout QuakeMapBufferLayouts[QuakeMapBufferCount] =
-	{
-		Renderer::BufferLayout(FaceAttributes, FaceAttributeCount)
-	};
-	const int FaceBufferIndex = 0;
-	const int FaceTextureSlot = 0;
-
 	FaceTexture::FaceTexture() : texture(nullptr)
 	{
 	}
@@ -57,13 +41,11 @@ namespace BSP
 			ErrorStack::Log("Failed to create renderer texture from WAL file.");
 			return false;
 		}
-		return true;
-	}
 
-	// Bind the face texture for rendering.
-	void FaceTexture::BindTexture(Renderer::Interface *renderer) const
-	{
-		renderer->SetTexture(texture, FaceTextureSlot);
+		// Update texture size to pass to shader.
+		textureSize.x = static_cast<float>(image.GetWidth());
+		textureSize.y = static_cast<float>(image.GetHeight());
+		return true;
 	}
 
 	// Visibility index constants.
@@ -107,10 +89,14 @@ namespace BSP
 	// Draw this face.
 	void Face::Draw(Renderer::Interface *renderer, Renderer::MaterialLayout *layout) const
 	{
-		texture->BindTexture(renderer);
-		const int vertexCount = mesh.GetVertexCount();
-		layout->BindBuffer(FaceBufferIndex, vertexBuffer);
-		renderer->Draw(Renderer::TriangleFan, vertexCount);
+		// Bind the texture.
+		Renderer::Texture *renderTexture = texture->GetTexture();
+		const Vector2 *textureSize = texture->GetSize();
+		Painter::instance->SetTexture(renderer, renderTexture, *textureSize);
+
+		// Make draw call for face vertices.
+		unsigned int vertexCount = static_cast<unsigned int>(mesh.GetVertexCount());
+		Painter::instance->DrawFace(renderer, vertexBuffer, vertexCount);
 	}
 
 	Node::Node() : visibilityFrame(InvalidVisibilityFrame)
@@ -481,7 +467,10 @@ namespace BSP
 	}
 
 	// Draw the map.
-	void Map::Draw(const Vector3 &viewPoint, Renderer::Interface *renderer)
+	void Map::Draw(
+		Renderer::Interface *renderer,
+		const Vector3 &viewPoint,
+		const Matrix4x4 &projectionView)
 	{
 		// Store parameters so we don't have to keep passing them down.
 		this->referencePoint = viewPoint;
@@ -497,9 +486,15 @@ namespace BSP
 			visibleCluster = viewClusterIndex;
 			MarkVisibleCluster(viewClusterIndex);
 		}
+
+		// Set up painter to draw the map.
+		Painter::instance->PrepareRenderer(renderer, projectionView);
 		
 		// Start drawing from head of tree.
 		DrawNode(HeadIndex);
+
+		// Clear up renderer.
+		Painter::instance->ClearRenderer(renderer);
 	}
 
 	// Trace a line through the map.
@@ -671,24 +666,6 @@ namespace BSP
 
 		}
 		return true;
-	}
-
-	// Get generic map renderer resources.
-	bool Map::LoadStaticResources(Renderer::Resources *resources, Renderer::Material *mapMaterial)
-	{
-		layout = mapMaterial->GetLayout(QuakeMapBufferLayouts, QuakeMapBufferCount);
-		if (layout == nullptr) {
-			return false;
-		}
-		return true;
-	}
-
-	// Free generic map renderer resources.
-	void Map::FreeStaticResources()
-	{
-		if (layout != nullptr) {
-			layout->Destroy();
-		}
 	}
 
 }
