@@ -9,6 +9,13 @@ namespace OpenGL
 	{
 	}
 
+	Buffer::~Buffer()
+	{
+		if (handle != 0) {
+			glDeleteBuffers(1, &handle);
+		}
+	}
+
 	// Create the buffer instance.
 	bool Buffer::Initialize()
 	{
@@ -19,12 +26,6 @@ namespace OpenGL
 			return false;
 		}
 		return true;
-	}
-
-	// Destroy the buffer.
-	void Buffer::Destroy()
-	{
-		delete this;
 	}
 
 	// Load data into the buffer.
@@ -51,15 +52,6 @@ namespace OpenGL
 	void Buffer::Unbind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	// Private destructor, must be killed through Destroy().
-	Buffer::~Buffer()
-	{
-		// Free buffer handle if we have one.
-		if (handle != 0) {
-			glDeleteBuffers(1, &handle);
-		}
 	}
 
 }

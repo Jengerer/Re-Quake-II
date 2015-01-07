@@ -1,5 +1,3 @@
-#pragma once
-
 #include "material_layout.h"
 #include <error_stack.h>
 #include <memory_manager.h>
@@ -9,6 +7,11 @@ namespace OpenGL
 
 	MaterialLayout::MaterialLayout() : bufferLayouts(0), bufferCount(0)
 	{
+	}
+
+	MaterialLayout::~MaterialLayout()
+	{
+        delete[] bufferLayouts;
 	}
 
 	// Set the buffer layouts array.
@@ -22,12 +25,6 @@ namespace OpenGL
 	bool MaterialLayout::Initialize()
 	{
 		return true;
-	}
-
-	// Destroy this layout.
-	void MaterialLayout::Destroy()
-	{
-		delete this;
 	}
 
 	// Bind a buffer to a layout slot.
@@ -54,15 +51,6 @@ namespace OpenGL
 		int bufferCount = this->bufferCount;
 		for (int i = 0; i < bufferCount; ++i, ++bufferLayouts) {
 			bufferLayouts->Deactivate();
-		}
-	}
-
-	// Private destructor; must be killed through Destroy().
-	MaterialLayout::~MaterialLayout()
-	{
-		// Delete the buffer layouts.
-		if (bufferLayouts != nullptr) {
-			delete[] bufferLayouts;
 		}
 	}
 

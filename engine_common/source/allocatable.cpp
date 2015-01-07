@@ -2,7 +2,7 @@
 #include "memory_manager.h"
 
 // Scalar new operator.
-void *Allocatable::operator new(size_t size)
+void *Allocatable::operator new(std::size_t size)
 {
 	return MemoryManager::Allocate(size);
 }
@@ -14,7 +14,7 @@ void Allocatable::operator delete(void *buffer)
 }
 
 // Array new operator.
-void *Allocatable::operator new[](size_t size)
+void *Allocatable::operator new[](std::size_t size)
 {
 	return MemoryManager::Allocate(size);
 }

@@ -9,8 +9,8 @@ namespace Renderer
 
 	public:
 
-		// Free the buffer.
-		virtual void Destroy() = 0;
+        // Buffer virtual destructor.
+        virtual ~Buffer() = default;
 
 	};
 

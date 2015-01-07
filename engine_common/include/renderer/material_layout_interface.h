@@ -12,8 +12,8 @@ namespace Renderer
 
 	public:
 
-		// Destroy this layout reference.
-		virtual void Destroy() = 0;
+        // Layout virtual destructor.
+        virtual ~MaterialLayout() = default;
 
 		// Bind a buffer to a specific layout.
 		virtual void BindBuffer(int bufferIndex, const Buffer *buffer) = 0;

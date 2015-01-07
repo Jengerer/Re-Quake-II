@@ -1,9 +1,9 @@
 #include "memory_manager.h"
-#include <intrin.h>
 #include <new>
 #include <stdio.h>
 
 // Allocation count static.
+#if defined(_DEBUG)
 unsigned int MemoryManager::activeMemoryUsage = 0;
 unsigned int MemoryManager::peakMemoryUsage = 0;
 unsigned int MemoryManager::totalMemoryUsage = 0;
@@ -12,6 +12,7 @@ int MemoryManager::breakAllocation = -1;
 int MemoryManager::usedStart = MaximumAllocations;
 int MemoryManager::freeStart = 0;
 Allocation MemoryManager::allocations[MaximumAllocations];
+#endif
 
 // Initialize memory management.
 void MemoryManager::Initialize(void)

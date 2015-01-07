@@ -12,8 +12,8 @@ namespace Renderer
 
 	public:
 
-		// Delete the material instance.
-		virtual void Destroy() = 0;
+        // Virtual destructor.
+        virtual ~Material() = default;
 
 		// Get a reference to a material variable.
 		virtual Variable *GetVariable(const char *name) = 0;

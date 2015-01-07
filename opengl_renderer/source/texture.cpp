@@ -8,6 +8,13 @@ namespace OpenGL
 	{
 	}
 
+	Texture::~Texture()
+	{
+		if (handle != 0) {
+			glDeleteTextures(1, &handle);
+		}
+	}
+
 	// Create the texture handle.
 	bool Texture::Initialize()
 	{
@@ -17,12 +24,6 @@ namespace OpenGL
 			return false;
 		}
 		return true;
-	}
-
-	// Delete this texture resource.
-	void Texture::Destroy()
-	{
-		delete this;
 	}
 
 	// Bind this texture to a texture slot.
@@ -63,14 +64,6 @@ namespace OpenGL
 			return false;
 		}
 		return true;
-	}
-
-	// Private destructor.
-	Texture::~Texture()
-	{
-		if (handle != 0) {
-			glDeleteTextures(1, &handle);
-		}
 	}
 
 }

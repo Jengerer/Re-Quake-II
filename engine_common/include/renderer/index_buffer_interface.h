@@ -11,8 +11,8 @@ namespace Renderer
 
 	public:
 
-		// Free the index buffer.
-		virtual void Destroy() = 0;
+        // Index buffer virtual destructor.
+        virtual ~IndexBuffer() = default;
 
 	};
 

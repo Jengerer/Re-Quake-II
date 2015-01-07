@@ -26,7 +26,7 @@ uint8_t *FileData::AllocateData(int32_t size)
 	}
 	uint8_t *buffer = reinterpret_cast<uint8_t*>(MemoryManager::Allocate(size));
 	if (buffer == nullptr) {
-		return false;
+		return nullptr;
 	}
 	this->data = buffer;
 	this->size = size;
@@ -132,7 +132,7 @@ bool File::Read(int32_t size, FileData *out)
 
 	// Assume the size was correct.
 	size_t count = fread(data, 1, size, handle);
-	if (count != size) {
+	if (count != static_cast<size_t>(size)) {
 		// If size mismatches, check that it's due to EOF.
 		if (feof(handle) == 0) {
 			ErrorStack::Log("Failed to read %d bytes from file.", size);

@@ -13,6 +13,15 @@ namespace OpenGL
 	{
 	}
 
+	// Destroy the program (linked shaders are automatically unlinked).
+	Material::~Material()
+	{
+		// Free the handle if we have one.
+		if (handle != 0) {
+			glDeleteProgram(handle);
+		}
+	}
+
 	// Build the program for a pair of shaders.
 	bool Material::Initialize(
 		const char *vertexSource,
@@ -76,12 +85,6 @@ namespace OpenGL
 		return true;
 	}
 
-	// Destroy the material.
-	void Material::Destroy()
-	{
-		delete this;
-	}
-
 	// Get a reference to a variable in this material.
 	Renderer::Variable *Material::GetVariable(const char *name)
 	{
@@ -115,13 +118,13 @@ namespace OpenGL
 		// Convert the buffer layouts to OpenGL ones.
 		BufferLayout *outLayout = new BufferLayout[bufferCount];
 		if (outLayout == nullptr) {
-			layout->Destroy();
+            delete layout;
 			ErrorStack::Log("Failed to allocate buffer layout objects.");
 			return nullptr;
 		}
 		layout->SetBufferLayouts(outLayout, bufferCount);
 		if (!layout->Initialize()) {
-			layout->Destroy();
+            delete layout;
 			return nullptr;
 		}
 
@@ -131,7 +134,7 @@ namespace OpenGL
 			int attributeCount = bufferLayouts->GetAttributeCount();
 			Attribute *attributes = new Attribute[attributeCount];
 			if (attributes == nullptr) {
-				layout->Destroy();
+                delete layout;
 				ErrorStack::Log("Failed to allocate attribute array.");
 				return nullptr;
 			}
@@ -148,7 +151,7 @@ namespace OpenGL
 				// Get the location of the attribute.
 				GLint location = glGetAttribLocation(handle, name);
 				if (location == -1) {
-					layout->Destroy();
+                    delete layout;
 					ErrorStack::Log("Failed to get location of attribute '%s'.", name);
 					return nullptr;
 				}
@@ -173,15 +176,6 @@ namespace OpenGL
 	void Material::Deactivate()
 	{
 		glUseProgram(0);
-	}
-
-	// Destroy the program (linked shaders are automatically unlinked).
-	Material::~Material()
-	{
-		// Free the handle if we have one.
-		if (handle != 0) {
-			glDeleteProgram(handle);
-		}
 	}
 
 	// Compile a shader.

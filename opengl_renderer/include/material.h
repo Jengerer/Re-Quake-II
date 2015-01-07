@@ -14,6 +14,7 @@ namespace OpenGL
 	public:
 
 		Material();
+        virtual ~Material();
 
 		// Initialize the material.
 		bool Initialize(
@@ -21,9 +22,6 @@ namespace OpenGL
 			int vertexSourceLength,
 			const char *pixelSource,
 			int pixelSourceLength);
-		
-		// Free this material.
-		virtual void Destroy();
 
 		// Get a reference to a variable in this material.
 		virtual Renderer::Variable *GetVariable(const char *name);
@@ -38,11 +36,6 @@ namespace OpenGL
 
 		// Unset this program from rendering.
 		void Deactivate();
-
-	private:
-
-		// Private destructor; must be killed by Destroy().
-		~Material();
 
 	private:
 

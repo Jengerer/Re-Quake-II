@@ -8,11 +8,9 @@ namespace OpenGL
 	{
 	}
 
-	// Destroy variable reference.
-	void Variable::Destroy()
-	{
-		delete this;
-	}
+    Variable::~Variable()
+    {
+    }
 
 	// Set value as integer.
 	void Variable::SetInteger(int value)
@@ -54,11 +52,6 @@ namespace OpenGL
 	void Variable::SetMatrix4x4(const Matrix4x4 *value)
 	{
 		glUniformMatrix4fv(location, 1, GL_TRUE, static_cast<const GLfloat*>(&value->matrixArray[0][0]));
-	}
-
-	// Private destructor; must be killed through Destroy().
-	Variable::~Variable()
-	{
 	}
 
 }

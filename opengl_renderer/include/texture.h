@@ -2,7 +2,7 @@
 
 #include <allocatable.h>
 #include <image.h>
-#include <renderer/texture.h>
+#include <renderer/texture_interface.h>
 
 namespace OpenGL
 {
@@ -14,23 +14,16 @@ namespace OpenGL
 	public:
 
 		Texture();
+        virtual ~Texture();
 
 		// Initialize texture object.
 		bool Initialize();
-
-		// Delete this texture resource.
-		virtual void Destroy();
 
 		// Bind this texture to a certain slot.
 		void Bind(unsigned int textureSlot);
 
 		// Load the texture data from an image.
 		bool Load(const Image<PixelRGBA> *image);
-
-	private:
-
-		// Must be deleted through Destroy().
-		~Texture();
 
 	private:
 

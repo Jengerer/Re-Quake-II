@@ -1,29 +1,122 @@
-CC=g++
-AR=ar
-CFLAGS=-Wall -g -std=c++11
-INCLUDES=-I/usr/include/SDL2
-LIBDIR=-L./
-LIBS=-lSDL2 -lGL -lGLEW -lm -lengine -lopengl_renderer -lplatformer -lcommon
+# Common compilation definitions.
+COMPILER := g++
+LINKER := ar
+COMMON_COMPILE_FLAGS := -Wall -Werror -std=c++11
+LIBRARY_COMPILE_FLAGS := -fPIC -c
+LIBRARY_BUILD_FLAGS := -shared
+ENGINE_ROOT=$(shell pwd)/
 
-all: jengine
+# Add debug flags to compilation.
+DEBUG_COMPILE_FLAGS := -g
+ifdef DEBUG
+    COMMON_COMPILE_FLAGS += $(DEBUG_COMPILE_FLAGS)
+endif
 
-jengine: main.o libengine.a libopengl_renderer.a libplatformer.a libcommon.a
-	$(CC) -o $@ $^ $(INCLUDES) $(LIBDIR) $(LIBS)
+# Common module definitions.
+LIBRARY_OUTPUT_PATH=$(ENGINE_ROOT)lib/
+INCLUDE_SUBDIRECTORY := include/
+SOURCE_SUBDIRECTORY := source/
+BUILD_SUBDIRECTORY := build/
 
-libengine.a: engine.o window.o renderer.o game.o keyboard_manager.o
-	$(AR) rcs $@ $^
+# Engine common library definitions.
+ENGINE_COMMON_NAME := engine_common
+ENGINE_COMMON_VERSION_MAJOR := 1
+ENGINE_COMMON_VERSION_MINOR := 0
+ENGINE_COMMON_VERSION_BUILD := 0
+ENGINE_COMMON_INCLUDE_FLAGS := -I$(ENGINE_ROOT)$(ENGINE_COMMON_NAME)/$(INCLUDE_SUBDIRECTORY)
+ENGINE_COMMON_SOURCE_DIRECTORY := $(ENGINE_ROOT)$(ENGINE_COMMON_NAME)/$(SOURCE_SUBDIRECTORY)
+ENGINE_COMMON_BUILD_DIRECTORY := $(ENGINE_ROOT)$(ENGINE_COMMON_NAME)/$(BUILD_SUBDIRECTORY)
+ENGINE_COMMON_COMPILE_FLAGS := $(ENGINE_COMMON_INCLUDE_FLAGS) $(ENGINE_COMMON_LIBRARY_FLAGS) $(COMMON_COMPILE_FLAGS) $(LIBRARY_COMPILE_FLAGS)
+ENGINE_COMMON_OBJECTS := \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)renderer/attribute.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)renderer/buffer_layout.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)allocatable.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)error_stack.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)file.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)math_common.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)matrix3x3.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)matrix4x4.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)memory_manager.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)vector2.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)vector3.o \
+	$(ENGINE_COMMON_BUILD_DIRECTORY)vector4.o
 
-libopengl_renderer.a: opengl_renderer.o opengl_model.o polygon.o indexed_mesh.o mesh.o
-	$(AR) rcs $@ $^
+# OpenGL renderer library definitions.
+OPENGL_NAME := opengl_renderer
+OPENGL_VERSION_MAJOR := 1
+OPENGL_VERSION_MINOR := 0
+OPENGL_VERSION_BUILD := 0
+OPENGL_INCLUDE_FLAGS := \
+	-I$(ENGINE_ROOT)$(OPENGL_NAME)/$(INCLUDE_SUBDIRECTORY) \
+	$(ENGINE_COMMON_INCLUDE_FLAGS)
+OPENGL_SOURCE_DIRECTORY := $(ENGINE_ROOT)$(OPENGL_NAME)/$(SOURCE_SUBDIRECTORY)
+OPENGL_BUILD_DIRECTORY := $(ENGINE_ROOT)$(OPENGL_NAME)/$(BUILD_SUBDIRECTORY)
+OPENGL_LIBRARY_FLAGS := \
+    -L$(LIBRARY_OUTPUT_PATH)
+#    -lGL -lGLU -l$(ENGINE_COMMON_NAME)
+OPENGL_COMPILE_FLAGS := $(OPENGL_INCLUDE_FLAGS) $(OPENGL_LIBRARY_FLAGS) $(COMMON_COMPILE_FLAGS) $(LIBRARY_COMPILE_FLAGS)
+OPENGL_OBJECTS := \
+    $(OPENGL_BUILD_DIRECTORY)attribute.o \
+    $(OPENGL_BUILD_DIRECTORY)buffer.o \
+    $(OPENGL_BUILD_DIRECTORY)buffer_layout.o \
+    $(OPENGL_BUILD_DIRECTORY)common.o \
+    $(OPENGL_BUILD_DIRECTORY)index_buffer.o \
+    $(OPENGL_BUILD_DIRECTORY)material.o \
+    $(OPENGL_BUILD_DIRECTORY)material_layout.o \
+    $(OPENGL_BUILD_DIRECTORY)opengl_export.o \
+    $(OPENGL_BUILD_DIRECTORY)renderer.o \
+    $(OPENGL_BUILD_DIRECTORY)resources.o \
+    $(OPENGL_BUILD_DIRECTORY)texture.o \
+    $(OPENGL_BUILD_DIRECTORY)variable.o
 
-libplatformer.a: platformer.o map.o player.o player_move.o
-	$(AR) rcs $@ $^
+# Quake II executable definitions.
+QUAKE2_TARGET_NAME=quake2
+QUAKE2_LIBRARIES=-l$(ENGINE_COMMON_LIBRARY_NAME)
 
-libcommon.a: vector3d.o vector2d.o file.o
-	$(AR) rcs $@ $^
+# List of libraries.
+LIBRARIES := \
+	$(ENGINE_COMMON_NAME) \
+	$(OPENGL_NAME)
 
-%.o: %.cpp
-	$(CC) -c -o $@ $< $(CFLAGS) $(INCLUDES)
+# Main make target.
+all: create_library_directory $(LIBRARIES)
 
-clean:
-	rm -f *.o *.a
+# Game executable target.
+$(QUAKE2_TARGET_NAME): null
+	$(COMPILER) -o $@ $^ $(INCLUDES) $(LIBDIR) $(LIBS)
+
+# Engine common library target.
+$(ENGINE_COMMON_NAME): BUILD_DIRECTORY := $(ENGINE_COMMON_BUILD_DIRECTORY) $(ENGINE_COMMON_BUILD_DIRECTORY)renderer/
+$(ENGINE_COMMON_NAME): BUILD_OBJECTS := $(ENGINE_COMMON_OBJECTS)
+$(ENGINE_COMMON_NAME): COMPILE_FLAGS := $(ENGINE_COMMON_COMPILE_FLAGS)
+$(ENGINE_COMMON_NAME): VERSION_MAJOR := $(ENGINE_COMMON_VERSION_MAJOR)
+$(ENGINE_COMMON_NAME): VERSION_FULL := $(VERSION_MAJOR).$(ENGINE_COMMON_VERSION_MINOR).$(ENGINE_COMMON_VERSION_BUILD)
+$(ENGINE_COMMON_NAME): create_$(ENGINE_COMMON_NAME)_build_directory $(ENGINE_COMMON_OBJECTS)
+$(ENGINE_COMMON_BUILD_DIRECTORY)%.o : $(ENGINE_COMMON_SOURCE_DIRECTORY)%.cpp
+	$(COMPILER) -o $@ $< $(ENGINE_COMMON_COMPILE_FLAGS)
+
+# OpenGL library target.
+$(OPENGL_NAME): BUILD_DIRECTORY := $(OPENGL_BUILD_DIRECTORY)
+$(OPENGL_NAME): BUILD_OBJECTS := $(OPENGL_OBJECTS)
+$(OPENGL_NAME): COMPILE_FLAGS := $(OPENGL_COMPILE_FLAGS)
+$(OPENGL_NAME): VERSION_MAJOR := $(OPENGL_VERSION_MAJOR)
+$(OPENGL_NAME): VERSION_FULL := $(VERSION_MAJOR).$(OPENGL_VERSION_MINOR).$(OPENGL_VERSION_BUILD)
+$(OPENGL_NAME): create_$(OPENGL_NAME)_build_directory $(OPENGL_OBJECTS)
+$(OPENGL_BUILD_DIRECTORY)%.o : $(OPENGL_SOURCE_DIRECTORY)%.cpp
+	$(COMPILER) -o $@ $< $(OPENGL_COMPILE_FLAGS)
+
+# Generic library target.
+$(LIBRARIES):
+	$(COMPILER) \
+		-o $(LIBRARY_OUTPUT_PATH)lib$@.so.$(VERSION_FULL) \
+		-Wl,-soname,lib$@.so.$(VERSION_MAJOR) \
+		$(BUILD_OBJECTS) \
+		$(LIBRARY_BUILD_FLAGS)
+
+# Creating library directory.
+create_library_directory:
+	mkdir -p $(LIBRARY_OUTPUT_PATH)
+
+# Creating build directory.
+create_%_build_directory:
+	mkdir -p $(BUILD_DIRECTORY)

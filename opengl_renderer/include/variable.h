@@ -14,9 +14,7 @@ namespace OpenGL
 	public:
 
 		Variable(GLint location);
-
-		// Destroy the reference to this variable.
-		virtual void Destroy();
+        virtual ~Variable();
 
 		// Set value as integer.
 		virtual void SetInteger(int value);
@@ -38,11 +36,6 @@ namespace OpenGL
 
 		// Set value as 4x4 matrix.
 		virtual void SetMatrix4x4(const Matrix4x4 *value);
-
-	private:
-
-		// Private destructor; must be killed through Destroy().
-		~Variable();
 
 	private:
 

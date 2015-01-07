@@ -48,7 +48,7 @@ namespace OpenGL
 		int32_t vertexLength = vertexData.GetSize();
 		int32_t pixelLength = pixelData.GetSize();
 		if (!material->Initialize(vertexSource, vertexLength, pixelSource, pixelLength)) {
-			material->Destroy();
+            delete material;
 			return nullptr;
 		}
 		return material;
@@ -68,11 +68,11 @@ namespace OpenGL
 
 		// Initialize the buffer.
 		if (!buffer->Initialize()) {
-			buffer->Destroy();
+            delete buffer;
 			return nullptr;
 		}
 		if (!buffer->Load(data, bufferSize)) {
-			buffer->Destroy();
+            delete buffer;
 			return nullptr;
 		}
 		return buffer;
@@ -93,11 +93,11 @@ namespace OpenGL
 
 		// Initialize the buffer.
 		if (!buffer->Initialize()) {
-			buffer->Destroy();
+            delete buffer;
 			return nullptr;
 		}
 		if (!buffer->Load(indices, bufferSize, indexType)) {
-			buffer->Destroy();
+            delete buffer;
 			return nullptr;
 		}
 		return buffer;
@@ -109,16 +109,16 @@ namespace OpenGL
 		Texture *texture = new Texture();
 		if (texture == nullptr) {
 			ErrorStack::Log("Failed to allocate OpenGL texture object.");
-			return false;
+			return nullptr;
 		}
 		if (!texture->Initialize()) {
-			texture->Destroy();
+            delete texture;
 			ErrorStack::Log("Failed to initialize OpenGL texture object.");
-			return false;
+			return nullptr;
 		}
 		if (!texture->Load(image)) {
-			texture->Destroy();
-			return false;
+            delete texture;
+			return nullptr;
 		}
 		return static_cast<Renderer::Texture*>(texture);
 	}

@@ -4,7 +4,7 @@
 #include "renderer/index_buffer_interface.h"
 #include "renderer/material_interface.h"
 #include "renderer/material_layout_interface.h"
-#include "renderer/texture.h"
+#include "renderer/texture_interface.h"
 
 namespace Renderer
 {

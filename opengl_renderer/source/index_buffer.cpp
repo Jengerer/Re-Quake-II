@@ -9,6 +9,13 @@ namespace OpenGL
 	{
 	}
 
+	IndexBuffer::~IndexBuffer()
+	{
+		if (handle != 0) {
+			glDeleteBuffers(1, &handle);
+		}
+	}
+
 	// Initialize the index buffer.
 	bool IndexBuffer::Initialize()
 	{
@@ -18,12 +25,6 @@ namespace OpenGL
 			return false;
 		}
 		return true;
-	}
-
-	// Destroy this index buffer.
-	void IndexBuffer::Destroy()
-	{
-		delete this;
 	}
 
 	// Initialize from index data.
@@ -57,14 +58,6 @@ namespace OpenGL
 	void IndexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	// Release OpenGL buffer.
-	IndexBuffer::~IndexBuffer()
-	{
-		if (handle != 0) {
-			glDeleteBuffers(1, &handle);
-		}
 	}
 
 	// Translate index type to OpenGL type.

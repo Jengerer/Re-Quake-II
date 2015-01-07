@@ -15,8 +15,8 @@ namespace Renderer
 
 	public:
 
-		// Destroy the reference to the variable.
-		virtual void Destroy() = 0;
+        // Virtual destructor for interface.
+        virtual ~Variable() = default;
 
 		// Set value as integer.
 		virtual void SetInteger(int value) = 0;

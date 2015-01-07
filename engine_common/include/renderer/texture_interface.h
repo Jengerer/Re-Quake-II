@@ -11,8 +11,8 @@ namespace Renderer
 
 	public:
 
-		// Destroy this texture resource.
-		virtual void Destroy() = 0;
+        // Texture virtual destructor.
+        virtual ~Texture() = default;
 	
 	};
 

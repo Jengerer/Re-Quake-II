@@ -14,12 +14,10 @@ namespace OpenGL
 	public:
 
 		Buffer();
+        virtual ~Buffer();
 
 		// Initialize the buffer for loading.
 		bool Initialize();
-
-		// Free the buffer.
-		virtual void Destroy();
 
 		// Set the buffer data.
 		bool Load(const void *data, unsigned int size);
@@ -29,11 +27,6 @@ namespace OpenGL
 
 		// Unbind the buffer from rendering.
 		void Unbind() const;
-
-	private:
-
-		// Private destructor, must be killed through Destroy().
-		~Buffer();
 
 	private:
 

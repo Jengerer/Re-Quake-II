@@ -14,12 +14,10 @@ namespace OpenGL
 	public:
 
 		IndexBuffer();
+		virtual ~IndexBuffer();
 
 		// Initialize the index buffer.
 		bool Initialize();
-
-		// Destroy this index buffer.
-		virtual void Destroy();
 
 		// Initialize from a set of index data.
 		bool Load(
@@ -35,11 +33,6 @@ namespace OpenGL
 
 		// Get index type for this buffer.
 		inline GLenum GetIndexType() const { return type; }
-
-	private:
-
-		// Private destructor; must be killed through Destroy().
-		~IndexBuffer();
 
 	private:
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "error_stack.h"
 #include <allocatable.h>
 #include <inttypes.h>
 #include <memory_manager.h>
