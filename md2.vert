@@ -11,8 +11,7 @@ out vec2 psUV;
 
 // Camera view variables.
 uniform mat4 object;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 projectionView;
 
 // Animation interpolation amount.
 uniform float time;
@@ -20,8 +19,7 @@ uniform float time;
 // Pass vertex colour to next shader.
 void main(void) {
 	vec4 translated = object * vec4(position0, 1.f);
-	gl_Position = projection *
-		view *
+	gl_Position = projectionView *
 		object *
 		vec4(mix(position0, position1, object[0][0]), 1.f);
 	psNormal = mix(normal0, normal1, time);

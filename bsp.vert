@@ -6,14 +6,14 @@ in vec2 uv;
 in vec2 lightMapUV;
 out vec2 psUV;
 
+// Texture size uniform.
+uniform vec2 textureSize;
+
 // Camera view variables.
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 projectionView;
 
 // Pass vertex colour to next shader.
 void main(void) {
-	gl_Position = projection *
-		view *
-		vec4(position, 1.f);
-	psUV = (uv / 64.f) + lightMapUV; // Lightmap is (0, 0) for now.
+	gl_Position = projectionView * vec4(position, 1.f);
+	psUV = (uv / textureSize) + lightMapUV; // Lightmap is (0, 0) for now.
 }

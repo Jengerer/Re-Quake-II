@@ -29,7 +29,7 @@
     <ClInclude Include="include\renderer\renderer_interface.h" />
     <ClInclude Include="include\renderer\resources_interface.h" />
     <ClInclude Include="include\renderer\shared.h" />
-    <ClInclude Include="include\renderer\texture.h" />
+    <ClInclude Include="include\renderer\texture_interface.h" />
     <ClInclude Include="include\renderer\variable_interface.h" />
     <ClInclude Include="include\vector2.h" />
     <ClInclude Include="include\vector3.h" />

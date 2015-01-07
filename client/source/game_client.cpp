@@ -12,8 +12,6 @@
 // Rendering parameters.
 const char *ModelVertexShader = "md2.vert";
 const char *ModelFragmentShader = "md2.frag";
-const char *MapVertexShader = "bsp.vert";
-const char *MapFragmentShader = "bsp.frag";
 const float NearDistanceZ = 4.0f;
 const float FarDistanceZ = 4096.0f;
 const float AspectRatio = 4.0f / 3.0f;
@@ -23,11 +21,7 @@ Client::Client()
 	: utilities(nullptr),
 	modelMaterial(nullptr),
 	modelObject(nullptr),
-	modelView(nullptr),
-	modelProjection(nullptr),
-	mapView(nullptr),
-	mapProjection(nullptr),
-	mapTexture(nullptr)
+	modelProjectionView(nullptr)
 {
 	camera.SetPosition(Vector3::Zero);
 }
@@ -101,8 +95,10 @@ bool Client::OnTickEnd()
 	renderer->ClearScene();
 
 	// Generate view matrix.
-	Matrix4x4 view;
-	camera.GenerateViewTransform(&view);
+	Matrix4x4 projectionView;
+	camera.GenerateProjectionView(&projectionView);
+
+	// Multiply view by projection.
 
 	// Generate object matrix.
 	Matrix4x4 objectMatrix;
@@ -116,17 +112,12 @@ bool Client::OnTickEnd()
 
 	// Draw map.
 	const Vector3 *cameraPosition = camera.GetPosition();
-	renderer->SetMaterial(mapMaterial);
-	mapView->SetMatrix4x4(&view);
-	renderer->SetWireframe(false);
-	map.Draw(*cameraPosition, renderer);
-	renderer->UnsetMaterial(modelMaterial);
+	map.Draw(renderer, *cameraPosition, projectionView);
 
 	// Draw model.
 	renderer->SetMaterial(modelMaterial);
 	modelObject->SetMatrix4x4(&obj);
-	view.Identity();
-	modelView->SetMatrix4x4(&view);
+	modelProjectionView->SetMatrix4x4(&projectionView);
 	renderer->SetTexture(modelSkin, 0);
 	model.Draw(renderer);
 	renderer->UnsetMaterial(modelMaterial);
@@ -154,34 +145,25 @@ bool Client::LoadResources(void)
 	if (modelObject == nullptr) {
 		return false;
 	}
-	modelView = modelMaterial->GetVariable("view");
-	if (modelView == nullptr) {
-		return false;
-	}
-	modelProjection = modelMaterial->GetVariable("projection");
-	if (modelProjection == nullptr) {
+	modelProjectionView = modelMaterial->GetVariable("projectionView");
+	if (modelProjectionView == nullptr) {
 		return false;
 	}
 	modelTexture = modelMaterial->GetVariable("texture");
 	if (modelTexture == nullptr) {
 		return false;
 	}
-	mapView = mapMaterial->GetVariable("view");
-	if (mapView == nullptr) {
-		return false;
-	}
-	mapProjection = mapMaterial->GetVariable("projection");
-	if (mapProjection == nullptr) {
-		return false;
-	}
-	mapTexture = mapMaterial->GetVariable("texture");
-	if (mapTexture == nullptr) {
+
+	// Prepare PAK files.
+	if (!QuakeFileManager::Initialize()) {
 		return false;
 	}
 	
 	// Prepare to load game resources.
 	Renderer::Resources *resources = utilities->GetRendererResources();
-	if (!QuakeFileManager::Initialize()) {
+
+	// Initialize map painter.
+	if (!BSP::Painter::Initialize(resources)) {
 		return false;
 	}
 
@@ -221,26 +203,17 @@ bool Client::LoadResources(void)
 		return false;
 	}
 
-	// Generate projection matrix.
-	Matrix4x4 projectionMatrix;
-	projectionMatrix.PerspectiveProjection(AspectRatio, FieldOfView, NearDistanceZ, FarDistanceZ);
+	// Set up camera projection.
+	camera.SetFrustum(NearDistanceZ, FarDistanceZ, AspectRatio, FieldOfView);
 
 	// Activate the material for setting variables.
 	Renderer::Interface *renderer = utilities->GetRenderer();
 	renderer->SetMaterial(modelMaterial);
-	modelProjection->SetMatrix4x4(&projectionMatrix);
 	modelTexture->SetInteger(0);
 	renderer->UnsetMaterial(modelMaterial);
-	renderer->SetMaterial(mapMaterial);
-	mapProjection->SetMatrix4x4(&projectionMatrix);
-	mapTexture->SetInteger(0);
-	renderer->UnsetMaterial(mapMaterial);
 
 	// Load static model resources.
 	if (!EntityModel::LoadStaticResources(resources, modelMaterial)) {
-		return false;
-	}
-	if (!BSP::Map::LoadStaticResources(resources, mapMaterial)) {
 		return false;
 	}
 	return true;
@@ -250,23 +223,14 @@ bool Client::LoadResources(void)
 void Client::FreeResources(void)
 {
 	// Destroy variables.
-	if (modelProjection != nullptr) {
-		modelProjection->Destroy();
-	}
-	if (modelView != nullptr) {
-		modelView->Destroy();
+	if (modelProjectionView != nullptr) {
+		modelProjectionView->Destroy();
 	}
 	if (modelObject != nullptr) {
 		modelObject->Destroy();
 	}
 	if (modelTexture != nullptr) {
 		modelTexture->Destroy();
-	}
-	if (mapView != nullptr) {
-		mapView->Destroy();
-	}
-	if (mapProjection != nullptr) {
-		mapProjection->Destroy();
 	}
 
 	// Destroy textures.
@@ -278,12 +242,6 @@ void Client::FreeResources(void)
 	if (modelMaterial != nullptr) {
 		modelMaterial->Destroy();
 	}
-	if (mapMaterial != nullptr) {
-		mapMaterial->Destroy();
-	}
-	if (mapTexture != nullptr) {
-		mapTexture->Destroy();
-	}
 
 	// Destroy model.
 	model.Destroy();
@@ -291,7 +249,7 @@ void Client::FreeResources(void)
 
 	// Destroy static materials.
 	EntityModel::FreeStaticResources();
-	BSP::Map::FreeStaticResources();
+	BSP::Painter::Shutdown();
 	WAL::Parser::DestroyPalette();
 }
 
@@ -302,10 +260,6 @@ bool Client::InitializeShaders(void)
 	Renderer::Resources *resources = utilities->GetRendererResources();
 	modelMaterial = resources->CreateMaterial(ModelVertexShader, ModelFragmentShader);
 	if (modelMaterial == nullptr) {
-		return false;
-	}
-	mapMaterial = resources->CreateMaterial(MapVertexShader, MapFragmentShader);
-	if (mapMaterial == nullptr) {
 		return false;
 	}
 	return true;

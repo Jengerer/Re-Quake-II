@@ -43,16 +43,11 @@ private:
 	// Shader parameters.
 	Renderer::Texture *modelSkin;
 	Renderer::Material *modelMaterial;
-	Renderer::Material *mapMaterial;
 
 	// Uniform variables for rendering.
 	Renderer::Variable *modelObject;
-	Renderer::Variable *modelView;
-	Renderer::Variable *modelProjection;
+	Renderer::Variable *modelProjectionView;
 	Renderer::Variable *modelTexture;
-	Renderer::Variable *mapView;
-	Renderer::Variable *mapProjection;
-	Renderer::Variable *mapTexture;
 
 	// Model and map to render.
 	Camera camera;
