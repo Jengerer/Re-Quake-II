@@ -104,26 +104,11 @@ namespace BSP
 
 	Painter::~Painter()
 	{
-		if (material != nullptr) {
-			material->Destroy();
-			material = nullptr;
-		}
-		if (layout != nullptr) {
-			layout->Destroy();
-			layout = nullptr;
-		}
-		if (projectionViewVariable != nullptr) {
-			projectionViewVariable->Destroy();
-			projectionViewVariable = nullptr;
-		}
-		if (textureSlotVariable != nullptr) {
-			textureSlotVariable->Destroy();
-			textureSlotVariable = nullptr;
-		}
-		if (textureSizeVariable != nullptr) {
-			textureSizeVariable->Destroy();
-			textureSizeVariable = nullptr;
-		}
+        delete material;
+        delete layout;
+        delete projectionViewVariable;
+        delete textureSlotVariable;
+        delete textureSizeVariable;
 	}
 
 	// Load painter resources.

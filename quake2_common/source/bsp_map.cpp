@@ -13,9 +13,7 @@ namespace BSP
 
 	FaceTexture::~FaceTexture()
 	{
-		if (texture != nullptr) {
-			texture->Destroy();
-		}
+        delete texture;
 	}
 
 	// Copy texture name to entry.
@@ -59,9 +57,7 @@ namespace BSP
 
 	Face::~Face()
 	{
-		if (vertexBuffer != nullptr) {
-			vertexBuffer->Destroy();
-		}
+        delete vertexBuffer;
 	}
 
 	bool Face::Initialize(int vertexCount)
@@ -258,8 +254,9 @@ namespace BSP
 	// Start frame to get incremented to 0 on first frame.
 	Map::Map()
 		: planes(nullptr),
-		nodes(nullptr),
+        textures(nullptr),
 		faces(nullptr),
+		nodes(nullptr),
 		brushSides(nullptr),
 		brushes(nullptr),
 		clusters(nullptr),
@@ -587,7 +584,7 @@ namespace BSP
 		BSP::Node *parent = leaf->GetParent();
 		while (parent != nullptr) {
 			// Check if another leaf has already traversed this ancestor.
-			uint32_t currentFrame = parent->GetVisibilityFrame();
+			int32_t currentFrame = parent->GetVisibilityFrame();
 			if (currentFrame == visibilityFrame) {
 				break;
 			}
@@ -660,7 +657,8 @@ namespace BSP
 				const BSP::BrushSide *side = brush->GetFirstSide();
 				int32_t sideCount = brush->GetSideCount();
 				for (int32_t i = 0; i < sideCount; ++i, ++side) {
-					const Geometry::Plane *plane = side->GetPlane();
+                    const Geometry::Plane *plane = side->GetPlane();
+                    (void)plane;
 				}
 			}
 

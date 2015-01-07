@@ -1,5 +1,3 @@
-#pragma once
-
 #include "error_stack.h"
 #include "pcx_parser.h"
 #include "quake_file_manager.h"
@@ -25,7 +23,6 @@ namespace WAL
 	bool Parser::LoadPalette()
 	{
 		// Parse the PCX file but only save its palette.
-		QuakeFileManager *quakeFiles = QuakeFileManager::GetInstance();
 		Image<PixelRGB> rgbPalette;
 		PCX::Parser pcxParser;
 		if (!pcxParser.LoadPalette(ColourMap, &rgbPalette)) {

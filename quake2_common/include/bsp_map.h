@@ -113,7 +113,7 @@ namespace BSP
 		inline const BSP::Face *GetFirstFace() const { return firstFace; }
 		inline uint16_t GetFaceCount() const { return faceCount; }
 		inline BSP::Node *GetParent() const { return parent; }
-		inline uint32_t GetVisibilityFrame() const { return visibilityFrame; }
+		inline int32_t GetVisibilityFrame() const { return visibilityFrame; }
 
 		inline bool IsVisible(int32_t visibilityFrame) const { return (visibilityFrame == this->visibilityFrame); }
 

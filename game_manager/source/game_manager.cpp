@@ -72,7 +72,7 @@ namespace GameManager
 	// Engine frame update.
 	bool Implementation::OnTick(float timeDelta)
 	{
-		(float)timeDelta;
+		(void)timeDelta;
 		if (!clientListener->OnTickBegin()) {
 			return false;
 		}

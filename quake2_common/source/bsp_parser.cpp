@@ -237,7 +237,7 @@ namespace BSP
 
 				// Get the texture information structure to get UV coordinates.
 				int16_t textureIndex = inputFace->textureIndex;
-				const FileFormat::Texture *currentTexture = &textures[textureIndex];
+				const FileFormat::Texture *currentTexture = &fileTextures[textureIndex];
 
 				// Build polygon from face edges.
 				const FileFormat::SurfaceEdge *currentEdgeEntry = &surfaceEdges[inputFace->firstEdge];
@@ -438,7 +438,6 @@ namespace BSP
 
 			BSP::Face **mapLeafFaces = out->GetLeafFaces();
 			BSP::Brush **mapLeafBrushes = out->GetLeafBrushes();
-			const BSP::LeafCluster *mapClusters = out->GetClusters();
 			BSP::Leaf *outputLeaf = out->GetLeaves();
 			const FileFormat::Leaf *inputLeaf = leaves;
 			for (int32_t i = 0; i < leafCount; ++i, ++inputLeaf, ++outputLeaf) {
