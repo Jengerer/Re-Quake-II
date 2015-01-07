@@ -139,6 +139,11 @@ namespace BSP
 					lumpReference = reinterpret_cast<const void**>(&leafFaces);
 					lumpElementCount = &leafFaceCount;
 					break;
+				case LeafBrushesLump:
+					elementSize = sizeof(uint16_t);
+					lumpReference = reinterpret_cast<const void**>(&leafBrushes);
+					lumpElementCount = &leafBrushCount;
+					break;
 				case EdgesLump:
 					elementSize = sizeof(FileFormat::Edge);
 					lumpReference = reinterpret_cast<const void**>(&edges);

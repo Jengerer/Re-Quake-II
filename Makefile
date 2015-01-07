@@ -9,9 +9,7 @@ ENGINE_ROOT=$(shell pwd)/
 
 # Add debug flags to compilation.
 DEBUG_COMPILE_FLAGS := -g
-ifdef DEBUG
-    COMMON_COMPILE_FLAGS += $(DEBUG_COMPILE_FLAGS)
-endif
+#COMMON_COMPILE_FLAGS += $(DEBUG_COMPILE_FLAGS)
 
 # Common module definitions.
 LIBRARY_OUTPUT_PATH := $(ENGINE_ROOT)lib/
@@ -304,6 +302,16 @@ $(LIBRARIES):
 	$(SYMBOLIC_LINK) -s -f \
 		$(LIBRARY_OUTPUT_PATH)lib$@.so.$(VERSION_FULL) \
 		$(LIBRARY_OUTPUT_PATH)lib$@.so
+
+
+# Clean up build directories.
+CLEAN_PATHS := \
+	$(addsuffix /$(BUILD_SUBDIRECTORY),$(LIBRARIES)) \
+	$(QUAKE2_BUILD_PATH) \
+	$(LIBRARY_OUTPUT_PATH) \
+	$(EXECUTABLE_OUTPUT_PATH)
+clean:
+	rm -rf $(CLEAN_PATHS)
 
 # Creating library directory.
 create_library_directory:
