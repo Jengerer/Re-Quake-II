@@ -222,26 +222,21 @@ bool Client::LoadResources(void)
 // Free base resources for client.
 void Client::FreeResources(void)
 {
-	// Destroy variables.
-	if (modelProjectionView != nullptr) {
-		modelProjectionView->Destroy();
-	}
-	if (modelObject != nullptr) {
-		modelObject->Destroy();
-	}
-	if (modelTexture != nullptr) {
-		modelTexture->Destroy();
-	}
+    // Free variables.
+    delete modelProjectionView;
+    modelProjectionView = nullptr;
+    delete modelObject;
+    modelObject = nullptr;
+    delete modelTexture;
+    modelTexture = nullptr;
 
 	// Destroy textures.
-	if (modelSkin != nullptr) {
-		modelSkin->Destroy();
-	}
+    delete modelSkin;
+    modelSkin = nullptr;
 
 	// Destroy materials.
-	if (modelMaterial != nullptr) {
-		modelMaterial->Destroy();
-	}
+    delete modelMaterial;
+    modelMaterial = nullptr;
 
 	// Destroy model.
 	model.Destroy();

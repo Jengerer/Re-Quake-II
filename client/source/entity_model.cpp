@@ -36,10 +36,7 @@ EntityModelFrame::EntityModelFrame() : vertices(nullptr), bufferSize(0), vertexB
 
 EntityModelFrame::~EntityModelFrame()
 {
-	// Destroy renderer buffer object.
-	if (vertexBuffer != nullptr) {
-		vertexBuffer->Destroy();
-	}
+    delete vertexBuffer;
 }
 
 // Set the vertex array for this frame.
@@ -144,7 +141,6 @@ bool EntityModel::LoadResources(Renderer::Resources *resources)
 // Draw the mesh.
 void EntityModel::Draw(Renderer::Interface *renderer)
 {
-	Renderer::Buffer *buffer = frames[0].GetVertexBuffer();
 	layout->BindBuffer(StartFrameBufferIndex, frames[0].GetVertexBuffer());
 	layout->BindBuffer(EndFrameBufferIndex, frames[1].GetVertexBuffer());
 	layout->BindBuffer(TextureCoordinateBufferIndex, textureCoordinateBuffer);
@@ -168,7 +164,6 @@ bool EntityModel::LoadStaticResources(Renderer::Resources *resources, Renderer::
 // Free model-generic renderer resources.
 void EntityModel::FreeStaticResources()
 {
-	if (layout != nullptr) {
-		layout->Destroy();
-	}
+    delete layout;
+    layout = nullptr;
 }
