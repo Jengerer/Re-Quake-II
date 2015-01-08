@@ -3,8 +3,8 @@
 
 // TODO: Erase these once we get settings.
 const char *GameTitle = "Game Test";
-const int GameWidth = 1024;
-const int GameHeight = 768;
+const int GameWidth = 1920;
+const int GameHeight = 1080;
 
 namespace GameManager
 {
@@ -51,6 +51,8 @@ namespace GameManager
 		// Set up renderer and create window.
 		WindowFlags flags;
 		flags.raw = 0;
+		flags.bits.fullscreen = false;
+		flags.bits.borderless = true;
 		flags.bits.verticalSync = true;
 		window = engineUtilities->MakeWindow(GameTitle, GameWidth, GameHeight, flags);
 		if (window == nullptr) {

@@ -11,4 +11,6 @@ Currently no server module, the client is just set up to run at a fixed time-ste
   2. Properly Animating Textures
   3. Physics and Map Collision Tests
   
+Screenshot: http://i.imgur.com/DKDF4Yl.jpg
+  
 Thanks for checking it out!
