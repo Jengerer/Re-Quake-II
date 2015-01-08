@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SDK_LIB_DIR)\glew\include;.\include;..\include;..\common\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(SDK_LIB_DIR)\glew\include;.\include;..\engine_common\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
     <LibraryPath>..\lib;$(SDK_LIB_DIR)\glew\lib\Release\Win32;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>

@@ -51,6 +51,7 @@ namespace GameManager
 		// Set up renderer and create window.
 		WindowFlags flags;
 		flags.raw = 0;
+		flags.bits.verticalSync = true;
 		window = engineUtilities->MakeWindow(GameTitle, GameWidth, GameHeight, flags);
 		if (window == nullptr) {
 			return false;

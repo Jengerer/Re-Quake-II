@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine.vcxproj", "{D092F127-0814-4682-AB88-F036A4E1ABD9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "common\common.vcxproj", "{5CB050B3-F94B-4486-B5F7-E591F838A4C8}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opengl_renderer", "opengl_renderer\opengl_renderer.vcxproj", "{83D99828-9FCB-423E-96C8-F094E2B20742}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game_manager", "game_manager\game_manager.vcxproj", "{293F5E9F-9D6E-427C-94B0-0C749E859D53}"
@@ -19,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quake2", "quake2\quake2.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quake2_common", "quake2_common\quake2_common.vcxproj", "{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "engine_common\engine_common.vcxproj", "{5CB050B3-F94B-4486-B5F7-E591F838A4C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -29,10 +29,6 @@ Global
 		{D092F127-0814-4682-AB88-F036A4E1ABD9}.Debug|Win32.Build.0 = Debug|Win32
 		{D092F127-0814-4682-AB88-F036A4E1ABD9}.Release|Win32.ActiveCfg = Release|Win32
 		{D092F127-0814-4682-AB88-F036A4E1ABD9}.Release|Win32.Build.0 = Release|Win32
-		{5CB050B3-F94B-4486-B5F7-E591F838A4C8}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5CB050B3-F94B-4486-B5F7-E591F838A4C8}.Debug|Win32.Build.0 = Debug|Win32
-		{5CB050B3-F94B-4486-B5F7-E591F838A4C8}.Release|Win32.ActiveCfg = Release|Win32
-		{5CB050B3-F94B-4486-B5F7-E591F838A4C8}.Release|Win32.Build.0 = Release|Win32
 		{83D99828-9FCB-423E-96C8-F094E2B20742}.Debug|Win32.ActiveCfg = Debug|Win32
 		{83D99828-9FCB-423E-96C8-F094E2B20742}.Debug|Win32.Build.0 = Debug|Win32
 		{83D99828-9FCB-423E-96C8-F094E2B20742}.Release|Win32.ActiveCfg = Release|Win32
@@ -57,6 +53,10 @@ Global
 		{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}.Debug|Win32.Build.0 = Debug|Win32
 		{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}.Release|Win32.ActiveCfg = Release|Win32
 		{944FECCB-4DB7-4DB8-B1A3-98AA5A914FE7}.Release|Win32.Build.0 = Release|Win32
+		{5CB050B3-F94B-4486-B5F7-E591F838A4C8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5CB050B3-F94B-4486-B5F7-E591F838A4C8}.Debug|Win32.Build.0 = Debug|Win32
+		{5CB050B3-F94B-4486-B5F7-E591F838A4C8}.Release|Win32.ActiveCfg = Release|Win32
+		{5CB050B3-F94B-4486-B5F7-E591F838A4C8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -40,7 +40,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>.\include;.\common\include;$(SDK_LIB_DIR)\libpng;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\include;.\engine_common\include;$(SDK_LIB_DIR)\libpng;$(SDK_LIB_DIR)\sdl2\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>.\lib;$(SDK_LIB_DIR)\libpng\projects\vstudio\Debug;$(SDK_LIB_DIR)\sdl2\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>

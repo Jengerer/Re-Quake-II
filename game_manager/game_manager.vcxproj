@@ -44,7 +44,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
-    <IncludePath>.\include;..\include;..\common\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>.\include;..\include;..\engine_common\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>..\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
