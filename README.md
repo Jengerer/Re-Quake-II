@@ -12,5 +12,7 @@ Currently no server module, the client is just set up to run at a fixed time-ste
   3. Physics and Map Collision Tests
   
 Screenshot: http://i.imgur.com/DKDF4Yl.jpg
+
+Libraries used: SDL2, GLEW.
   
 Thanks for checking it out!
