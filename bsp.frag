@@ -1,11 +1,10 @@
-#version 150
+#version 120
 
-in vec2 psUV;
-out vec4 frag_colour;
+varying vec2 psUV;
 
 // Texture variables.
 uniform sampler2D texture;
 
 void main(void) {
-	frag_colour = texture2D(texture, psUV);
+	gl_FragColor = texture2D(texture, psUV);
 }

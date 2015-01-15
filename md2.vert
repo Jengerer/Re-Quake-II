@@ -1,13 +1,13 @@
-#version 150
+#version 120
 
 // Input and output attributes.
-in vec3 position0;
-in vec3 normal0;
-in vec3 position1;
-in vec3 normal1;
-in vec2 uv;
-out vec3 psNormal;
-out vec2 psUV;
+attribute vec3 position0;
+attribute vec3 normal0;
+attribute vec3 position1;
+attribute vec3 normal1;
+attribute vec2 uv;
+varying vec3 psNormal;
+varying vec2 psUV;
 
 // Camera view variables.
 uniform mat4 object;

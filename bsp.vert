@@ -1,10 +1,10 @@
-#version 150
+#version 120
 
 // Input and output attributes.
-in vec3 position;
-in vec2 uv;
-in vec2 lightMapUV;
-out vec2 psUV;
+attribute vec3 position;
+attribute vec2 uv;
+attribute vec2 lightMapUV;
+varying vec2 psUV;
 
 // Texture size uniform.
 uniform vec2 textureSize;

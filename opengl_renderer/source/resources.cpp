@@ -49,6 +49,7 @@ namespace OpenGL
 		int32_t pixelLength = pixelData.GetSize();
 		if (!material->Initialize(vertexSource, vertexLength, pixelSource, pixelLength)) {
             delete material;
+            ErrorStack::Log("Failed to initialize material for files %s and %s.", vertexFile, pixelFile);
 			return nullptr;
 		}
 		return material;
