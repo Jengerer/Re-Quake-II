@@ -43,13 +43,14 @@ void ErrorStack::Log(const char *format, ...)
 	if (length < 0) {
 		return;
 	}
+    int bufferSize = length + 1;
 	
 	// Allocate space and copy the string.
-	char *buffer = reinterpret_cast<char*>(MemoryManager::Allocate(length + 1));
+	char *buffer = reinterpret_cast<char*>(MemoryManager::Allocate(bufferSize));
 	if (buffer == nullptr) {
 		return;
 	}
-	int written = vsnprintf(buffer, length, format, args);
+	int written = vsnprintf(buffer, bufferSize, format, args);
 	va_end(args);
 	if (written < 0) {
 		MemoryManager::Free(buffer);
